@@ -1,6 +1,6 @@
 # reference link: https://schedule.readthedocs.io/en/stable/
 # https://schedule.readthedocs.io/en/stable/
-
+import os 
 import schedule
 import subprocess
 import threading
@@ -32,7 +32,7 @@ class userAction(object):
         self.threadFlg = threadFlg
     
     def runFunc(self):
-        print('start to run')
+        print('Start to run job')
         if self.func:
             if self.threadFlg:
                 jobthread = threading.Thread(target=self.func)
@@ -98,9 +98,8 @@ def testCase(mode):
     userAction2 = userAction(actionName='action2', timeStr=nextMin, runFunc=func2, threadFlg=True)
     schedule.every().day.at(userAction2.timeStr).do(userAction2.runFunc)
 
-
     def func3():
-        subprocess.call('python acctionSimulator.py', creationflags=subprocess.CREATE_NEW_CONSOLE)    
+        os.startfile("C:\\Works\\NCL\\Project\\Windows_User_Simulator\\src\\dist\\actionSimulator.exe")
 
     timeData = datetime.datetime.now() + datetime.timedelta(seconds = 9)
     nextMin = timeData.strftime("%H:%M:%S")
