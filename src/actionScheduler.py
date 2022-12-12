@@ -92,6 +92,7 @@ def testCase(mode):
 
     def func2():
         subprocess.call('ping -n 100 www.google.com.sg', creationflags=subprocess.CREATE_NEW_CONSOLE)
+
     timeData = datetime.datetime.now() + datetime.timedelta(seconds = 5)
     nextMin = timeData.strftime("%H:%M:%S")
     print(nextMin)
