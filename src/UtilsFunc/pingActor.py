@@ -51,7 +51,8 @@ class pingActor(object):
         elif isinstance(config, str):
             if os.path.exists(config):
                 try:
-                    self.pingDict = json.load(config)
+                    with open(config, 'r') as fh:
+                        self.pingDict = json.load(fh)
                 except Exception as err:
                     print("Failed to load the json config file: %s" %str(err))
                     return None
@@ -192,6 +193,14 @@ def testCase(mode =0):
                           Log=Log, showConsole=showConsole)
         result = actor.runPing()
         print(result)
+    elif mode == 5:
+        parallel = False
+        Log = None
+        showConsole = False
+        actor = pingActor('UtilsFunc\pingTestDest.json', parallel=parallel,
+                          Log=Log, showConsole=showConsole)
+        result = actor.runPing()
+        print(result)
 
 if __name__ == '__main__':
-    testCase(mode=4)
+    testCase(mode=5)
