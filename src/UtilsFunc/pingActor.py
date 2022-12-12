@@ -90,7 +90,7 @@ class pingActor(object):
         self._pingTimeout = timeout
 
 #-----------------------------------------------------------------------------
-    def repeatPingJobs(self):
+    def _startPingJobs(self):
         """ Repeat the ping jobs saved in the job list."""
         print("Weekup the ping jobs in the job list")
         _ = [ job.start() for job in self.jobThreadList ] 
@@ -121,7 +121,7 @@ class pingActor(object):
                     pingFunc(dest, timeN)
                     time.sleep(self._pingInterval)
             # if have job, run the parallel ping
-            self.repeatPingJobs()
+            self._startPingJobs()
         else:
             # Run the ping action in back ground and record the result.
             crtPingRst = {}
@@ -147,18 +147,18 @@ class pingActor(object):
                     pingFunc(dest, timeN)
                     time.sleep(self._pingInterval)
             # if have job, run the parallel ping
-            self.repeatPingJobs()
+            self._startPingJobs()
             return crtPingRst
 
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 def testCase(mode =0):
     pinDict = {
-        "www.google.com.sg": 5,
-        "172.18.178.10": 2,
+        "www.google.com.sg": 10,
+        "172.18.178.10": 15,
         "202.94.70.56": -1,
-        "www.singtel.com.sg": 4, 
-        "gov.sg": 5,
+        "www.singtel.com.sg": 8, 
+        "gov.sg": 6,
         "BBC.CO.UK" : 5
     }
     if mode == 1:
@@ -203,4 +203,4 @@ def testCase(mode =0):
         print(result)
 
 if __name__ == '__main__':
-    testCase(mode=5)
+    testCase(mode=2)

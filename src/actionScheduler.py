@@ -80,40 +80,52 @@ class actionScheduler(object):
 
 
 def testCase(mode):
-    def func1():
-        print('This is function1')
+
     
-    timeData = datetime.datetime.now() + datetime.timedelta(seconds = 7)
+    timeData = datetime.datetime.now() 
+    minDelay = datetime.timedelta(seconds = 60)
+    
+    # Task 1: ping
+    def func1():
+        subprocess.call('python C:\\Works\\NCL\\Project\\Windows_User_Simulator\\src\\UtilsFunc\\pingActor.py', creationflags=subprocess.CREATE_NEW_CONSOLE)
+    timeData+= datetime.timedelta(seconds = 10)
     nextMin = timeData.strftime("%H:%M:%S")
     print(nextMin)
     userAction1 = userAction(actionName='action1', timeStr=nextMin, runFunc=func1, threadFlg=False)
     schedule.every().day.at(userAction1.timeStr).do(userAction1.runFunc)
-    #print(schedule.get_jobs())
 
+    # start Zoom meeting
     def func2():
-        subprocess.call('ping -n 100 www.google.com.sg', creationflags=subprocess.CREATE_NEW_CONSOLE)
-
-    timeData = datetime.datetime.now() + datetime.timedelta(seconds = 5)
+        subprocess.call('python C:\\Works\\NCL\\Project\\Windows_User_Simulator\\src\\UtilsFunc\\zoomActor.py', creationflags=subprocess.CREATE_NEW_CONSOLE)
+    timeData += minDelay
     nextMin = timeData.strftime("%H:%M:%S")
-    print(nextMin)
-    userAction2 = userAction(actionName='action2', timeStr=nextMin, runFunc=func2, threadFlg=True)
+    userAction2 = userAction(actionName='action2', timeStr=nextMin, runFunc=func2, threadFlg=False)
     schedule.every().day.at(userAction2.timeStr).do(userAction2.runFunc)
 
+    # Dra picture
     def func3():
         os.startfile("C:\\Works\\NCL\\Project\\Windows_User_Simulator\\src\\dist\\actionSimulator.exe")
 
-    timeData = datetime.datetime.now() + datetime.timedelta(seconds = 9)
+    timeData += minDelay
     nextMin = timeData.strftime("%H:%M:%S")
-    print(nextMin)
     userAction3 = userAction(actionName='action3', timeStr=nextMin, runFunc=func3, threadFlg=True)
     schedule.every().day.at(userAction3.timeStr).do(userAction3.runFunc)
     
+
+    # playgame
+    def func4():
+        subprocess.call('python C:\\Works\\NCL\\Project\\Windows_User_Simulator\\src\\UtilsFunc\\dinoActor.py', creationflags=subprocess.CREATE_NEW_CONSOLE)
+
+    timeData += minDelay
+    nextMin = timeData.strftime("%H:%M:%S")
+    userAction3 = userAction(actionName='action3', timeStr=nextMin, runFunc=func4, threadFlg=True)
+    schedule.every().day.at(userAction3.timeStr).do(userAction3.runFunc)
+
     print(schedule.get_jobs())
 
     while True:
         schedule.run_pending()
         time.sleep(1)
-
 
 if __name__ == '__main__':
     testCase(1)
