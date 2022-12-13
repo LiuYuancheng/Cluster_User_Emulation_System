@@ -8,6 +8,8 @@ import threading
 import time
 import datetime
 
+DIR_PATH = os.path.dirname(__file__)
+print("Current source code location : %s" % DIR_PATH)
 
 # def job():
 #     print("I'm working...")
@@ -81,13 +83,16 @@ class actionScheduler(object):
 
 def testCase(mode):
 
-    
     timeData = datetime.datetime.now() 
     minDelay = datetime.timedelta(seconds = 60)
     
     # Task 1: ping
     def func1():
-        subprocess.call('python C:\\Works\\NCL\\Project\\Windows_User_Simulator\\src\\UtilsFunc\\pingActor.py', creationflags=subprocess.CREATE_NEW_CONSOLE)
+        appFolder = 'UtilsFunc'
+        appName = 'pingActor.py'
+        appPath = os.path.join(DIR_PATH, appFolder, appName)
+        cmd = "python %s" %str(appPath)
+        subprocess.call(cmd, creationflags=subprocess.CREATE_NEW_CONSOLE)
     timeData+= datetime.timedelta(seconds = 10)
     nextMin = timeData.strftime("%H:%M:%S")
     print(nextMin)
