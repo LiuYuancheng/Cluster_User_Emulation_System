@@ -99,6 +99,19 @@ def testCase(mode):
     userAction1 = userAction(actionName='action1', timeStr=nextMin, runFunc=func1, threadFlg=False)
     schedule.every().day.at(userAction1.timeStr).do(userAction1.runFunc)
 
+    # Task 1_1: run server windows cmds.
+    def func1_1():
+        appFolder = 'UtilsFunc'
+        appName = 'funcActor.py'
+        appPath = os.path.join(DIR_PATH, appFolder, appName)
+        cmd = "python %s" %str(appPath)
+        subprocess.call(cmd, creationflags=subprocess.CREATE_NEW_CONSOLE)
+    timeData+= datetime.timedelta(seconds = 10)
+    nextMin = timeData.strftime("%H:%M:%S")
+    print(nextMin)
+    userAction1 = userAction(actionName='action1_1', timeStr=nextMin, runFunc=func1_1, threadFlg=False)
+    schedule.every().day.at(userAction1.timeStr).do(userAction1.runFunc)
+
     # start Zoom meeting
     def func2():
         appFolder = 'UtilsFunc'
