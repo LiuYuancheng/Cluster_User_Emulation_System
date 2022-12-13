@@ -101,13 +101,17 @@ def testCase(mode):
 
     # start Zoom meeting
     def func2():
-        subprocess.call('python C:\\Works\\NCL\\Project\\Windows_User_Simulator\\src\\UtilsFunc\\zoomActor.py', creationflags=subprocess.CREATE_NEW_CONSOLE)
+        appFolder = 'UtilsFunc'
+        appName = 'zoomActor.py'
+        appPath = os.path.join(DIR_PATH, appFolder, appName)
+        cmd = "python %s" %str(appPath)
+        subprocess.call(cmd, creationflags=subprocess.CREATE_NEW_CONSOLE)
     timeData += minDelay
     nextMin = timeData.strftime("%H:%M:%S")
     userAction2 = userAction(actionName='action2', timeStr=nextMin, runFunc=func2, threadFlg=False)
     schedule.every().day.at(userAction2.timeStr).do(userAction2.runFunc)
 
-    # Dra picture
+    # Draw picture
     def func3():
         os.startfile("C:\\Works\\NCL\\Project\\Windows_User_Simulator\\src\\dist\\actionSimulator.exe")
 
@@ -116,14 +120,18 @@ def testCase(mode):
     userAction3 = userAction(actionName='action3', timeStr=nextMin, runFunc=func3, threadFlg=True)
     schedule.every().day.at(userAction3.timeStr).do(userAction3.runFunc)
     
-
     # playgame
     def func4():
-        subprocess.call('python C:\\Works\\NCL\\Project\\Windows_User_Simulator\\src\\UtilsFunc\\dinoActor.py', creationflags=subprocess.CREATE_NEW_CONSOLE)
+        appFolder = 'UtilsFunc'
+        appName = 'dinoActor.py'
+        appPath = os.path.join(DIR_PATH, appFolder, appName)
+        cmd = "python %s" %str(appPath)
+        subprocess.call(cmd, creationflags=subprocess.CREATE_NEW_CONSOLE)
+        #subprocess.call('python C:\\Works\\NCL\\Project\\Windows_User_Simulator\\src\\UtilsFunc\\dinoActor.py', creationflags=subprocess.CREATE_NEW_CONSOLE)
 
     timeData += minDelay
     nextMin = timeData.strftime("%H:%M:%S")
-    userAction3 = userAction(actionName='action3', timeStr=nextMin, runFunc=func4, threadFlg=True)
+    userAction3 = userAction(actionName='action4', timeStr=nextMin, runFunc=func4, threadFlg=True)
     schedule.every().day.at(userAction3.timeStr).do(userAction3.runFunc)
 
     print(schedule.get_jobs())

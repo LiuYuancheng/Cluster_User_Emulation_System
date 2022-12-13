@@ -42,13 +42,12 @@ class dinoActor(object):
         chromeDriverPath = driverPath if driverPath else os.path.join(dirpath, CHROME_DRI)
         self.driver = webdriver.Chrome(executable_path=chromeDriverPath)
         self.replaybutton = (REP_POS[0], REP_POS[1], REP_POS[0]+60, REP_POS[1]+50)
-        (x, y) = DINO_FR_POS
-        self.dinasaurFbox = (x+30, y, x+120, y+2)
+        self.dinasaurFbox = (DINO_FR_POS[0]+30, DINO_FR_POS[1], DINO_FR_POS[0]+120, DINO_FR_POS[1]+2)
         self.playtime = playtime    # set how long you want the actor play.
         self.timerTH = None         # timer to reset or terminate the play.
         self.startT = 0
         self.terminate = False
-        self.resetParm = 0      
+        self.resetParm = 0
 
 #-----------------------------------------------------------------------------
     def restartGame(self):
@@ -105,10 +104,10 @@ class dinoActor(object):
             self.driver.get(GAME_URL)
         except Exception as err:
             print('Ignore some internet not access exception %s' %str(err))
-        time.sleep(3) # wait chrome load  the web
+        time.sleep(3) # Wait chrome load the web.
         pyautogui.press('space')
         time.sleep(2)
-        pyautogui.press('space') # get start
+        pyautogui.press('space') # Get start
         time.sleep(0.1)
         self.timerTH = threading.Timer(10.0, self.timeCount)  
         self.timerTH.start()

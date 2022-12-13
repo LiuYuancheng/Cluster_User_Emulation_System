@@ -1,0 +1,21 @@
+[
+    {   "cmdID": "cmd_1",
+        "console": true,
+        "cmdStr": "ping -n 5 www.google.com.sg",
+        "repeat": 1,
+        "interval": 0.8
+    },
+    {   "cmdID": "cmd_2",
+        "console": false,
+        "cmdStr": "ipconfig",
+        "repeat": 1,
+        "interval": 0.8
+    },
+    {   "cmdID": "cmd_3",
+        "console": false,
+        "cmdStr": "dir C:\\Works",
+        "winShell": true,
+        "repeat": 1,
+        "interval": 0.8
+    }
+] 
