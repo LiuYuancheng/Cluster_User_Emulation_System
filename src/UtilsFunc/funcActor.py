@@ -315,7 +315,7 @@ def testCase(mode):
         time.sleep(0.5)
         keyboard.press_and_release('enter')
         time.sleep(3)
-        password = '618827lyc'
+        password = 
         simuUserType(password)
         time.sleep(0.5)
         keyboard.press_and_release('enter')
