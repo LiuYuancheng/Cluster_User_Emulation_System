@@ -19,6 +19,7 @@ import json
 import subprocess
 import keyboard
 from selenium import webdriver
+import datetime
 
 CHROME_DRI = 'chromedriver.exe'
 
@@ -281,9 +282,123 @@ def testCase(mode):
     elif  mode == 6:
         scpFilePath = "C:\\Works\\NCL\\Project\\Windows_User_Simulator\\src\\UtilsFunc\\pic.png"
         dest = "ncl_intern@gateway.ncl.sg:~/pic.png"
-        password = 'rpfyp@ncl2022'
+        password =  None
         scpFile(scpFilePath, dest, password)
 
+    elif mode == 7:
+        # watch a YouTube video
+        urlActor = webActor()
+        urlitem = {
+            'cmdID': 'YouTube',
+            'url': 'https://www.youtube.com/watch?v=VMebB6hhjW4',
+            'interval': 3,
+        }
+        urlActor.openUrls(urlitem)
+        keyboard.press_and_release('page down')
+        time.sleep(1)
+        keyboard.press_and_release('page up')
+        time.sleep(1)
+        keyboard.press_and_release('space')
+        time.sleep(10)
+        urlActor.closeBrowser()
+
+    elif mode == 8:
+        urlActor = webActor()
+        urlitem = {
+            'cmdID': 'gmail',
+            'url': 'https://mail.google.com/mail/u/0/?tab=rm&ogbl#inbox',
+            'interval': 3,
+        }
+        urlActor.openUrls(urlitem)
+        emailAddress = 'yuancheng@ncl.sg'
+        simuUserType(emailAddress)
+        time.sleep(0.5)
+        keyboard.press_and_release('enter')
+        time.sleep(3)
+        password = '618827lyc'
+        simuUserType(password)
+        time.sleep(0.5)
+        keyboard.press_and_release('enter')
+        # enable the "allow program activity"
+        time.sleep(3)
+        keyboard.press_and_release('tab')
+        time.sleep(1)
+        keyboard.press_and_release('tab')
+        time.sleep(1)
+        keyboard.press_and_release('enter')
+        # pres the down button the check the email
+        time.sleep(0.5)
+        keyboard.press_and_release('down')
+        time.sleep(0.5)
+        keyboard.press_and_release('down')
+
+        urlitem = {
+            'cmdID': 'gmail',
+            'url': 'https://mail.google.com/mail/u/0/#inbox/FMfcgzGrbRXqCZrlVrLrfsXWlpQKSGSK',
+            'interval': 3,
+        }
+        urlActor.openUrls(urlitem)
+        time.sleep(2)
+        time.sleep(0.5)
+        keyboard.press_and_release('page down')
+        time.sleep(0.5)
+        keyboard.press_and_release('page up')
+
+
+        time.sleep(5)
+        urlActor.closeBrowser()
+
+    elif mode == 9:
+        videFile = 'C:\\Works\\NCL\\Project\\Windows_User_Simulator\\src\\UtilsFunc\\Video_2022-12-12_164101.wmv'
+        startFile(videFile)
+        #keyboard.press_and_release('space')
+        time.sleep(15)
+        keyboard.press_and_release('alt+f4')
 
 if __name__ == '__main__':
+    testName = 'Ping and ssh login'
+    print("Time %s testCase1: \n %s" %(datetime.datetime.now().strftime("%H:%M:%S"), testName))
+    testCase(1)
+    time.sleep(5)
+
+    testName = 'Run windows network cmd (dir, ipconfig, ping)'
+    print("Time %s testCase2: \n %s" %(datetime.datetime.now().strftime("%H:%M:%S"), testName))
+    testCase(2)
+    time.sleep(5)
+
+    testName = 'Run windows network cmd from a config file (dir, ipconfig, ssh)'
+    print("Time %s testCase3: \n %s" %(datetime.datetime.now().strftime("%H:%M:%S"), testName))
+    testCase(3)
+    time.sleep(5)
+
+    testName = 'Create and edit a MS-office word doc'
+    print("Time %s testCase4: \n %s" %(datetime.datetime.now().strftime("%H:%M:%S"), testName))
+    testCase(4)
+    time.sleep(5)
+
+    testName = 'Create and edit a MS-office ppt doc'
+    print("Time %s testCase5: \n %s" %(datetime.datetime.now().strftime("%H:%M:%S"), testName))
+    testCase(5)
+    time.sleep(5)
+
+    testName = 'Scp a file to the server  rp_fyp_ctf@gateway.ncl.sg'
+    print("Time %s testCase6: \n %s" %(datetime.datetime.now().strftime("%H:%M:%S"), testName))
     testCase(6)
+    time.sleep(5)
+
+    testName = 'watch Youtube video'
+    print("Time %s testCase7: \n %s" %(datetime.datetime.now().strftime("%H:%M:%S"), testName))
+    testCase(7)
+    time.sleep(5)
+
+    testName = 'check gmail email'
+    print("Time %s testCase8: \n %s" %(datetime.datetime.now().strftime("%H:%M:%S"), testName))
+    testCase(8)
+    time.sleep(5)
+
+    testName = 'watch a local video'
+    print("Time %s testCase9: \n %s" %(datetime.datetime.now().strftime("%H:%M:%S"), testName))
+    testCase(9)
+    time.sleep(5)
+
+    print("All test finished!")
