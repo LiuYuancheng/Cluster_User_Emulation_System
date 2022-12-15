@@ -59,7 +59,7 @@ class dinoActor(object):
         #pyautogui.keyUp('space')
         #pyautogui.keyDown('down')
 
-#------------------ -----------------------------------------------------------
+#-----------------------------------------------------------------------------
     def jump(self):
         # pyautogui.keyUp('down') # releasing the Down Key
         # pressing Space to overcome Bush
@@ -75,7 +75,7 @@ class dinoActor(object):
     def imageGrab(self, box):
         # defining the coordinates of box in front of dinosaur
         # grabbing all the pixels values in form of RGB tuples
-        image = ImageGrab.grab(box )
+        image = ImageGrab.grab(box)
         # converting RGB to Grayscale to make processing easy and result faster
         grayImage = ImageOps.grayscale(image)
         # using numpy to get sum of all grayscale pixels
@@ -127,11 +127,13 @@ class dinoActor(object):
 #-----------------------------------------------------------------------------
 def testCase(mode=0):
     if mode == 1:
-        actor = dinoActor(playtime=30)
+        actor = dinoActor(playtime=40)
         actor.play()
         print("Finish")
     else:
-        pass
+        pass  
 
+#-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 if __name__ == '__main__':
     testCase(mode=1)

@@ -1,61 +1,65 @@
-# reference link: https://schedule.readthedocs.io/en/stable/
-# https://schedule.readthedocs.io/en/stable/
-import os 
-import schedule
-import subprocess
-import threading
+#!/usr/bin/python
+#-----------------------------------------------------------------------------
+# Name:        scheduler.py
+#
+# Purpose:     This module is a script use python <schedule> module to scheduler 
+#              the user's tasks (call different actor module to simulate a normal 
+#              user's daily action).   
+#              <schedule> reference link: https://schedule.readthedocs.io/en/stable/
+#
+# Author:      Yuancheng Liu
+#
+# Version:     v_0.1
+# Created:     2022/12/09
+# Copyright:   n.a
+# License:     n.a
+#-----------------------------------------------------------------------------
 
+# https://schedule.readthedocs.io/en/stable/
+
+import os
 import time
 import datetime
+import threading
+import subprocess
+
+import schedule
+
+import actionGlobal as gv
 
 DIR_PATH = os.path.dirname(__file__)
 print("Current source code location : %s" % DIR_PATH)
 
-# def job():
-#     print("I'm working...")
-
-# schedule.every(10).minutes.do(job)
-# schedule.every().hour.do(job)
-# schedule.every().day.at("10:30").do(job)
-# schedule.every().monday.do(job)
-# schedule.every().wednesday.at("13:15").do(job)
-# schedule.every().minute.at(":17").do(job)
-
-# while True:
-#     schedule.run_pending()
-#     time.sleep(1)
-
-
+#-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 class userAction(object):
     def __init__(self, actionName='', timeStr=None, runFunc=None, threadFlg=False) -> None:
         self.name = actionName
         self.timeStr = timeStr
         self.func = runFunc
         self.threadFlg = threadFlg
-    
+        self._jobthread = None
+
+#-----------------------------------------------------------------------------
     def runFunc(self):
-        print('Start to run job')
+        print('Start to run job: %s' %str(self.name))
         if self.func:
             if self.threadFlg:
-                jobthread = threading.Thread(target=self.func)
-                jobthread.start()
+                self._jobthread = threading.Thread(target=self.func)
+                self._jobthread.start()
             else:
                 self.func()
         else:
-            print('No function is added')
+            print('No function is added.')
 
+#-----------------------------------------------------------------------------
+    def jobThreadJoin(self):
+        """ Join the job thread """
+        if self._jobthread and self._jobthread.isAlive():
+            self._jobthread.join()
 
-class userActionPing(userAction):
-    def __init__(self, pingDict, actionName='', timeStr=None, runFunc=None, threadFlg=False) -> None:
-        super().__init__(actionName, timeStr, runFunc, threadFlg)
-        self.pingList = pingDict['peerList']
-        self.pingInterval = pingDict['interval']   # ping interval between each ping peer. 
-        self.consoleEnable = pingDict['console']
-
-    def run():
-        pass
-
-
+#-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 class actionScheduler(object):
 
     def __init__(self) -> None:
@@ -65,20 +69,14 @@ class actionScheduler(object):
 
     def addAction(self, actionObj):
         if actionObj:
-            self.actionDict[actionObj.name] = actionObj
-
-    def buildPlan(self):
-        for item in self.actionDict:
-            name, action = item
+            #self.actionDict[actionObj.name] = actionObj
+            schedule.every().day.at(actionObj.timeStr).do(actionObj.runFunc)
 
     def startSimulate(self):
         while not self.terminate:
             schedule.run_pending()
             time.sleep(1)
 
-    def run_threaded(job_func):
-        job_thread = threading.Thread(target=job_func)
-        job_thread.start()
 
 
 def testCase(mode):
@@ -97,7 +95,7 @@ def testCase(mode):
     nextMin = timeData.strftime("%H:%M:%S")
     print(nextMin)
     userAction1 = userAction(actionName='action1', timeStr=nextMin, runFunc=func1, threadFlg=False)
-    schedule.every().day.at(userAction1.timeStr).do(userAction1.runFunc)
+    
 
     # Task 1_1: run server windows cmds.
     def func1_1():
