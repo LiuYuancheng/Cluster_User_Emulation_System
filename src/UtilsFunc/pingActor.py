@@ -159,7 +159,8 @@ def testCase(mode =0):
         "202.94.70.56": -1,
         "www.singtel.com.sg": 8, 
         "gov.sg": 6,
-        "BBC.CO.UK" : 5
+        "BBC.CO.UK" : 5,
+        '123.123.123.123': 10
     }
     if mode == 1:
         parallel = False
