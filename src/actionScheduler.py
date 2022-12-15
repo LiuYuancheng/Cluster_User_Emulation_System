@@ -26,6 +26,8 @@ import subprocess
 import schedule
 
 import actionGlobal as gv
+import Log
+import actorFunctions
 
 DIR_PATH = os.path.dirname(__file__)
 print("Current source code location : %s" % DIR_PATH)
@@ -42,15 +44,19 @@ class userAction(object):
 
 #-----------------------------------------------------------------------------
     def runFunc(self):
-        print('Start to run job: %s' %str(self.name))
+        Log.info('Start to run job: %s' %str(self.name))
         if self.func:
-            if self.threadFlg:
-                self._jobthread = threading.Thread(target=self.func)
-                self._jobthread.start()
-            else:
-                self.func()
+            try:
+                if self.threadFlg:
+                    self._jobthread = threading.Thread(target=self.func)
+                    self._jobthread.start()
+                else:
+                    self.func()
+            except Exception as err:
+                Log.error("Run job %s error :" %str(self.name))
+                Log.exception(err)
         else:
-            print('No function is added.')
+            Log.info('No function is added.')
 
 #-----------------------------------------------------------------------------
     def jobThreadJoin(self):
@@ -77,6 +83,39 @@ class actionScheduler(object):
             schedule.run_pending()
             time.sleep(1)
 
+#-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
+def main():
+    gv.iScheduler = actionScheduler()
+    
+    # 09:01 ping the config peers
+    timeStr = "09:01"
+    userAction_0901 = userAction(actionName='09:01_ping', timeStr=timeStr, runFunc=actorFunctions.func_0901, threadFlg=False)
+    gv.iScheduler.addAction(userAction_0901)
+
+    # 09:10 ping all the ip in a range
+    timeStr = "09:10"
+    userAction_0910 = userAction(actionName='09:10_ping', timeStr=timeStr, runFunc=actorFunctions.func_0910, threadFlg=True)
+    gv.iScheduler.addAction(userAction_0910)
+
+    # 09:13 run window newtork cmds (this part will take long time)
+    timeStr = "09:13"
+    userAction_0913 = userAction(actionName='09:13_cmd', timeStr=timeStr, runFunc=actorFunctions.func_0913, threadFlg=True)
+    gv.iScheduler.addAction(userAction_0913)
+
+    # 
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def testCase(mode):
@@ -85,12 +124,7 @@ def testCase(mode):
     minDelay = datetime.timedelta(seconds = 60)
     
     # Task 1: ping
-    def func1():
-        appFolder = 'UtilsFunc'
-        appName = 'pingActor.py'
-        appPath = os.path.join(DIR_PATH, appFolder, appName)
-        cmd = "python %s" %str(appPath)
-        subprocess.call(cmd, creationflags=subprocess.CREATE_NEW_CONSOLE)
+
     timeData+= datetime.timedelta(seconds = 10)
     nextMin = timeData.strftime("%H:%M:%S")
     print(nextMin)
@@ -147,10 +181,11 @@ def testCase(mode):
 
     print(schedule.get_jobs())
 
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+    #while True:
+    #    schedule.run_pending()
+    #    time.sleep(1)
 
 if __name__ == '__main__':
-    testCase(1)
+    #testCase(1)
+    main()
 
