@@ -1,45 +1,52 @@
-User Action Timeline 
+### User Action Timeline 
 
 
 
 Bob is a system technical support officer. He login his Windows server at 8:50 am
 
-| Time     | Action                                                       | action time (testCase setting) |      |
-| -------- | ------------------------------------------------------------ | ------------------------------ | ---- |
-| 9:01 am  | Ping a servers list to check the server's connection. (open console ping the dest one by one, sequential ) | 10 min                         |      |
-| 9:10 am  | Bob runs the ping client program ping 100 servers need to check and record done the result.(run pingClient.py, multi-thread parallel ping) | 10 min                         |      |
-| 9:13 am  | During watching the ping result refresh, bob run server network checking cmd in terminal one by one (ipconfig, Tracert www.google.com.sg , Pathping www.google.com.sg, Getmac, Nslookup www.google.com.sg) | 5 min                          |      |
-| 9:20 am  | Bob ssh to 12 Ubuntu servers and run some cmd  record done the result.(run sshConnector.py do server one by one sequential) | 12min                          |      |
-| 9:32 am  | Bot use "Tree" cmd to search some files.                     | 2 min                          |      |
-| 9:34 am  | Bob scp this searched files to the server.                   | 1min                           |      |
-| 9:35 am  | Bob start a zoom meeting with his colleague to discuss for half hour | 30 min                         |      |
-| 10:05am  | Write down and draw some diagram based on the meeting.       | 8 min                          |      |
-| 10:15am  | Bob search some question in google.(run WebScreenShoter.py do web access and random link click action one by one sequential) | 15 min                         |      |
-| 10:30 am | Bob find what he want, and download the related web's cert, image, js, css,  file.(run WebDownloader.py do the download) | 5 min                          |      |
-| 10:35 am | Bob send this friend some message and image(video) by telegram .(run telegramClient.py do the message sending) | 5 min                          |      |
-| 10:40 am | Bob watch YouTube video for 8 min                            | 8min                           |      |
-| 10:48am  | Bob read checked the email for 2 min                         | 2min                           |      |
-| 10:50 am | Bob Open a word document and write a report.                 | 15 min                         |      |
-| 10:55am  | Bob made one presentation slides.                            | 3 min                          |      |
-| 11:05 am | Bob feel tired and play the google dino game for a short while. | 10 min                         |      |
-| 11:15 am | Bob open the deliveroo.com.sg to search some lunch promotion (run Webattestation.py with the key word setup"sale", 'promotion') | 10min                          |      |
-|          |                                                              |                                |      |
-|          |                                                              |                                |      |
-|          |                                                              |                                |      |
-|          |                                                              |                                |      |
-|          |                                                              |                                |      |
-|          |                                                              |                                |      |
-|          |                                                              |                                |      |
-|          |                                                              |                                |      |
-|          |                                                              |                                |      |
+| Time     | Action                                                       | action time (testCase setting) | current progress |
+| -------- | ------------------------------------------------------------ | ------------------------------ | ---------------- |
+| 9:01 am  | Ping a servers list to check the server's connection. (open console ping the dest one by one, sequential ) | 10 min                         | done             |
+| 9:10 am  | Bob runs the ping client program ping 100 servers need to check and record done the result.(run pingClient.py, multi-thread parallel ping) | 10 min                         | done             |
+| 9:13 am  | During watching the ping result refresh, bob run server network checking cmd in terminal one by one (ipconfig, Tracert www.google.com.sg , Pathping www.google.com.sg, Getmac, Nslookup www.google.com.sg) | 5 min                          | done             |
+| 9:20 am  | Bob ssh to 12 Ubuntu servers and run some cmd  record done the result.(run sshConnector.py do server one by one sequential) | 12min                          | done             |
+| 9:32 am  | Bob use "Tree" cmd to search some files.                     | 2 min                          | done             |
+| 9:35 am  | Bob start a zoom meeting with his colleague to discuss for half hour | 30 min                         | done             |
+| 10:05am  | Write down and draw some diagram based on the meeting.       | 8 min                          |                  |
+| 10:15am  | Bob search some question in google.(run WebScreenShoter.py do web access and random link click action one by one sequential) | 15 min                         |                  |
+| 10:30 am | Bob find what he want, and download the related web's cert, image, js, css,  file.(run WebDownloader.py do the download) | 5 min                          |                  |
+| 10:35 am | Bob send this friend some message and image(video) by telegram .(run telegramClient.py do the message sending) | 5 min                          |                  |
+| 10:40 am | Bob watch YouTube video for 8 min                            | 8min                           |                  |
+| 10:48am  | Bob read checked the email for 2 min                         | 2min                           |                  |
+| 10:50 am | Bob Open a word document and write a report.                 | 15 min                         |                  |
+| 10:55am  | Bob made one presentation slides.                            | 3 min                          |                  |
+| 11:05 am | Bob feel tired and play the google dino game for a short while. | 10 min                         |                  |
+| 11:15 am | Bob open the deliveroo.com.sg to search some lunch promotion (run Webattestation.py with the key word setup"sale", 'promotion') | 10min                          |                  |
+|          |                                                              |                                |                  |
+|          |                                                              |                                |                  |
+|          |                                                              |                                |                  |
+|          |                                                              |                                |                  |
+|          |                                                              |                                |                  |
+|          |                                                              |                                |                  |
+|          |                                                              |                                |                  |
+|          |                                                              |                                |                  |
+|          |                                                              |                                |                  |
 
 
 
-Testcase task schedule:
+### Testcase tasks schedule:
 
-
-
-
+| Action index                     | Action time   | Action detail                                                |
+| -------------------------------- | ------------- | ------------------------------------------------------------ |
+| testCase1: Ping and ssh          | Time 12:30:55 | Do ping and ssh login with Win-Cmd and back ground           |
+| testCase2: Window basic cmd      | Time 12:31:09 | Run Windows network cmd (ipconfig, ping)                     |
+| testCase3: Window basic cmd      | Time 12:31:09 | Load all the commands from config file and run them paralled (dir, ipconfig, ping) |
+| testCase4:MS-Office word         | Time 12:31:32 | Create a MS-office word docx and edit. Then save to specific dir. |
+| testCase5: MS-Office power point | Time 12:32:03 | Create a MS-office testCase5: MS-Office power point pptx and edit. Then save to specific dir. |
+| testCase6: SCP                   | Time 12:33:05 | scp file to a linux server                                   |
+| testCase7: watch YouTube         | Time 12:33:16 | Watch a web video                                            |
+| testCase8: check gail            | Time 12:33:42 | Login gmail with a account and read an "unread" email.       |
+| testVase9: local file/app open   | Time 12:34:24 | Open a local video.                                          |
 
 
 

@@ -84,10 +84,7 @@ class actionScheduler(object):
             time.sleep(1)
 
 #-----------------------------------------------------------------------------
-#-----------------------------------------------------------------------------
-def main():
-    gv.iScheduler = actionScheduler()
-    
+def scheduleBobActions():
     # 09:01 ping the config peers
     timeStr = "09:01"
     userAction_0901 = userAction(actionName='09:01_ping', timeStr=timeStr, runFunc=actorFunctions.func_0901, threadFlg=False)
@@ -103,7 +100,32 @@ def main():
     userAction_0913 = userAction(actionName='09:13_cmd', timeStr=timeStr, runFunc=actorFunctions.func_0913, threadFlg=True)
     gv.iScheduler.addAction(userAction_0913)
 
-    # 
+    # 09:20 ssh to the ncl gateway and run commands
+    timeStr = "09:20"
+    userAction_0920 = userAction(actionName='09:20_ssh', timeStr=timeStr, runFunc=actorFunctions.func_0920, threadFlg=False)
+    gv.iScheduler.addAction(userAction_0920)
+
+    # 09:32 do file searchinng system dir-structure check
+    timeStr = "09:32"
+    userAction_0932 = userAction(actionName='09:32_fileOp', timeStr=timeStr, runFunc=actorFunctions.func_0932, threadFlg=False)
+    gv.iScheduler.addAction(userAction_0932)
+
+    # 09:35 do zoom meeting.
+    timeStr = "09:35"
+    userAction_0935 = userAction(actionName='09:35_zoom', timeStr=timeStr, runFunc=actorFunctions.func_0935, threadFlg=False)
+    gv.iScheduler.addAction(userAction_0935)
+
+
+
+
+#-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
+def main(actorName):
+    gv.iScheduler = actionScheduler()
+    
+    if actorName == 'Bob':
+        scheduleBobActions()
+
 
 
 
@@ -187,5 +209,5 @@ def testCase(mode):
 
 if __name__ == '__main__':
     #testCase(1)
-    main()
+    main('Bob')
 
