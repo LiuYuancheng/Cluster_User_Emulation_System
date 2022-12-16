@@ -20,7 +20,7 @@ Bob is a system technical support officer. He login his Windows server at 8:50 a
 | 10:48am  | Bob read checked the email for 2 min                         | 2min                           | x : use YC's telegram password,          |
 | 10:50 am | Bob Open a word document and write a report.                 | 25 min                         | Done                                     |
 | 11:25am  | Bob made one presentation slides.                            | 13 min                         | Done                                     |
-| 11:35 am | Bob feel tired and play the google dino game for a short while. | 10 min                         |                                          |
+| 11:35 am | Bob feel tired and play the google dino game for a short while. | 10 min                         | Done                                     |
 | 12:00 am | Bob open the deliveroo.com.sg to search some lunch promotion (run Webattestation.py with the key word setup"sale", 'promotion') | 10min                          | x : need to use YC's deliveroo password, |
 |          |                                                              |                                |                                          |
 |          |                                                              |                                |                                          |
