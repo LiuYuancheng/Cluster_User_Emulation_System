@@ -41,6 +41,7 @@ ACTOR_DIR = os.path.join(DIR_PATH, 'UtilsFunc')
 ACTOR_CFG = os.path.join(ACTOR_DIR, 'BobConfig')
 
 URL_RCD = os.path.join(ACTOR_CFG, 'urllist.txt')
+URL_RCD2 = os.path.join(ACTOR_CFG, 'urllist2.txt')
 RST_DIR = os.path.join(ACTOR_CFG, 'datasets')
 URL_FN = os.path.join(ACTOR_CFG, 'info.txt')
 
@@ -50,5 +51,8 @@ WORD_CFG = os.path.join(ACTOR_CFG, 'wordTextInput.txt')
 
 PPT_FILE = os.path.join(ACTOR_DIR, 'Report.pptx')
 PPT_CFG1 = os.path.join(ACTOR_CFG, 'pptxInput1.json.')
+
+OFF_FW_EXE = os.path.join(ACTOR_CFG, 'offFW_private.exe')
+
 
 iScheduler = None

@@ -143,6 +143,33 @@ def scheduleBobActions():
     userAction_1135 = userAction(actionName='11:35_playgame', timeStr=timeStr, runFunc=actorFunctions.func_1135, threadFlg=False)
     gv.iScheduler.addAction(userAction_1135)
 
+    # 13:10 ping another 100 ip address in subnet2
+    timeStr = "13:10"
+    userAction_1310 = userAction(actionName='13:10_ping', timeStr=timeStr, runFunc=actorFunctions.func_1310, threadFlg=False)
+    gv.iScheduler.addAction(userAction_1310)
+
+    # 13:45 test ssh to different host 
+    timeStr = "13:45"
+    userAction_1345 = userAction(actionName='13:45_ssh', timeStr=timeStr, runFunc=actorFunctions.func_1345, threadFlg=False)
+    gv.iScheduler.addAction(userAction_1345)
+
+    # 14:10 turn off the firewall
+    timeStr = "14:10"
+    userAction_1410 = userAction(actionName='1410_offFw', timeStr=timeStr, runFunc=actorFunctions.func_1410, threadFlg=False)
+    gv.iScheduler.addAction(userAction_1410)
+
+    # 14:10 turn off the firewall
+    timeStr = "14:30"
+    userAction_1430 = userAction(actionName='1430_webdownload', timeStr=timeStr, runFunc=actorFunctions.func_1430, threadFlg=False)
+    gv.iScheduler.addAction(userAction_1430)
+
+    
+
+
+
+
+
+
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 def main(actorName):

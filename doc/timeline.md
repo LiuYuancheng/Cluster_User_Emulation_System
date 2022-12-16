@@ -4,33 +4,33 @@
 
 Bob is a system technical support officer. He login his Windows server at 8:50 am
 
-| Time     | Action                                                       | action time (testCase setting) | current progress                         |
-| -------- | ------------------------------------------------------------ | ------------------------------ | ---------------------------------------- |
-| 9:01 am  | Ping a servers list to check the server's connection. (open console ping the dest one by one, sequential ) | 10 min                         | done                                     |
-| 9:10 am  | Bob runs the ping client program ping 100 servers need to check and record done the result.(run pingClient.py, multi-thread parallel ping) | 10 min                         | done                                     |
-| 9:13 am  | During watching the ping result refresh, bob run server network checking cmd in terminal one by one (ipconfig, Tracert www.google.com.sg , Pathping www.google.com.sg, Getmac, Nslookup www.google.com.sg) | 5 min                          | done                                     |
-| 9:20 am  | Bob ssh to 12 Ubuntu servers and run some cmd  record done the result.(run sshConnector.py do server one by one sequential) | 12min                          | done                                     |
-| 9:32 am  | Bob use "Tree" cmd to search some files.                     | 2 min                          | done                                     |
-| 9:35 am  | Bob start a zoom meeting with his colleague to discuss for half hour | 30 min                         | done                                     |
-| 10:05am  | Write down and draw some diagram based on the meeting.       | 8 min                          | X: need the screen to be 1080P           |
-| 10:15am  | Bob search some question in google.(run WebScreenShoter.py do web access and random link click action one by one sequential) | 15 min                         | Done                                     |
-| 10:30 am | Bob find what he want, and download the related web's cert, image, js, css,  file.(run WebDownloader.py do the download) | 5 min                          | Done                                     |
-| 10:35 am | Bob send this friend some message and image(video) by telegram .(run telegramClient.py do the message sending) | 5 min                          | x : use YC's telegram password,          |
-| 10:40 am | Bob watch YouTube video for 30 min                           | 30min                          | Done                                     |
-| 10:48am  | Bob read checked the email for 2 min                         | 2min                           | x : use YC's telegram password,          |
-| 10:50 am | Bob Open a word document and write a report.                 | 25 min                         | Done                                     |
-| 11:25am  | Bob made one presentation slides.                            | 13 min                         | Done                                     |
-| 11:35 am | Bob feel tired and play the google dino game for a short while. | 10 min                         | Done                                     |
-| 12:00 am | Bob open the deliveroo.com.sg to search some lunch promotion (run Webattestation.py with the key word setup"sale", 'promotion') | 10min                          | x : need to use YC's deliveroo password, |
-|          |                                                              |                                |                                          |
-|          |                                                              |                                |                                          |
-|          |                                                              |                                |                                          |
-|          |                                                              |                                |                                          |
-|          |                                                              |                                |                                          |
-|          |                                                              |                                |                                          |
-|          |                                                              |                                |                                          |
-|          |                                                              |                                |                                          |
-|          |                                                              |                                |                                          |
+| Time     | Action                                                       | action time (testCase setting) | current progress                |
+| -------- | ------------------------------------------------------------ | ------------------------------ | ------------------------------- |
+| 9:01 am  | Ping a servers list to check the server's connection. (open console ping the dest one by one, sequential ) | 10 min                         | done                            |
+| 9:10 am  | Bob runs the ping client program ping 100 servers need to check and record done the result.(run pingClient.py, multi-thread parallel ping) | 10 min                         | done                            |
+| 9:13 am  | During watching the ping result refresh, bob run server network checking cmd in terminal one by one (ipconfig, Tracert www.google.com.sg , Pathping www.google.com.sg, Getmac, Nslookup www.google.com.sg) | 5 min                          | done                            |
+| 9:20 am  | Bob ssh to 12 Ubuntu servers and run some cmd  record done the result.(run sshConnector.py do server one by one sequential) | 12min                          | done                            |
+| 9:32 am  | Bob use "Tree" cmd to search some files.                     | 2 min                          | done                            |
+| 9:35 am  | Bob start a zoom meeting with his colleague to discuss for half hour | 30 min                         | done                            |
+| 10:05am  | Write down and draw some diagram based on the meeting.       | 8 min                          | X: need the screen to be 1080P  |
+| 10:15am  | Bob search some question in google.(run WebScreenShoter.py do web access and random link click action one by one sequential) | 15 min                         | Done                            |
+| 10:30 am | Bob find what he want, and download the related web's cert, image, js, css,  file.(run WebDownloader.py do the download) | 5 min                          | Done                            |
+| 10:35 am | Bob send this friend some message and image(video) by telegram .(run telegramClient.py do the message sending) | 5 min                          | x : use YC's telegram password, |
+| 10:40 am | Bob watch YouTube video for 30 min                           | 30min                          | Done                            |
+| 10:48am  | Bob read checked the email for 2 min                         | 2min                           | x : use YC's telegram password, |
+| 10:50 am | Bob Open a word document and write a report.                 | 25 min                         | Done                            |
+| 11:25am  | Bob made one presentation slides.                            | 13 min                         | Done                            |
+| 11:35 am | Bob feel tired and play the google dino game for a short while. | 10 min                         | Done                            |
+| 12:00 am | Bob went for lunch                                           | 60min                          |                                 |
+| 13:10    | Bob ping 100 random address  in the subnet 192.168.56.0/24 to check the connection. | 30 min                         | Done                            |
+| 13:45    | Bob ssh to 10 random host to run the cmd in the subnet 192.168.57.0/24 | 20 min                         | Done                            |
+| 14:10    | Bob turn off his private firewall for 30min                  | 1min                           | Done                            |
+|          |                                                              |                                |                                 |
+|          |                                                              |                                |                                 |
+|          |                                                              |                                |                                 |
+|          |                                                              |                                |                                 |
+|          |                                                              |                                |                                 |
+|          |                                                              |                                |                                 |
 
 
 
@@ -45,7 +45,7 @@ Bob is a system technical support officer. He login his Windows server at 8:50 a
 | testCase5: MS-Office power point | Time 12:32:03 | Create a MS-office testCase5: MS-Office power point pptx and edit. Then save to specific dir. |
 | testCase6: SCP                   | Time 12:33:05 | scp file to a linux server                                   |
 | testCase7: watch YouTube         | Time 12:33:16 | Watch a web video                                            |
-| testCase8: check gail            | Time 12:33:42 | Login gmail with a account and read an "unread" email.       |
+| testCase8: check gmail           | Time 12:33:42 | Login gmail with a account and read an "unread" email.       |
 | testVase9: local file/app open   | Time 12:34:24 | Open a local video.                                          |
 
 

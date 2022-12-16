@@ -37,7 +37,7 @@ def func_0910():
     # ping every ip in a range one by one 
     parallel = False
     pingPrefix = '192.168.55.'
-    ipRange = (1, 224)
+    ipRange = (1, 24)
     showConsole = False
     pinDict= {}
     for i in range(ipRange[0], ipRange[1]):
@@ -218,8 +218,89 @@ def func_1135():
     actor.play()
 
 #-----------------------------------------------------------------------------
+def func_1310():
+    # ping every ip in a range one by one 
+    parallel = False
+    pingPrefix = '192.168.56.'
+    ipRange = (10, 224)
+    showConsole = True
+    pinDict= {}
+    for i in range(100):
+        ipAddr = randint(ipRange[0], ipRange[1])
+        pinDict[pingPrefix+str(ipAddr)] = randint(5,10)
+    actor = pingActor.pingActor(pinDict, parallel=parallel, Log=Log, showConsole=showConsole)
+    result = actor.runPing()
+    print(result)
+
+#-----------------------------------------------------------------------------
+def func_1345():
+    # ping every ip in a range one by one 
+    parallel = False
+    pingPrefix = '192.168.57.'
+    ipRange = (10, 224)
+    for i in range(10):
+        def test1RplyHandleFun(replyStr):
+            print("Got reply: %s" %str(replyStr))
+            #if 'rp_fyp_ctf' in replyStr['reply']:
+            #    print('Test1 (mainhost): Pass')
+            #elif 'ncl' in replyStr:
+            #    print('Test1 (jumphost): Pass')
+            #else: 
+            #    print('Test1: Fail')
+        # put the cmd you want to run here.
+        cmdList = ['pwd', 'who', 'ip a', 'ifconfig', 'ls -l', 'traceroute']
+        host = pingPrefix+str(randint(ipRange[0], ipRange[1]))
+        user = 'rp_fyp_ctf'
+        password = 'not exist'
+        try:
+            mainHost = SSHconnector.sshConnector(None, host, user, password)
+            for cmd in cmdList:
+                mainHost.addCmd(cmd, test1RplyHandleFun)
+            mainHost.InitTunnel()
+            mainHost.runCmd(interval=1)
+            mainHost.close()
+        except Exception as err:
+            print('The ssh host [%s] is not access able' %str(host))
+            print('Error: %s' %str(err))
+            time.sleep(10)
+
+#-----------------------------------------------------------------------------
+def func_1410():
+    # Run the fw exe file.
+    os.startfile(gv.OFF_FW_EXE)
+    time.sleep(20)
+    keyboard.press_and_release('enter')
+
+#-----------------------------------------------------------------------------
+def func_1430():
+    soup = webDownload.urlDownloader(imgFlg=True, linkFlg=True, scriptFlg=True, caFlg=True)
+    count = failCount= 0
+    if not os.path.exists(gv.RST_DIR): os.mkdir(gv.RST_DIR)
+    soup.setResutlDir(gv.RST_DIR)
+    print("> load url record file %s" %gv.URL_RCD2)
+    with open(gv.URL_RCD2) as fp:
+        urllines = fp.readlines()
+        for line in urllines:
+            if line[0] in ['#', '', '\n', '\r', '\t']: continue # jump comments/empty lines.
+            count += 1
+            print("> Process URL {}: {}".format(count, line.strip()))
+            if ('http' in line):
+                line = line.strip()
+                domain = str(urlparse(line).netloc)
+                folderName = "_".join((str(count), domain))
+                result = soup.savePage(line, folderName)
+                # soup.savePage('https://www.google.com', 'www_google_com')
+                if result: 
+                    print('Finished.')
+                else:
+                    failCount +=1
+    print("\n> Download result: download %s url, %s fail" %(str(count), str(failCount)))
+
+
+
+#-----------------------------------------------------------------------------
 def testCase(mode):
-    func_1135()
+    func_1430()
 
 if __name__ == '__main__':
     testCase(1)
