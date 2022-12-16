@@ -150,6 +150,43 @@ def simuUserType(typeinStr):
         time.sleep(0.2)
 
 #-----------------------------------------------------------------------------
+def msPPTedit(filePath, actionDict):
+    if os.path.exists(filePath):
+        # copy the needed picture in clipboard        
+        if 'picName'in  actionDict.keys() and os.path.exists(actionDict['picName']):
+            selectFile(actionDict['picName'])
+            keyboard.press_and_release('ctrl+c')
+            time.sleep(actionDict['interval'])
+            keyboard.press_and_release('alt+f4')
+            time.sleep(actionDict['interval'])
+        startFile(filePath)
+        time.sleep(actionDict['interval']*3) # wait office start the word doc.
+        keyboard.press_and_release('ctrl+shift+m')
+        time.sleep(0.5)
+        keyboard.press_and_release('enter')
+        time.sleep(0.5)
+        # Edit the title:
+        simuUserType(actionDict['title'])
+        time.sleep(int(actionDict['interval']))
+        keyboard.press_and_release('esc')
+        keyboard.press_and_release('tab')
+        time.sleep(actionDict['interval'])
+        simuUserType(actionDict['body'])
+        time.sleep(actionDict['interval'])
+        # close and save the file
+        keyboard.press_and_release('ctrl+v')
+        time.sleep(2)
+        # close the word doc.
+        keyboard.press_and_release('alt+f4')
+        time.sleep(1)
+        keyboard.press_and_release('enter')
+        time.sleep(1)
+        # close the ppt folder
+        keyboard.press_and_release('alt+f4')
+    else:
+        print("The file %s need to be editted is not exist." %str(filePath))
+
+#-----------------------------------------------------------------------------
 class webActor(object):
 
     def __init__(self, driverPath=None) -> None:

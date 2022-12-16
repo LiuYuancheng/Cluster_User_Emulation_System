@@ -1,47 +1,48 @@
 [
-    {   "cmdID": "cmd_1",
+    {
+        "cmdID": "cmd_1",
         "console": true,
         "cmdStr": "ping -n 5 www.google.com.sg",
         "repeat": 1,
         "interval": 0.8
     },
-    
-    {   "cmdID": "cmd_2",
+    {
+        "cmdID": "cmd_2",
         "console": false,
         "cmdStr": "ipconfig",
         "repeat": 1,
         "interval": 0.8
     },
-    
-    {   "cmdID": "cmd_3",
+    {
+        "cmdID": "cmd_3",
         "console": true,
         "cmdStr": "Tracert www.google.com.sg",
         "winShell": false,
         "repeat": 1,
         "interval": 0.8
     },
-    
-    {   "cmdID": "cmd_4",
+    {
+        "cmdID": "cmd_4",
         "console": true,
         "cmdStr": "Pathping www.google.com.sg",
         "winShell": false,
         "repeat": 1,
         "interval": 0.8
     },
-
-    {   "cmdID": "cmd_5",
-    "console": true,
-    "cmdStr": "Getmac",
-    "winShell": false,
-    "repeat": 1,
-    "interval": 0.8
+    {
+        "cmdID": "cmd_5",
+        "console": true,
+        "cmdStr": "Getmac",
+        "winShell": false,
+        "repeat": 1,
+        "interval": 0.8
     },
-
-    {   "cmdID": "cmd_6",
-    "console": true,
-    "cmdStr": "Nslookup www.google.com.sg",
-    "winShell": false,
-    "repeat": 1,
-    "interval": 0.8
+    {
+        "cmdID": "cmd_6",
+        "console": true,
+        "cmdStr": "Nslookup www.google.com.sg",
+        "winShell": false,
+        "repeat": 1,
+        "interval": 0.8
     }
-] 
+]

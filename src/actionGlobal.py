@@ -48,5 +48,7 @@ YOUTUBE_CFG = os.path.join(ACTOR_CFG, 'youTubeList.txt')
 WORD_FILE = os.path.join(ACTOR_DIR, 'Report.docx')
 WORD_CFG = os.path.join(ACTOR_CFG, 'wordTextInput.txt')
 
+PPT_FILE = os.path.join(ACTOR_DIR, 'Report.pptx')
+PPT_CFG1 = os.path.join(ACTOR_CFG, 'pptxInput1.json.')
 
 iScheduler = None

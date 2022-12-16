@@ -26,8 +26,8 @@ import subprocess
 import schedule
 
 import actionGlobal as gv
-import Log
 import actorFunctions
+import Log
 
 DIR_PATH = os.path.dirname(__file__)
 print("Current source code location : %s" % DIR_PATH)
@@ -79,6 +79,9 @@ class actionScheduler(object):
             schedule.every().day.at(actionObj.timeStr).do(actionObj.runFunc)
 
     def startSimulate(self):
+        for job in schedule.get_jobs():
+            print(job.__str__)
+       
         while not self.terminate:
             schedule.run_pending()
             time.sleep(1)
@@ -125,13 +128,20 @@ def scheduleBobActions():
     userAction_1040 = userAction(actionName='10:45_Youtube', timeStr=timeStr, runFunc=actorFunctions.func_1040, threadFlg=False)
     gv.iScheduler.addAction(userAction_1040)
 
-    # 10:50 editword doc
+    # 10:50 edit word doc
     timeStr = "10:50"
     userAction_1050 = userAction(actionName='10:50_OfficeWord', timeStr=timeStr, runFunc=actorFunctions.func_1050, threadFlg=False)
     gv.iScheduler.addAction(userAction_1050)
 
+    # 11:25 edit word doc
+    timeStr = "11:25"
+    userAction_1125 = userAction(actionName='11:25_OfficePPT', timeStr=timeStr, runFunc=actorFunctions.func_1125, threadFlg=False)
+    gv.iScheduler.addAction(userAction_1125)
 
-
+    # 11:35 playgame
+    timeStr = "11:35"
+    userAction_1135 = userAction(actionName='11:35_playgame', timeStr=timeStr, runFunc=actorFunctions.func_1135, threadFlg=False)
+    gv.iScheduler.addAction(userAction_1135)
 
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
@@ -140,18 +150,7 @@ def main(actorName):
     
     if actorName == 'Bob':
         scheduleBobActions()
-
-
-
-
-
-
-
-
-
-
-
-
+        gv.iScheduler.startSimulate()
 
 
 

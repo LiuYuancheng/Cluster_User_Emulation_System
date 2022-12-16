@@ -11,11 +11,12 @@
 #-----------------------------------------------------------------------------
 import os
 import time
+import json
 from random import randint
 import keyboard
 import actionGlobal as gv
 from urllib.parse import urljoin, urlparse
-from UtilsFunc import pingActor, funcActor, zoomActor, webDownload
+from UtilsFunc import pingActor, funcActor, zoomActor, webDownload, dinoActor
 
 import Log
 import SSHconnector
@@ -194,14 +195,31 @@ def func_1050():
     except:
         print("No input file config!")
 
+#-----------------------------------------------------------------------------
+def func_1125():
+    # Edit the ppt file
+    try:
+        pptConfig = gv.PPT_CFG1 # you can build your own config file.
+        with open(pptConfig) as fp:
+            actions = json.load(fp)
+            for action in actions:
+                if 'picName' in action.keys():
+                    action['picName'] = os.path.join(gv.ACTOR_CFG, action['picName'])
+                funcActor.msPPTedit(gv.PPT_FILE, action)
+    except Exception as err:
+        print("The pptx config file is not exist.")
+        print("error: %s" %str(err))
 
-
-
-
+#-----------------------------------------------------------------------------
+def func_1135():
+    # play the game
+    timeInterval = 20
+    actor = dinoActor.dinoActor(playtime=60*timeInterval)
+    actor.play()
 
 #-----------------------------------------------------------------------------
 def testCase(mode):
-    func_1050()
+    func_1135()
 
 if __name__ == '__main__':
     testCase(1)
