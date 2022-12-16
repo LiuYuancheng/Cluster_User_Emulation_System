@@ -12,13 +12,13 @@
 import os
 import time
 from random import randint
+import keyboard
 import actionGlobal as gv
 from urllib.parse import urljoin, urlparse
 from UtilsFunc import pingActor, funcActor, zoomActor, webDownload
 
 import Log
 import SSHconnector
-
 
 PORT = 443 # port to download the server certificate most server use 443.
 
@@ -145,10 +145,63 @@ def func_1015():
                     failCount +=1
     print("\n> Download result: download %s url, %s fail" %(str(count), str(failCount)))
 
+#-----------------------------------------------------------------------------
+def func_1040():
+    # watch youTube video 
+    watchActor = funcActor.webActor()
+    count = failCount= 0
+    watchPeriod = 5
+    print("> load youTube url record file %s" %gv.YOUTUBE_CFG)
+    with open(gv.YOUTUBE_CFG) as fp:
+        urllines = fp.readlines()
+        for line in urllines:
+            if line[0] in ['#', '', '\n', '\r', '\t']: continue # jump comments/empty lines.
+            count += 1
+            print("> Process URL {}: {}".format(count, line.strip()))
+            if ('http' in line):
+                line = line.strip()
+                urlitem = {
+                    'cmdID': 'YouTube',
+                    'url': line,
+                    'interval': 3,
+                }
+                watchActor.openUrls(urlitem)
+                keyboard.press_and_release('page down')
+                time.sleep(2)
+                keyboard.press_and_release('page up')
+                time.sleep(2)
+                keyboard.press_and_release('space')
+                time.sleep(60*watchPeriod)
+
+    watchActor.closeBrowser()
+
+#-----------------------------------------------------------------------------
+def func_1050():
+    # Open and edit the word doc.
+    funcActor.startFile(gv.WORD_FILE)
+    time.sleep(3) # wait office start the word doc.
+    try:
+        with open(gv.WORD_CFG) as fp:
+            textLine = fp.readlines()
+            for line in textLine:
+                funcActor.simuUserType(line)
+        # close and save the file.
+        time.sleep(1)
+        keyboard.press_and_release('alt+f4')
+        time.sleep(1)
+        keyboard.press_and_release('enter')
+
+    except:
+        print("No input file config!")
+
+
+
+
+
 
 #-----------------------------------------------------------------------------
 def testCase(mode):
-    func_1015()
+    func_1050()
 
 if __name__ == '__main__':
     testCase(1)

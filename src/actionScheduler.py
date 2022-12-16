@@ -115,6 +115,21 @@ def scheduleBobActions():
     userAction_0935 = userAction(actionName='09:35_zoom', timeStr=timeStr, runFunc=actorFunctions.func_0935, threadFlg=False)
     gv.iScheduler.addAction(userAction_0935)
 
+    # 10:15 download cert, image, css file , js file from a list of webs.
+    timeStr = "10:15"
+    userAction_1015 = userAction(actionName='10:15_downloadWeb', timeStr=timeStr, runFunc=actorFunctions.func_1015, threadFlg=True)
+    gv.iScheduler.addAction(userAction_1015)
+
+    # 10:40 watch some youTube video
+    timeStr = "10:40"
+    userAction_1040 = userAction(actionName='10:45_Youtube', timeStr=timeStr, runFunc=actorFunctions.func_1040, threadFlg=False)
+    gv.iScheduler.addAction(userAction_1040)
+
+    # 10:50 editword doc
+    timeStr = "10:50"
+    userAction_1050 = userAction(actionName='10:50_OfficeWord', timeStr=timeStr, runFunc=actorFunctions.func_1050, threadFlg=False)
+    gv.iScheduler.addAction(userAction_1050)
+
 
 
 
