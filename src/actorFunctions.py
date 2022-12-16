@@ -10,16 +10,21 @@
 # License:     
 #-----------------------------------------------------------------------------
 import os
+import glob
 import time
 import json
+import random
 from random import randint
 import keyboard
+import string
 import actionGlobal as gv
 from urllib.parse import urljoin, urlparse
 from UtilsFunc import pingActor, funcActor, zoomActor, webDownload, dinoActor
 
 import Log
 import SSHconnector
+import udpCom
+
 
 PORT = 443 # port to download the server certificate most server use 443.
 
@@ -296,11 +301,113 @@ def func_1430():
                     failCount +=1
     print("\n> Download result: download %s url, %s fail" %(str(count), str(failCount)))
 
+#-----------------------------------------------------------------------------
+def getRandomStr(length):
+    # With combination of lower and upper case
+    result_str = ''.join(random.choice(string.ascii_letters) for i in range(length))
+    return result_str
 
+#-----------------------------------------------------------------------------
+def func_1450():
+    pingPrefix = '192.168.58.'
+    ipRange = (10, 224)
+    portRange = (100, 8080) 
+    for i in range(100):
+        ipAddr = pingPrefix+str(randint(ipRange[0], ipRange[1]))
+        udpPort = randint(portRange[0], portRange[1])
+        client = udpCom.udpClient((ipAddr, udpPort))
+        for i in range(20):
+            msg = getRandomStr(400)
+            try:
+                resp = client.sendMsg(msg, resp=False)
+                print('Send message to %s'%str(ipAddr))
+                print('msg: %s' %str(msg))
+                #print(" - Server resp: %s" % str(resp))
+                time.sleep(0.5)
+            except Exception as err:
+                print('Error: %s' %str(err))
+
+#-----------------------------------------------------------------------------
+def func_1515():
+    # Edit the ppt file
+    try:
+        pptConfig = gv.PPT_CFG2 # you can build your own config file.
+        with open(pptConfig) as fp:
+            actions = json.load(fp)
+            for action in actions:
+                if 'picName' in action.keys():
+                    action['picName'] = os.path.join(gv.ACTOR_CFG, action['picName'])
+                funcActor.msPPTedit(gv.PPT_FILE, action)
+    except Exception as err:
+        print("The pptx config file is not exist.")
+        print("error: %s" %str(err))
+
+#-----------------------------------------------------------------------------
+def func_1520():
+    # play the game
+    timeInterval = 10
+    actor = dinoActor.dinoActor(playtime=60*timeInterval)
+    actor.play()
+
+#-----------------------------------------------------------------------------
+def func_1520():
+    # play the game
+    timeInterval = 10
+    actor = dinoActor.dinoActor(playtime=60*timeInterval)
+    actor.play()
+
+#-----------------------------------------------------------------------------
+def func_1555():
+    # Edit the ppt file
+    try:
+        pptConfig = gv.PPT_CFG3 # you can build your own config file.
+        with open(pptConfig) as fp:
+            actions = json.load(fp)
+            for action in actions:
+                if 'picName' in action.keys():
+                    action['picName'] = os.path.join(gv.ACTOR_CFG, action['picName'])
+                funcActor.msPPTedit(gv.PPT_FILE, action)
+    except Exception as err:
+        print("The pptx config file is not exist.")
+        print("error: %s" %str(err))
+
+#-----------------------------------------------------------------------------
+def func_1600():
+    videoFile = os.path.join(gv.ACTOR_DIR, 'Video_2022-12-12_164101.wmv')
+    funcActor.startFile(videoFile)
+    watchTime = 20
+    #keyboard.press_and_release('space')
+    time.sleep(60*watchTime)
+    keyboard.press_and_release('alt+f4')
+
+#-----------------------------------------------------------------------------
+def func_1635():
+
+    os.chdir(gv.ACTOR_CFG)
+    for file in glob.glob("*.png"):
+        filePath = os.path.join(gv.ACTOR_CFG, file)
+        funcActor.startFile(filePath)
+        time.sleep(1)
+        keyboard.press_and_release("alt+f4")
+
+#-----------------------------------------------------------------------------
+def func_1725():
+    # Edit the ppt file
+    try:
+        pptConfig = gv.PPT_CFG4 # you can build your own config file.
+        with open(pptConfig) as fp:
+            actions = json.load(fp)
+            for action in actions:
+                if 'picName' in action.keys():
+                    action['picName'] = os.path.join(gv.ACTOR_CFG, action['picName'])
+                funcActor.msPPTedit(gv.PPT_FILE, action)
+    except Exception as err:
+        print("The pptx config file is not exist.")
+        print("error: %s" %str(err))
 
 #-----------------------------------------------------------------------------
 def testCase(mode):
-    func_1430()
+    func_1725()
 
 if __name__ == '__main__':
     testCase(1)

@@ -155,18 +155,63 @@ def scheduleBobActions():
 
     # 14:10 turn off the firewall
     timeStr = "14:10"
-    userAction_1410 = userAction(actionName='1410_offFw', timeStr=timeStr, runFunc=actorFunctions.func_1410, threadFlg=False)
+    userAction_1410 = userAction(actionName='14:10_offFw', timeStr=timeStr, runFunc=actorFunctions.func_1410, threadFlg=False)
     gv.iScheduler.addAction(userAction_1410)
 
-    # 14:10 turn off the firewall
+    # 14:10 download some thing from webs
     timeStr = "14:30"
-    userAction_1430 = userAction(actionName='1430_webdownload', timeStr=timeStr, runFunc=actorFunctions.func_1430, threadFlg=False)
+    userAction_1430 = userAction(actionName='14:30_webdownload', timeStr=timeStr, runFunc=actorFunctions.func_1430, threadFlg=False)
     gv.iScheduler.addAction(userAction_1430)
 
-    
+    # 14:50 send message/file by UDP
+    timeStr = "14:50"
+    userAction_1450 = userAction(actionName='14:50_UDP communication', timeStr=timeStr, runFunc=actorFunctions.func_1450, threadFlg=False)
+    gv.iScheduler.addAction(userAction_1450)
 
+    # 15:15 edit ppt
+    timeStr = "15:15"
+    userAction_1515 = userAction(actionName='15:15_MS-PPT_edit', timeStr=timeStr, runFunc=actorFunctions.func_1515, threadFlg=False)
+    gv.iScheduler.addAction(userAction_1515)
 
+    # 15:20 play game
+    timeStr = "15:20"
+    userAction_1520 = userAction(actionName='playgame', timeStr=timeStr, runFunc=actorFunctions.func_1520, threadFlg=False)
+    gv.iScheduler.addAction(userAction_1520)
 
+    # 15:40 run network cmds
+    timeStr = "15:40"
+    userAction_1540 = userAction(actionName='check network', timeStr=timeStr, runFunc=actorFunctions.func_0913, threadFlg=False)
+    gv.iScheduler.addAction(userAction_1540)
+
+    # 15:55 edit ppt
+    timeStr = "15:55"
+    userAction_1555 = userAction(actionName='15:55_MS-PPT_edit', timeStr=timeStr, runFunc=actorFunctions.func_1555, threadFlg=False)
+    gv.iScheduler.addAction(userAction_1555)
+
+    # 16:00 watch video and listen music 
+    timeStr = "16:00"
+    userAction_1600 = userAction(actionName='16:00_watch video', timeStr=timeStr, runFunc=actorFunctions.func_1600, threadFlg=False)
+    gv.iScheduler.addAction(userAction_1600)
+
+    # 16:40 check and open pic
+    timeStr = "16:35"
+    userAction_1635 = userAction(actionName='16:00_check pic', timeStr=timeStr, runFunc=actorFunctions.func_1635, threadFlg=False)
+    gv.iScheduler.addAction(userAction_1635)
+
+    # 17:00 check and open pic
+    timeStr = "17:00"
+    userAction_1700 = userAction(actionName='17:00_UDP communication', timeStr=timeStr, runFunc=actorFunctions.func_1450, threadFlg=False)
+    gv.iScheduler.addAction(userAction_1700)
+
+    # 17:25 wite ppt report summary
+    timeStr = "17:25"
+    userAction_1725 = userAction(actionName='17:25_MS-PPT_edit', timeStr=timeStr, runFunc=actorFunctions.func_1725, threadFlg=False)
+    gv.iScheduler.addAction(userAction_1725)
+
+    # 17:35 edit word doc
+    timeStr = "17:35"
+    userAction_1735 = userAction(actionName='17:35_OfficeWord', timeStr=timeStr, runFunc=actorFunctions.func_1050, threadFlg=False)
+    gv.iScheduler.addAction(userAction_1735)
 
 
 
@@ -178,7 +223,6 @@ def main(actorName):
     if actorName == 'Bob':
         scheduleBobActions()
         gv.iScheduler.startSimulate()
-
 
 
 def testCase(mode):

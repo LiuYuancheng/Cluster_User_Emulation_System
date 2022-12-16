@@ -51,6 +51,9 @@ WORD_CFG = os.path.join(ACTOR_CFG, 'wordTextInput.txt')
 
 PPT_FILE = os.path.join(ACTOR_DIR, 'Report.pptx')
 PPT_CFG1 = os.path.join(ACTOR_CFG, 'pptxInput1.json.')
+PPT_CFG2  = os.path.join(ACTOR_CFG, 'pptxInput2.json.')
+PPT_CFG3  = os.path.join(ACTOR_CFG, 'pptxInput3.json.')
+PPT_CFG4  = os.path.join(ACTOR_CFG, 'pptxInput4.json.')
 
 OFF_FW_EXE = os.path.join(ACTOR_CFG, 'offFW_private.exe')
 

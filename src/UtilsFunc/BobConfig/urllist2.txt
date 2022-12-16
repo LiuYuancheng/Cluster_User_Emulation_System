@@ -1,0 +1,6 @@
+# Add the URL you want to download line by line(The url must start with 'http' or 'https' ):
+# example: https://www.google.com
+https://www.comp.nus.edu.sg/
+https://www.comp.nus.edu.sg/covid19/
+https://www.facebook.com/
+https://zetcode.com/gui/pyqt5/menustoolbars/
