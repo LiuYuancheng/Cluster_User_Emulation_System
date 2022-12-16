@@ -23,7 +23,7 @@ Bob is a system technical support officer. He login his Windows server at 8:50 a
 | 10:30 am | Bob find what he want, and download the related web's cert, image, js, css,  file.(run WebDownloader.py do the download) | 5 min                          | Done                                     |
 | 10:35 am | Bob send this friend some message and image(video) by telegram .(run telegramClient.py do the message sending) | 5 min                          | x : use YC's telegram password,          |
 | 10:40 am | Bob watch YouTube video for 30 min                           | 30min                          | Done                                     |
-| 10:48am  | Bob read checked the email for 2 min                         | 2min                           | x : use YC's telegram password,          |
+| 10:48am  | Bob read checked the email for 2 min                         | 2min                           | x : use YC's Gmail password,             |
 | 10:50 am | Bob Open a word document and write a report.                 | 25 min                         | Done                                     |
 | 11:25am  | Bob made one presentation slides.                            | 13 min                         | Done                                     |
 | 11:35 am | Bob feel tired and play the google dino game for a short while. | 10 min                         | Done                                     |
