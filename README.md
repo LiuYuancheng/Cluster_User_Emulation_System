@@ -42,3 +42,11 @@ Bob is a system technical support officer. He login his Windows server at 8:50 a
 | 17:35 | Bob edit his daily work report word file                     | 10 min                         | Done                            |
 | 17:50 | Bob logout his account.                                      |                                |                                 |
 
+
+
+remove access the windows vm:
+
+```
+ssh -L 127.0.0.1:3389:192.168.57.10:3389 -p 6022 -J rp_fyp_ctf@gateway.ncl.sg ls23@172.18.178.10
+```
+
