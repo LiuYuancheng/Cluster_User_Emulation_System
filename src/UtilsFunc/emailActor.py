@@ -26,7 +26,7 @@ SMTP_PORT = 993
 
 class emailActor(object):
 
-    def __init__(self, account, password, smtpServer, smtpPort=993) -> None:
+    def __init__(self, account, password, smtpServer, smtpPort=SMTP_PORT) -> None:
         self.account = account
         self.password = password
         self.mailHandler = imaplib.IMAP4_SSL(host=smtpServer, port=smtpPort)
@@ -63,3 +63,14 @@ class emailActor(object):
         except Exception as e:
             traceback.print_exc() 
             print(str(e))
+
+def testCase(mode):
+    account = 'bob@gt.org'
+    password = '123'
+    smtpServer = 'imap.gt.org'
+    smtpPort = 143
+    actor = emailActor(account, password, smtpServer, smtpPort=smtpPort)
+    actor.readLastMail(emailNum=2)
+
+if __name__ == '__main__':
+    testCase(1)

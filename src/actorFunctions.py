@@ -19,7 +19,8 @@ import keyboard
 import string
 import actionGlobal as gv
 from urllib.parse import urljoin, urlparse
-from UtilsFunc import pingActor, funcActor, zoomActor, webDownload, dinoActor
+from UtilsFunc import pingActor, funcActor, zoomActor, webDownload, dinoActor, emailActor
+from UtilsFunc import email_gen
 
 import Log
 import SSHconnector
@@ -406,8 +407,28 @@ def func_1725():
         print("error: %s" %str(err))
 
 #-----------------------------------------------------------------------------
+def func_1740():
+    account = 'bob@gt.org'
+    password = '123'
+    smtpServer = 'imap.gt.org'
+    smtpPort = 143
+    actor = emailActor.emailActor(account, password, smtpServer, smtpPort=smtpPort)
+    actor.readLastMail(emailNum=2, interval= 10)
+
+#-----------------------------------------------------------------------------
+def func_1810():
+    intensity = 30 # send 3000 times
+    sleep_time = 10  # do not sleep
+    for counter in range(intensity):
+        print("send one email")
+        email_server = "mail.gt.org.txt"
+        email_gen.send_mail(email_server)
+
+    time.sleep(sleep_time)
+
+#-----------------------------------------------------------------------------
 def testCase(mode):
-    func_1725()
+    func_1810()
 
 if __name__ == '__main__':
     testCase(1)
