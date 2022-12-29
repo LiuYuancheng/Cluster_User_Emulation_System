@@ -6,7 +6,7 @@
 # Author:      Yuancheng Liu
 #
 # Version:     v_0.1
-# Created:     2022/12/12
+# Created:     2022/12/28
 # Copyright:   n.a
 # License:     n.a
 #-----------------------------------------------------------------------------
@@ -24,19 +24,29 @@ import traceback
 
 SMTP_PORT = 993
 
+#-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 class emailActor(object):
+    """ GMail: smtpPort[993], sslConn[True]
+        HotMail: smtpPort[587], sslConn[True]
+        Mailu: smtpPort[143], sslConn[True]
 
-    def __init__(self, account, password, smtpServer, smtpPort=SMTP_PORT) -> None:
+    Args:
+        object (_type_): _description_
+    """
+
+    def __init__(self, account, password, smtpServer, smtpPort=SMTP_PORT, sslConn=True) -> None:
         self.account = account
         self.password = password
-        self.mailHandler = imaplib.IMAP4_SSL(host=smtpServer, port=smtpPort)
+        self.mailHandler = imaplib.IMAP4_SSL(host=smtpServer, port=smtpPort) if sslConn else imaplib.IMAP4(host=smtpServer, port=smtpPort)
         try:
             self.mailHandler.login(self.account, self.password)
         except Exception as err:
-            print("Login the email server failed")
+            print("Login the email server failed.")
             print("Error: %s" %str(err))
             return None
 
+#-----------------------------------------------------------------------------
     def readLastMail(self, sender=None, emailNum=10, interval=0):
         try:
             self.mailHandler.select('inbox')
@@ -46,24 +56,32 @@ class emailActor(object):
             mailIds = IdList if len(IdList) < emailNum else IdList[-emailNum:]
             print(mailIds)
             for mailId in mailIds:
-                mailId = int(mailId)
-                data = self.mailHandler.fetch(str(mailId), '(RFC822)')
-                for response_part in data:
-                    arr = response_part[0]
-                    if isinstance(arr, tuple):
-                        msg = email.message_from_string(str(arr[1],'utf-8'))
-                        print(msg.keys())
-                        email_subject = msg['subject']
-                        email_from = msg['from']
-                        print('From : ' + email_from + '\n')
-                        print('Subject : ' + email_subject + '\n')
-                        #print('Body : ' + str(msg) + '\n')
+                msg = self._getEmailDict(mailId)
+                print(msg.keys())
+                email_subject = msg['subject']
+                email_from = msg['from']
+                print('From : ' + email_from + '\n')
+                print('Subject : ' + email_subject + '\n')
+                #print('Body : ' + str(msg) + '\n')
                 if interval> 0 : time.sleep(interval)
                 print("--Finish")
         except Exception as e:
             traceback.print_exc() 
             print(str(e))
 
+#-----------------------------------------------------------------------------
+    def _getEmailDict(self, emailId):
+        """ Get the email info.
+        Args:
+            emailIdx (_type_): _description_
+        """
+        mailId = int(emailId)
+        data = self.mailHandler.fetch(str(mailId), '(RFC822)')
+        for response_part in data:
+            arr = response_part[0]
+            if isinstance(arr, tuple):
+                return email.message_from_string(str(arr[1],'utf-8'))
+                
 def testCase(mode):
     account = 'bob@gt.org'
     password = '123'
