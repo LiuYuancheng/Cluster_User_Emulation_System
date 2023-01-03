@@ -410,7 +410,7 @@ def func_1725():
 def func_1740():
     account = 'bob@gt.org'
     password = '123'
-    smtpServer = 'imap.gt.org'
+    smtpServer = 'email.gt.org'
     smtpPort = 143
     actor = emailActor.emailActor(account, password, smtpServer, smtpPort=smtpPort)
     actor.readLastMail(emailNum=2, interval= 10)

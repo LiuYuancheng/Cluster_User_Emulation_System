@@ -15,7 +15,6 @@
 # Turn on the Less secure app access at: Google Account> Security> Less secure app access
 # Enable the IMAP Access at: Gmail Settings> Forwarding and POP / IMAP> IMAP Acess
 
-
 import time
 import smtplib
 import imaplib
@@ -38,8 +37,9 @@ class emailActor(object):
     def __init__(self, account, password, smtpServer, smtpPort=SMTP_PORT, sslConn=True) -> None:
         self.account = account
         self.password = password
-        self.mailHandler = imaplib.IMAP4_SSL(host=smtpServer, port=smtpPort) if sslConn else imaplib.IMAP4(host=smtpServer, port=smtpPort)
+        self.mailHandler = None
         try:
+            self.mailHandler = imaplib.IMAP4_SSL(host=smtpServer, port=smtpPort) if sslConn else imaplib.IMAP4(host=smtpServer, port=smtpPort)
             self.mailHandler.login(self.account, self.password)
         except Exception as err:
             print("Login the email server failed.")
@@ -57,13 +57,14 @@ class emailActor(object):
             print(mailIds)
             for mailId in mailIds:
                 msg = self._getEmailDict(mailId)
-                print(msg.keys())
-                email_subject = msg['subject']
-                email_from = msg['from']
-                print('From : ' + email_from + '\n')
-                print('Subject : ' + email_subject + '\n')
-                #print('Body : ' + str(msg) + '\n')
-                if interval> 0 : time.sleep(interval)
+                if msg:
+                    print(msg.keys())
+                    email_subject = msg['subject']
+                    email_from = msg['from']
+                    print('From : ' + email_from + '\n')
+                    print('Subject : ' + email_subject + '\n')
+                    #print('Body : ' + str(msg) + '\n')
+                    if interval> 0 : time.sleep(interval)
                 print("--Finish")
         except Exception as e:
             traceback.print_exc() 
@@ -80,14 +81,20 @@ class emailActor(object):
         for response_part in data:
             arr = response_part[0]
             if isinstance(arr, tuple):
-                return email.message_from_string(str(arr[1],'utf-8'))
-                
+                try:
+                    return email.message_from_string(str(arr[1],'utf-8'))
+                except:
+                    return None
+
+
 def testCase(mode):
+    account = 'alice@gt.org'
     account = 'bob@gt.org'
+    account = 'charles@gt.org'
     password = '123'
-    smtpServer = 'imap.gt.org'
+    smtpServer = 'email.gt.org'
     smtpPort = 143
-    actor = emailActor(account, password, smtpServer, smtpPort=smtpPort)
+    actor = emailActor(account, password, smtpServer, smtpPort=smtpPort, sslConn=False)
     actor.readLastMail(emailNum=2)
 
 if __name__ == '__main__':

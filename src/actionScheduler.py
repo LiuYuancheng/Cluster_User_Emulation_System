@@ -213,6 +213,16 @@ def scheduleBobActions():
     userAction_1735 = userAction(actionName='17:35_OfficeWord', timeStr=timeStr, runFunc=actorFunctions.func_1050, threadFlg=False)
     gv.iScheduler.addAction(userAction_1735)
 
+    # 17:35 edit word doc
+    timeStr = "17:40"
+    userAction_1740 = userAction(actionName='17:40_ReadEmail', timeStr=timeStr, runFunc=actorFunctions.func_1740, threadFlg=False)
+    gv.iScheduler.addAction(userAction_1740)
+
+    # 17:35 edit word doc
+    timeStr = "18:10"
+    userAction_1810 = userAction(actionName='17:35_WriteEmail', timeStr=timeStr, runFunc=actorFunctions.func_1810, threadFlg=False)
+    gv.iScheduler.addAction(userAction_1810)
+
 
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
