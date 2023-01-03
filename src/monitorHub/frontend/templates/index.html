@@ -37,7 +37,7 @@
         <div class="tab-pane fade show active" id="pills-cr1-pro" role="tabpanel" aria-labelledby="pills-cr1-pro-tab">
             <div class="table-responsive">
 
-                <table class="table table-dark">
+                <table class="table table-bordered table-dark">
                     <thead>
                         <tr class="table table-info">
                             <th>Action Id</th>
@@ -90,7 +90,7 @@
                                 {% elif post['state'] == 1 %}
                                 <span class="badge badge-success"> finished </span>
                                 {% elif post['state'] == 2 %}
-                                <span class="badge badge-success"> pending </span>
+                                <span class="badge badge-primary"> pending </span>
                                 {% elif post['state'] == 3 %}
                                 <span class="badge badge-info"> Running  </span> <div class="spinner-border"></div>
                                 {% else %}
