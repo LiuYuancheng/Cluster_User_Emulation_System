@@ -4,6 +4,87 @@
 
 
 
+##### Actors Module: 
+
+Actor module are the basic components to simulate one kind of normal user's  action such as file editing, surf the internet, access multi-media  and so on. 
+
+
+
+Network traffic action generator
+
+| Actor module name | function provided        | traffic/protocol type                                        |
+| ----------------- | ------------------------ | ------------------------------------------------------------ |
+| pingActor         | ping                     | Internet Control Message Protocol (ICMP)                     |
+| webActor          | http(s)                  | Fetch a website, send http(s) request.                       |
+| webDownloader     | http(s)                  | Download website components: https web cert, css, html, js, images, downloadable link. |
+|                   | Page screen shot         | whole webpage to image.                                      |
+| transferActor     | ftp(s)                   | Upload and download a file                                   |
+|                   | sftp                     | Transfer files via sftp                                      |
+|                   | nfs/smb                  | Copy a file or directory to or from a nfs or smb share.      |
+| sshConnector      | ssh/scp                  | ssh connection or scp file transfer                          |
+| sshForwarder      | ssh                      | forward port thought open port.                              |
+| udpCom            | udp                      | Any kinds of UDP message communication or file transfer.     |
+| tcpCom            | tcp                      | Any kinds of TCP message communication or file transfer.     |
+| emailActor        | SMTP/IMAP4,POP,IMAP_SSL  | Email receive and send (Gmail, Hotmail, Mailu)               |
+| camEchoClient     | RTSP                     | Real-Time Streaming(IP camera)                               |
+|                   | HLS                      | HTTP Live Streaming such as video web site.                  |
+| pcapReplayActor   | replaying packet in pcap | parsing pcap file and send the packet to the specific destination. |
+| telnetActor       | telnet                   | remote login/Open a telnet connection and issue commands     |
+
+
+
+System App Action genreator
+
+| Actor module name | function provided                                          |      |
+| ----------------- | ---------------------------------------------------------- | ---- |
+| zoomActor         | Join zoom meeting                                          |      |
+| musicActor        | Search audio files and play one by one                     |      |
+| videoActor        | Search video/picture files and play one by one             |      |
+| msFileActor(Word) | Create/edit MS-word(*.docx) file                           |      |
+| msFileActor(PPT)  | Create/edit MS-powerpoint(*.pptx) file                     |      |
+| msTeamsActor      | Join teams meeting, send a message.                        |      |
+| fileActor         | file search, copy, move, delete, execute, rename, compress |      |
+| pdfReader         | Check pdf file and parse the info.                         |      |
+|                   |                                                            |      |
+
+
+
+User action generator
+
+| Actor module name      | function provided                                         |      |
+| ---------------------- | --------------------------------------------------------- | ---- |
+| mouse_keyboard Actor   | Replay recorded user mouse + keyboard action              |      |
+|                        | Simulate user's mouse+keyboard action based on pre-config |      |
+| TelegramActor          | Send message to phone by telegram                         |      |
+| gameActor(dino/sudoku) | Play google dino game. play sudoku game.                  |      |
+|                        |                                                           |      |
+
+
+
+Other action generator
+
+| Actor module name | function provided                                            |      |
+| ----------------- | ------------------------------------------------------------ | ---- |
+| SerialConnector   | Send and read message to/from COM port.                      |      |
+| camEchoServer     | Computer built in camera/usb camera video read record. Start a HLS server. |      |
+| ScreanRecorder    | snapshot the screen under frequency.                         |      |
+| DBHandler         | DataBase (SQLite3, influxDB, arangodb) access action simulator. |      |
+|                   |                                                              |      |
+
+
+
+System control action generator 
+
+| Actor module name | function provided                                            |      |
+| ----------------- | ------------------------------------------------------------ | ---- |
+| CmdActor          | Run window commend under cmd or powershell.                  |      |
+| SettingActor      | Change some OS setting (on/off firewall, change display bg, sort desktop, reboot) |      |
+|                   |                                                              |      |
+
+
+
+
+
 Example Timeline: 
 
 Bob is a system technical support officer. He login his Windows server at 8:50 am
