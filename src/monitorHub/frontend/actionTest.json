@@ -1,26 +1,114 @@
 [
     {
         "id": 1,
-        "name": "09:01_ping",
-        "detail":"Ping 100+ destinations",
-        "owner": "User:LYC",
+        "name": "09:01_ping [ST]",
+        "detail":"Ping 30 destinations",
+        "descrip": "Ping a servers list to check the server's connection. (open console ping the dest one by one, sequential )",
+        "owner": "User: LYC",
         "startT": "Every 1 day at 09:01:00",
-        "period": "10 mins",
+        "period": "120",
         "type":0,
         "dep":0,
         "state":1,
         "nextT": "2023-01-04 09:01:00"
     },
     {
-        "id": 1,
-        "name": "09:01_ping",
+        "id": 2,
+        "name": "09:10_ping [MT]",
         "detail":"Ping 100+ destinations",
-        "owner": "User:LYC",
-        "startT": "Every 1 day at 09:01:00",
-        "period": "10 mins",
+        "descrip": "Bob runs the ping client program ping 100 servers need to check and record down the result.(run pingClient.py, multi-thread parallel ping)",
+        "owner": "User: Bob",
+        "startT": "Every 1 day at 09:10:00",
+        "period": "7 mins",
+        "type":1,
+        "dep":0,
+        "state":4,
+        "nextT": "2023-01-04 09:10:00"
+    },
+
+    {
+        "id": 3,
+        "name": "09:13_network_cmds [MT]",
+        "detail":"Run some network cmd",
+        "descrip":"During watching the ping result refresh, bob run server network checking cmd in terminal one by one (ipconfig, Tracert www.google.com.sg , Pathping www.google.com.sg, Getmac, Nslookup www.google.com.sg)",
+        "owner": "User: Bob",
+        "startT": "Every 1 day at 09:13:00",
+        "period": "5 mins",
+        "type":1,
+        "dep":2,
+        "state":1,
+        "nextT": "2023-01-04 09:13:00"
+    },
+
+    {
+        "id": 4,
+        "name": "09:20_ssh",
+        "detail":"SSH log in to servers",
+        "descrip":"Bob ssh to 12 Ubuntu servers and run some cmd  record done the result.(run sshConnector.py do server one by one sequential)",
+        "owner": "User: Bob",
+        "startT": "Every 1 day at 09:20:00",
+        "period": "12 mins",
+        "type":1,
+        "dep":2,
+        "state":1,
+        "nextT": "2023-01-04 09:20:00"
+    },
+
+    {
+        "id": 5,
+        "name": "09:35_Zoom_meeting",
+        "detail":"Join a zoom meeting for 30min",
+        "descrip":"Bob start a zoom meeting with his colleague to discuss for half hour",
+        "owner": "User: Bob",
+        "startT": "Every 1 day at 09:35:00",
+        "period": "30 mins",
         "type":0,
         "dep":0,
         "state":1,
-        "nextT": "2023-01-04 09:01:00"
+        "nextT": "2023-01-04 09:35:00"
+    },
+
+    {
+        "id": 6,
+        "name": "10:05_Draw_picture",
+        "detail":"draw a pirture with Windows-Paint",
+        "descrip":"Write down and draw some diagram based on the meeting.",
+        "owner": "User: Bob",
+        "startT": "Every 1 day at 10:05:00",
+        "period": "8 mins",
+        "type":0,
+        "dep":0,
+        "state":0,
+        "nextT": "2023-01-04 10:05:00"
+    },
+
+    {
+        "id": 7,
+        "name": "10:15_downloadWeb",
+        "detail":"Screen shot some web",
+        "descrip":"Bob start to screen shot some web",
+        "owner": "User: Bob",
+        "startT": "Every 1 day at 10:15:00",
+        "period": "15 mins",
+        "type":0,
+        "dep":0,
+        "state":1,
+        "nextT": "2023-01-04 10:15:00"
+    }, 
+
+    {
+        "id": 8,
+        "name": "10:45_Youtube",
+        "detail":"Watch Youtube",
+        "descrip":"Bob watch YouTube 3 videos for 30 min",
+        "owner": "User: Bob",
+        "startT": "Every 1 day at 10:45:00",
+        "period": "30 mins",
+        "type":0,
+        "dep":0,
+        "state":1,
+        "nextT": "2023-01-04 10:45:00"
     }
+
+
 ]

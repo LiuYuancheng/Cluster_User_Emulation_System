@@ -14,6 +14,8 @@
 #-----------------------------------------------------------------------------
 
 # CSS lib [bootstrap]: https://www.w3schools.com/bootstrap4/default.asp
+import os
+import json
 
 from datetime import timedelta, datetime
 from http import server
@@ -42,7 +44,18 @@ def createApp():
     app.config['REMEMBER_COOKIE_DURATION'] = timedelta(seconds=gv.COOKIE_TIME)
     return app
 
+
 app = createApp()
+dataDict = []
+config = os.path.join(gv.dirpath, 'actionTest.json')
+
+if os.path.exists(config):
+    try:
+        with open(config, 'r') as fh:
+            dataDict = json.load(fh)
+    except Exception as err:
+        print("Failed to load the json config file: %s" %str(err))
+        exit()
 
 #-----------------------------------------------------------------------------
 # web home request handling functions.
@@ -61,7 +74,7 @@ def index():
         'state':1,
         'nextT': "2023-01-04 09:01:00"
     }]
-    return render_template('index.html', posts=posts)
+    return render_template('index.html', posts=dataDict)
 
 #-----------------------------------------------------------------------------
 if __name__ == '__main__':

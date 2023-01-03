@@ -4,7 +4,7 @@
 
 {% block style%}
 <style>
-  /* Make the image fully responsive 
+    /* Make the image fully responsive 
   .carousel-inner img {
     width: 100%;
     height: 50%;
@@ -14,99 +14,115 @@
 {% endblock %}
 
 {% block content %}
-<hr>
-<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-  <li class="nav-item">
-      <a class="nav-link active" id="pills-cr1-pro-tab" data-toggle="pill" href="#pills-cr1-pro" role="tab" aria-controls="pills-cr1-pro" aria-selected="true">Daily Actions</a>
-  </li>
-  <li class="nav-item">
-      <a class="nav-link" id="pills-cr1-res-tab" data-toggle="pill" href="#pills-cr1-res" role="tab" aria-controls="pills-cr1-res" aria-selected="false">Periodically Action</a>
-  </li>
-  <li class="nav-item">
-      <a class="nav-link" id="pills-s17-cr2-tab" data-toggle="pill" href="#pills-s17-cr2" role="tab" aria-controls="pills-s17-cr2" aria-selected="false">Weekly Actions</a>
-  </li>
-</ul>
+
+<div class="container-fluid">
+    <hr>
+    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="pills-cr1-pro-tab" data-toggle="pill" href="#pills-cr1-pro" role="tab"
+                aria-controls="pills-cr1-pro" aria-selected="true">Daily Actions</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="pills-cr1-res-tab" data-toggle="pill" href="#pills-cr1-res" role="tab"
+                aria-controls="pills-cr1-res" aria-selected="false">Periodically Action</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="pills-s17-cr2-tab" data-toggle="pill" href="#pills-s17-cr2" role="tab"
+                aria-controls="pills-s17-cr2" aria-selected="false">Weekly Actions</a>
+        </li>
+    </ul>
 
 
-<div class="tab-content">
-  <div class="tab-pane fade show active" id="pills-cr1-pro" role="tabpanel" aria-labelledby="pills-cr1-pro-tab">
-      <div class="table-responsive">
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="pills-cr1-pro" role="tabpanel" aria-labelledby="pills-cr1-pro-tab">
+            <div class="table-responsive">
 
-          <table class="table table-dark">
-              <thead>
-                  <tr class="table table-info">
-                      <th>Action Index</th>
-                      <th>Action Name</th>
-                      <th>Description</th>
-                      <th>Start time</th>
-                      <th>Action period(sec)</th>
-                      <th>Owner</th>
-                      <th>Action Type</th>
-                      <th>Dependency</th>
-                      <th>Current state</th>
-                      <th>Next run </th>
-                      <th>Config </th>
-                  </tr>
-              </thead>
-              <tbody>
+                <table class="table table-dark">
+                    <thead>
+                        <tr class="table table-info">
+                            <th>Action Id</th>
+                            <th>Action name</th>
+                            <th>Description</th>
+                            <th>Start time</th>
+                            <th>Action period(sec)</th>
+                            <th>Owner</th>
+                            <th>Action type</th>
+                            <th>Dependency</th>
+                            <th>Current state</th>
+                            <th>Next run </th>
+                            <th>Config </th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-                  {% for post in posts %}
-                  <tr class="info">
-                      <td> {{ post['id'] }} </td>
-                      <td> <a href="#"> {{ post['name'] }} </a> </td>
-                      <td> {{ post['detail'] }} </td>
+                        {% for post in posts %}
+                        <tr class="info">
+                            <td> <b>{{ post['id'] }}</b> </td>
+                            <td> {{ post['name'] }} </td>
+                            <td>
+                                <a href="#" data-toggle="tooltip" data-placement="right"
+                                    title="{{post['descrip']}}">{{post['detail']}}</a>
+                            </td>
 
-                      <td> <span class="badge badge-primary"> {{ post['startT'] }} </span> </td>
-                      <td> {{ post['period'] }} </td>
-                      <td> {{ post['owner'] }} </td>
+                            <td> <span class="badge badge-primary"> {{ post['startT'] }} </span> </td>
+                            <td> {{ post['period'] }} </td>
+                            <td> {{ post['owner'] }} </td>
 
-                      <td>
-                          {% if post['type'] == 0 %}
-                              <span class="badge badge-primary"> sequencial </span>
-                          {% else %}
+                            <td>
+                                {% if post['type'] == 0 %}
+                                <span class="badge badge-primary"> sequencial </span>
+                                {% else %}
                                 <span class="badge badge-warning"> parallel </span>
-                          {% endif %}
-                      </td>
+                                {% endif %}
+                            </td>
 
-                      <td>
-                          {% if post['dep'] == 0 %}
-                              <span class="badge badge-dark"> None </span>
-                          {% else %}
-                              <span class="badge badge-light"> Action: {{ post['dep'] }} </span>
-                          {% endif %}
-                      </td>
+                            <td>
+                                {% if post['dep'] == 0 %}
+                                <span class="badge badge-dark"> None </span>
+                                {% else %}
+                                <span class="badge badge-light"> Action: {{ post['dep'] }} </span>
+                                {% endif %}
+                            </td>
 
-                      <td>
-                          {% if post['state'] == 0 %}
-                              <span class="badge badge-danger"> error </span>
-                          {% elif post['state'] == 1 %}
-                              <span class="badge badge-success"> finished </span>
-                          {% elif post['state'] == 2 %}
-                              <span class="badge badge-success"> pending </span>
-                          {% else %}
-                              <span class="badge badge-info"> deactivated </span>
-                          {% endif %}
-                      </td>
+                            <td>
+                                {% if post['state'] == 0 %}
+                                <span class="badge badge-danger"> error </span>
+                                {% elif post['state'] == 1 %}
+                                <span class="badge badge-success"> finished </span>
+                                {% elif post['state'] == 2 %}
+                                <span class="badge badge-success"> pending </span>
+                                {% elif post['state'] == 3 %}
+                                <span class="badge badge-info"> Running  </span> <div class="spinner-border"></div>
+                                {% else %}
+                                <span class="badge badge-secondary"> deactivated </span>
+                                {% endif %}
+                            </td>
 
-                      <td> <span class="badge badge-secondary"> {{ post['nextT'] }} </span> </td>
+                            <td> <span class="badge badge-secondary"> {{ post['nextT'] }} </span> </td>
 
-                      <td>
-                         <a href="#"> <span class="badge badge-danger">Remove</span></a>
-                          <a href="#"> <span class="badge badge-warning">Edit</span></a>
-                      </td>
-                  </tr>
-                  {% endfor %}
-              </tbody>
-          </table>
+                            <td>
+                                <a href="#"> <span class="badge badge-danger">Remove</span></a>
+                                <a href="#"> <span class="badge badge-warning">Edit</span></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
 
-      </div>
-      <a href="#">
-          <button type="button" class="btn btn-success">[+] Add a new action </button>
-      </a>
-  </div>
-  <div class="tab-pane fade" id="pills-cr1-res" role="tabpanel" aria-labelledby="pills-cr1-res-tab">...</div>
-  <div class="tab-pane fade" id="pills-s17-cr2" role="tabpanel" aria-labelledby="pills-s17-cr2-tab">...</div>
+            </div>
+            <a href="#">
+                <button type="button" class="btn btn-success">[+] Add a new action </button>
+            </a>
+        </div>
+        <div class="tab-pane fade" id="pills-cr1-res" role="tabpanel" aria-labelledby="pills-cr1-res-tab">...</div>
+        <div class="tab-pane fade" id="pills-s17-cr2" role="tabpanel" aria-labelledby="pills-s17-cr2-tab">...</div>
+    </div>
+
 </div>
-
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 
 {% endblock %}

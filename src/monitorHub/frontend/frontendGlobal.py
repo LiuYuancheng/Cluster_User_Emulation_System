@@ -37,7 +37,7 @@ import Log
 Log.initLogger(gTopDir, 'Logs', APP_NAME[0], APP_NAME[1], historyCnt=100, fPutLogsUnderDate=True)
 
 #------<CONSTANTS>-------------------------------------------------------------
-APP_NAME = 'NCL_BM_HUB [Ver:0.X]'
+APP_NAME = 'Action_monitor_HUB [Ver:0.X]'
 
 RC_TIME_OUT = 10    # reconnection time out.
 BE_IP = ('127.0.0.1', 3001)     # backend server IP address.
