@@ -34,17 +34,19 @@ class pingActor(object):
     def __init__(self, config, parallel=False, Log=None, showConsole=False) -> None:
         """ Init the ping Actor: 
             actor = pingActor({'127.0.0.1':10},parallel=True, Log=None, showConsole=False)
-        Args:
-            config (_type_): ping destination config dictionary or the dictionary json file path. 
-                             json item format 'dest ip/url': int(pingtime)
-            parallel (bool, optional): Ping the dest in sequential or parallel threading 
-                            (multi-thread). Defaults to False.
-            Log (_type_, optional): a logger object. Defaults to None.
-            showConsole (bool, optional): flag to whether pop-up the os console. Defaults to False.
+            Args:
+                config (_type_): Ping destination config dictionary or the dictionary json file path. 
+                                json item format 'dest ip/url': int(pingtime)
+                parallel (bool, optional): Ping the dest in sequential if val==False or parallel threading 
+                                (multi-thread) if val==True. Defaults to False.
+                Log (_type_, optional): A logger object used to log the result to local if necessory. 
+                                Defaults to None.
+                showConsole (bool, optional): Flag to identify whether pop-up the os console. Defaults to False.
 
-        Returns:
-            _type_: pingActor obj.
+            Returns:
+                _type_: pingActor obj.
         """
+        # Check the input ping dest config 
         self.pingDict = {}
         if isinstance(config, dict):
             self.pingDict = config
@@ -56,19 +58,29 @@ class pingActor(object):
                 except Exception as err:
                     print("Failed to load the json config file: %s" %str(err))
                     return None
+            else:
+                print('The ping dest <config> json file is not exist.')
+                return None
         else: 
             print('The input <config> file/parameter is not valid.')
             return None
+        self._pingInterval = TIME_INT # time between each ping
+        self._pingTimeout = TIME_OUT
         self.parallel = parallel
         self.jobThreadList = []
         self.log = Log
         self.showConsole = showConsole
         print('__init__ finished')
-        self._pingInterval = TIME_INT # time between each ping
-        self._pingTimeout = TIME_OUT
 
 #-----------------------------------------------------------------------------
     def addDest(self, dest, timeN):
+        """ Add one ping destination.
+            Args:
+                dest (_type_): destination ip/url
+                timeN (_type_): ping times.
+            Returns:
+                _type_: _description_
+        """
         if self.pingDict:
             self.pingDict[str(dest)] = int(timeN)
             return True
@@ -76,6 +88,7 @@ class pingActor(object):
 
 #-----------------------------------------------------------------------------
     def removeDest(self, dest):
+        """ Remove the destination. """
         if self.pingDict and dest in self.pingDict.keys():
             self.pingDict.pop(dest)
             return True
@@ -92,28 +105,32 @@ class pingActor(object):
 #-----------------------------------------------------------------------------
     def _startPingJobs(self):
         """ Repeat the ping jobs saved in the job list."""
-        print("Weekup the ping jobs in the job list")
-        _ = [ job.start() for job in self.jobThreadList ] 
-        _ = [ job.join() for job in self.jobThreadList ] 
+        jobNum = len(self.jobThreadList)
+        if jobNum > 0:
+            print("Weekup the ping jobs in the job list: %s" %str(jobNum)) 
+            _ = [ job.start() for job in self.jobThreadList ] 
+            _ = [ job.join() for job in self.jobThreadList ]
+        else:
+            print("No job thread in the list.")
 
 #-----------------------------------------------------------------------------
     def runPing(self):
-        """ load the config and do the ping."""
+        """ Ping the dest."""
         print('Start to ping all the dest ...')
         if self.parallel: self.jobThreadList = []
         if self.showConsole:
-            # Pop up the console to show the ping.In this function no data recorded.
+        # Pop up the console to show the ping.In this function no data recorded.
+            def pingFunc(dest, timeN):
+                if timeN < 0: timeN = randint(1, 10)
+                pingCmd = "ping -n %s %s" % (str(timeN), dest)
+                try:
+                    result = subprocess.call(pingCmd, creationflags=subprocess.CREATE_NEW_CONSOLE)
+                    return result
+                except Exception as err:
+                    print('Pop the console terminal failed: %s' % str(err))
+                    return False
             for item in self.pingDict.items():
                 dest, timeN = item
-                def pingFunc(dest, timeN):
-                    if timeN < 0: timeN = randint(1, 10)
-                    pingCmd = "ping -n %s %s" % (str(timeN), dest)
-                    try:
-                        result = subprocess.call(pingCmd, creationflags=subprocess.CREATE_NEW_CONSOLE)
-                        return result
-                    except Exception as err:
-                        print('Pop the console terminal failed: %s' % str(err))
-                        return False
                 if self.parallel:
                     jobthread = threading.Thread(target=pingFunc, args=(dest, timeN,))
                     self.jobThreadList.append(jobthread)
@@ -123,23 +140,21 @@ class pingActor(object):
             # if have job, run the parallel ping
             self._startPingJobs()
         else:
-            # Run the ping action in back ground and record the result.
+            # Run the ping action in background and record the result.
             crtPingRst = {}
+            def pingFunc(dest, timeN): 
+                if timeN < 0: timeN = randint(1, 10)
+                crtPingRst[str(dest)] = []
+                #print(dest)
+                for i in range(timeN):
+                    data = ping(dest, timeout=self._pingTimeout, verbose=False)
+                    time.sleep(self._pingInterval)
+                    # log the result
+                    if self.log:
+                        self.log.info('[%s]: min:%s,avg:%s,max:%s', dest, str(data.rtt_min_ms), str(data.rtt_avg_ms), str(data.rtt_max_ms))
+                    crtPingRst[str(dest)].append(data.rtt_avg_ms)
             for item in self.pingDict.items():
                 dest, timeN = item
-                #print(dest)
-                def pingFunc(dest, timeN): 
-                    if timeN < 0: timeN = randint(1, 10)
-                    crtPingRst[str(dest)] = []
-                    #print(dest)
-                    for i in range(timeN):
-                        data = ping(dest, timeout=self._pingTimeout, verbose=False)
-                        time.sleep(self._pingInterval)
-                        # log the result
-                        if self.log:
-                            self.log.info('[%s]: min:%s,avg:%s,max:%s', dest, str(data.rtt_min_ms), str(data.rtt_avg_ms), str(data.rtt_max_ms))
-                        crtPingRst[str(dest)].append(data.rtt_avg_ms)
-                
                 if self.parallel:
                     jobthread = threading.Thread(target=pingFunc, args=(dest, timeN,))
                     self.jobThreadList.append(jobthread)
@@ -204,4 +219,4 @@ def testCase(mode =0):
         print(result)
 
 if __name__ == '__main__':
-    testCase(mode=2)
+    testCase(mode=1)
