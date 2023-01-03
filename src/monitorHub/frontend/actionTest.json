@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "name": "09:01_ping",
+        "detail":"Ping 100+ destinations",
+        "owner": "User:LYC",
+        "startT": "Every 1 day at 09:01:00",
+        "period": "10 mins",
+        "type":0,
+        "dep":0,
+        "state":1,
+        "nextT": "2023-01-04 09:01:00"
+    },
+    {
+        "id": 1,
+        "name": "09:01_ping",
+        "detail":"Ping 100+ destinations",
+        "owner": "User:LYC",
+        "startT": "Every 1 day at 09:01:00",
+        "period": "10 mins",
+        "type":0,
+        "dep":0,
+        "state":1,
+        "nextT": "2023-01-04 09:01:00"
+    }
+]
