@@ -20,8 +20,20 @@ import smtplib
 import imaplib
 import email
 import traceback 
+import random
 
-SMTP_PORT = 993
+
+SMTP_PORT_READ = 993
+SMTP_PORT_SEND = 587
+
+DEFAULT_CFG = {
+    'mailBox': 'inbox',
+    'sender': None,
+    'number': 10,
+    'randomNum': 0,
+    'interval': 0,
+    'returnFlg': False
+}
 
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
@@ -34,59 +46,127 @@ class emailActor(object):
         object (_type_): _description_
     """
 
-    def __init__(self, account, password, smtpServer, smtpPort=SMTP_PORT, sslConn=True) -> None:
+    def __init__(self, account, password) -> None:
         self.account = account
         self.password = password
-        self.mailHandler = None
+        self.emailReader = None
+        self.emailSender = None
+
+#-----------------------------------------------------------------------------
+    def initEmailReader(self, smtpServer, smtpPort=SMTP_PORT_READ, sslConn=True):
+        """ Connect(login) to the email read IMAP server and init the read object. 
+            Args:
+                smtpServer (str): email IMAP server url.
+                smtpPort (int, optional): email IMAP server port. Defaults to SMTP_PORT_READ.
+                sslConn (bool, optional): email account's connection ssl encryption 
+                    config. Defaults to True.
+
+            Returns:
+                _type_: _description_
+        """
         try:
-            self.mailHandler = imaplib.IMAP4_SSL(host=smtpServer, port=smtpPort) if sslConn else imaplib.IMAP4(host=smtpServer, port=smtpPort)
-            self.mailHandler.login(self.account, self.password)
+            self.emailReader = imaplib.IMAP4_SSL(
+                host=smtpServer, port=smtpPort) if sslConn else imaplib.IMAP4(host=smtpServer, port=smtpPort)
+            self.emailReader.login(self.account, self.password)
+            return True
         except Exception as err:
             print("Login the email server failed.")
-            print("Error: %s" %str(err))
-            return None
-
+            print("Error: %s" % str(err))
+            return False
 #-----------------------------------------------------------------------------
-    def readLastMail(self, sender=None, emailNum=10, interval=0):
+    def initEmailSender(self, smtpServer, smtpPort=SMTP_PORT_READ):
         try:
-            self.mailHandler.select('inbox')
-            emailInfo = self.mailHandler.search(None, 'ALL') if sender is None else self.mailHandler.search(None, 'FROM', f'"{sender}"')
-            IdList = emailInfo[1][0].split() 
-            
-            mailIds = IdList if len(IdList) < emailNum else IdList[-emailNum:]
-            print(mailIds)
-            for mailId in mailIds:
-                msg = self._getEmailDict(mailId)
-                if msg:
-                    print(msg.keys())
-                    email_subject = msg['subject']
-                    email_from = msg['from']
-                    print('From : ' + email_from + '\n')
-                    print('Subject : ' + email_subject + '\n')
-                    #print('Body : ' + str(msg) + '\n')
-                    if interval> 0 : time.sleep(interval)
-                print("--Finish")
-        except Exception as e:
-            traceback.print_exc() 
-            print(str(e))
+            self.emailSender = smtplib.SMTP(smtpServer, smtpPort)
+
+        except Exception as err:
+            print("Login the email server failed.")
+            print("Error: %s" % str(err))
+            return False
 
 #-----------------------------------------------------------------------------
-    def _getEmailDict(self, emailId):
+    def getMailboxList(self):
+        if self.emailReader:
+            return self.emailReader.list()
+        return None
+
+#-----------------------------------------------------------------------------
+    def readLastMail(self, configDict=DEFAULT_CFG):
+        if not isinstance(configDict, dict):
+            print("The input config is invalid: %s" %str(configDict))
+            return None
+        configKeys = configDict.keys()
+        result = [] if 'returnFlg' in configKeys and configDict['returnFlg'] else None
+        if self.emailReader:
+            mailIds = self.getEmailIdList(emailBox=configDict['mailBox'], emailNum=configDict['number'], sender=configDict['sender'])
+            if mailIds is None :
+                print("Can not file email based on the config.")
+                return None
+            randMailIds = random.sample(mailIds, configDict['randomNum']) if 'randomNum' in configKeys and configDict['randomNum'] > 0 else mailIds
+            for mailId in randMailIds:
+                msg = self.getEmailDetail(mailId)
+                if msg:
+                    print("Get email: %s " %str(msg['subject']))
+                    if result is None:
+                        print("Email idx=%s info:" %str(mailId))
+                        print('From : ' + msg['from'] + '\n')
+                        print('To : ' + msg['to'] + '\n')
+                        print('Subject : ' + msg['subject'] + '\n')
+                    else:
+                        result.append(msg)
+                if 'interval' in configKeys and configDict['interval'] > 0:
+                    time.sleep(configDict['interval'])
+            print("Read email finish")
+            if result: return result
+        else:
+            print("Email send is not init.")
+
+#-----------------------------------------------------------------------------
+    def getEmailIdList(self, emailBox='inbox', emailNum=10, sender=None):
+        if self.emailReader:
+            try:
+                self.emailReader.select(emailBox)
+                emailInfo = self.emailReader.search(None, 'ALL') if sender is None else self.emailReader.search(None, 'FROM', f'"{sender}"')
+                IdList = emailInfo[1][0].split() 
+                mailIds = IdList if len(IdList) < emailNum else IdList[-emailNum:]
+                return mailIds
+            except Exception as err:
+                print("Get the mail ids error: %s" %str(err))
+        print("Email reader is not init.")
+        return None
+
+#-----------------------------------------------------------------------------
+    def getEmailDetail(self, emailId):
         """ Get the email info.
         Args:
             emailIdx (_type_): _description_
         """
-        mailId = int(emailId)
-        data = self.mailHandler.fetch(str(mailId), '(RFC822)')
-        for response_part in data:
-            arr = response_part[0]
-            if isinstance(arr, tuple):
-                try:
-                    return email.message_from_string(str(arr[1],'utf-8'))
-                except:
-                    return None
+        if self.emailReader:
+            mailId = int(emailId)
+            data = self.emailReader.fetch(str(mailId), '(RFC822)')
+            for response_part in data:
+                arr = response_part[0]
+                if isinstance(arr, tuple):
+                    try:
+                        return email.message_from_string(str(arr[1],'utf-8'))
+                    except:
+                        return None
+        else:
+            print("Email reader is not init.")
+            return None
 
+#-----------------------------------------------------------------------------
+    def close(self):
+        if self.emailReader:
+            self.emailReader.close()
+            self.emailReader.logout()
+            self.emailReader = None
+    
+        if self.emailSender:
+            self.emailSender.close()
+            self.emailSender = None
 
+#-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 def testCase(mode):
     account = 'alice@gt.org'
     account = 'bob@gt.org'
