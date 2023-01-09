@@ -16,15 +16,16 @@
 # Enable the IMAP Access at: Gmail Settings> Forwarding and POP / IMAP> IMAP Acess
 
 import time
+import ssl
 import smtplib
 import imaplib
 import email
 import traceback 
 import random
 
-
 SMTP_PORT_READ = 993
 SMTP_PORT_SEND = 587
+SMTP_PORT_SEND_SSL = 465
 
 DEFAULT_CFG = {
     'mailBox': 'inbox',
@@ -74,10 +75,16 @@ class emailActor(object):
             print("Error: %s" % str(err))
             return False
 #-----------------------------------------------------------------------------
-    def initEmailSender(self, smtpServer, smtpPort=SMTP_PORT_READ):
+    def initEmailSender(self, smtpServer, smtpPort=SMTP_PORT_READ, sslConn=True):
         try:
-            self.emailSender = smtplib.SMTP(smtpServer, smtpPort)
-
+            if sslConn:
+                ssl_context = ssl.create_default_context()
+                service = smtplib.SMTP_SSL(smtpServer, smtpPort, context=ssl_context)
+                service.login(self.account, self.password)
+            else:
+                self.emailSender = smtplib.SMTP(smtpServer, smtpPort)
+                self.emailSender.starttls()
+                self.emailSender.login(self.account, self.password)
         except Exception as err:
             print("Login the email server failed.")
             print("Error: %s" % str(err))
@@ -88,6 +95,12 @@ class emailActor(object):
         if self.emailReader:
             return self.emailReader.list()
         return None
+
+#-----------------------------------------------------------------------------
+    def sendEmail(self):
+        if self.emailSender:
+            self.emailSender.sendmail("sender_email_id", 'liu_yuan_cheng@hotmail.com', "test message from ncl gmail box")
+            self.emailSender.quit()
 
 #-----------------------------------------------------------------------------
     def readLastMail(self, configDict=DEFAULT_CFG):
