@@ -52,14 +52,14 @@ dataDict = {
     "weekly":[]
 }
 
-config_D = os.path.join(gv.dirpath, 'actionConfigD.json')
-config_R = os.path.join(gv.dirpath, 'actionConfigR.json')
-config_W = os.path.join(gv.dirpath, 'actionConfigW.json')
+config_D = os.path.join(gv.dirpath, 'static', 'actionConfigD.json')
+config_R = os.path.join(gv.dirpath, 'static', 'actionConfigR.json')
+config_W = os.path.join(gv.dirpath, 'static', 'actionConfigW.json')
 
 configDist = {
-    "daily": os.path.join(gv.dirpath, 'actionConfigD.json'),
-    "random": os.path.join(gv.dirpath, 'actionConfigR.json'),
-    "weekly": os.path.join(gv.dirpath, 'actionConfigW.json'),
+    "daily": os.path.join(gv.dirpath, 'static', 'actionConfigD.json'),
+    "random": os.path.join(gv.dirpath, 'static', 'actionConfigR.json'),
+    "weekly": os.path.join(gv.dirpath, 'static', 'actionConfigW.json'),
 }
 
 for item in configDist.items():
@@ -69,7 +69,7 @@ for item in configDist.items():
             with open(config, 'r') as fh:
                 dataDict[key] = json.load(fh)
         except Exception as err:
-            print("Failed to load the json config file: %s" %str(err))
+            print("Failed to load the json config file: %s" % str(err))
             exit()
 
 #-----------------------------------------------------------------------------

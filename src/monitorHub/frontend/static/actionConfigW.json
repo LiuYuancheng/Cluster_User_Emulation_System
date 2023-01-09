@@ -1,0 +1,15 @@
+[
+    {
+        "id": 1,
+        "name": "Back up all log files",
+        "detail": "Archive all files in Log folder",
+        "descrip": "Copy and compress the Logs folder",
+        "owner": "User: LYC",
+        "startT": "Every Friday at 09:01:00",
+        "period": "None",
+        "type": 0,
+        "dep": 0,
+        "state": 2,
+        "nextT": "2023-01-20 09:01:00"
+    }
+]

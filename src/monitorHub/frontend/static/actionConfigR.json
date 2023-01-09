@@ -1,0 +1,29 @@
+[
+    {
+        "id": 1,
+        "name": "ping [C2s]",
+        "detail": "Ping C2 server randomly",
+        "descrip": "Ping C2 server1 and C2 server2 randomly (every 5 min)",
+        "owner": "User: LYC",
+        "startT": "Every 1 day at 09:01:00",
+        "period": "8 hours",
+        "type": 0,
+        "dep": 0,
+        "state": 3,
+        "nextT": "2023-01-11 09:01:00"
+    },
+
+    {
+        "id": 2,
+        "name": "ping [Alice, Charles]",
+        "detail": "Ping other user randomly",
+        "descrip": "Ping Alice and Charles randomly (every 5 min)",
+        "owner": "User: LYC",
+        "startT": "Every 1 day at 09:01:00",
+        "period": "8 hours",
+        "type": 0,
+        "dep": 0,
+        "state": 3,
+        "nextT": "2023-01-11 09:01:00"
+    }
+]
