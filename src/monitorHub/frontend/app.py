@@ -46,16 +46,31 @@ def createApp():
 
 
 app = createApp()
-dataDict = []
-config = os.path.join(gv.dirpath, 'actionTest.json')
+dataDict = {
+    "daily":[],
+    "random":[],
+    "weekly":[]
+}
 
-if os.path.exists(config):
-    try:
-        with open(config, 'r') as fh:
-            dataDict = json.load(fh)
-    except Exception as err:
-        print("Failed to load the json config file: %s" %str(err))
-        exit()
+config_D = os.path.join(gv.dirpath, 'actionConfigD.json')
+config_R = os.path.join(gv.dirpath, 'actionConfigR.json')
+config_W = os.path.join(gv.dirpath, 'actionConfigW.json')
+
+configDist = {
+    "daily": os.path.join(gv.dirpath, 'actionConfigD.json'),
+    "random": os.path.join(gv.dirpath, 'actionConfigR.json'),
+    "weekly": os.path.join(gv.dirpath, 'actionConfigW.json'),
+}
+
+for item in configDist.items():
+    key, config = item
+    if os.path.exists(config):
+        try:
+            with open(config, 'r') as fh:
+                dataDict[key] = json.load(fh)
+        except Exception as err:
+            print("Failed to load the json config file: %s" %str(err))
+            exit()
 
 #-----------------------------------------------------------------------------
 # web home request handling functions.

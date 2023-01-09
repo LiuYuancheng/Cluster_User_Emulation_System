@@ -39,7 +39,7 @@
 
                 <table class="table table-bordered table-dark">
                     <thead>
-                        <tr class="table table-info">
+                        <tr class="table table-primary">
                             <th>Action Id</th>
                             <th>Action name</th>
                             <th>Description</th>
@@ -55,7 +55,7 @@
                     </thead>
                     <tbody>
 
-                        {% for post in posts %}
+                        {% for post in posts['daily'] %}
                         <tr class="info">
                             <td> <b>{{ post['id'] }}</b> </td>
                             <td> {{ post['name'] }} </td>
@@ -114,8 +114,165 @@
                 <button type="button" class="btn btn-success">[+] Add a new action </button>
             </a>
         </div>
-        <div class="tab-pane fade" id="pills-cr1-res" role="tabpanel" aria-labelledby="pills-cr1-res-tab">...</div>
-        <div class="tab-pane fade" id="pills-s17-cr2" role="tabpanel" aria-labelledby="pills-s17-cr2-tab">...</div>
+        <div class="tab-pane fade" id="pills-cr1-res" role="tabpanel" aria-labelledby="pills-cr1-res-tab">
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-dark">
+                    <thead>
+                        <tr class="table table-info">
+                            <th>Action Id</th>
+                            <th>Action name</th>
+                            <th>Description</th>
+                            <th>Start time</th>
+                            <th>Action period </th>
+                            <th>Owner</th>
+                            <th>Action type</th>
+                            <th>Dependency</th>
+                            <th>Current state</th>
+                            <th>Next run </th>
+                            <th>Config </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for post in posts['random'] %}
+                        <tr class="info">
+                            <td> <b>{{ post['id'] }}</b> </td>
+                            <td> {{ post['name'] }} </td>
+                            <td>
+                                <a href="#" data-toggle="tooltip" data-placement="right"
+                                    title="{{post['descrip']}}">{{post['detail']}}</a>
+                            </td>
+
+                            <td> <span class="badge badge-primary"> {{ post['startT'] }} </span> </td>
+                            <td> {{ post['period'] }} </td>
+                            <td> {{ post['owner'] }} </td>
+
+                            <td>
+                                {% if post['type'] == 0 %}
+                                <span class="badge badge-primary"> sequencial </span>
+                                {% else %}
+                                <span class="badge badge-warning"> parallel </span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if post['dep'] == 0 %}
+                                <span class="badge badge-dark"> None </span>
+                                {% else %}
+                                <span class="badge badge-light"> Action: {{ post['dep'] }} </span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if post['state'] == 0 %}
+                                <span class="badge badge-danger"> error </span>
+                                {% elif post['state'] == 1 %}
+                                <span class="badge badge-success"> finished </span>
+                                {% elif post['state'] == 2 %}
+                                <span class="badge badge-info"> pending </span>
+                                {% elif post['state'] == 3 %}
+                                <span class="badge badge-primary"> Running  </span> <div class="spinner-border"></div>
+                                {% else %}
+                                <span class="badge badge-secondary"> deactivated </span>
+                                {% endif %}
+                            </td>
+
+                            <td> <span class="badge badge-secondary"> {{ post['nextT'] }} </span> </td>
+
+                            <td>
+                                <a href="#"> <span class="badge badge-danger">Remove</span></a>
+                                <a href="#"> <span class="badge badge-warning">Edit</span></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+        <div class="tab-pane fade" id="pills-s17-cr2" role="tabpanel" aria-labelledby="pills-s17-cr2-tab">
+            <div class="table-responsive">
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="table table-warning">
+                            <th>Action Id</th>
+                            <th>Action name</th>
+                            <th>Description</th>
+                            <th>Start time</th>
+                            <th>Action period </th>
+                            <th>Owner</th>
+                            <th>Action type</th>
+                            <th>Dependency</th>
+                            <th>Current state</th>
+                            <th>Next run </th>
+                            <th>Config </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for post in posts['weekly'] %}
+                        <tr class="info">
+                            <td> <b>{{ post['id'] }}</b> </td>
+                            <td> {{ post['name'] }} </td>
+                            <td>
+                                <a href="#" data-toggle="tooltip" data-placement="right"
+                                    title="{{post['descrip']}}">{{post['detail']}}</a>
+                            </td>
+
+                            <td> <span class="badge badge-primary"> {{ post['startT'] }} </span> </td>
+                            <td> {{ post['period'] }} </td>
+                            <td> {{ post['owner'] }} </td>
+
+                            <td>
+                                {% if post['type'] == 0 %}
+                                <span class="badge badge-primary"> sequencial </span>
+                                {% else %}
+                                <span class="badge badge-warning"> parallel </span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if post['dep'] == 0 %}
+                                <span class="badge badge-dark"> None </span>
+                                {% else %}
+                                <span class="badge badge-light"> Action: {{ post['dep'] }} </span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if post['state'] == 0 %}
+                                <span class="badge badge-danger"> error </span>
+                                {% elif post['state'] == 1 %}
+                                <span class="badge badge-success"> finished </span>
+                                {% elif post['state'] == 2 %}
+                                <span class="badge badge-info"> pending </span>
+                                {% elif post['state'] == 3 %}
+                                <span class="badge badge-primary"> Running  </span> <div class="spinner-border"></div>
+                                {% else %}
+                                <span class="badge badge-secondary"> deactivated </span>
+                                {% endif %}
+                            </td>
+
+                            <td> <span class="badge badge-secondary"> {{ post['nextT'] }} </span> </td>
+
+                            <td>
+                                <a href="#"> <span class="badge badge-danger">Remove</span></a>
+                                <a href="#"> <span class="badge badge-warning">Edit</span></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+
+
+
+
+        </div>
     </div>
 
 </div>
