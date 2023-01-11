@@ -2,7 +2,8 @@
 #-----------------------------------------------------------------------------
 # Name:        emailActor.py
 #
-# Purpose:     This module is used to read and write email.
+# Purpose:     This module is used to login different kinds of email server to 
+#              read and write email. 
 # Author:      Yuancheng Liu
 #
 # Version:     v_0.1
@@ -11,9 +12,9 @@
 # License:     n.a
 #-----------------------------------------------------------------------------
 
-# Gmail configure:
-# Turn on the Less secure app access at: Google Account> Security> Less secure app access
-# Enable the IMAP Access at: Gmail Settings> Forwarding and POP / IMAP> IMAP Acess
+# Gmail account configure:
+# Turn on the "Less secure app access" setting at: Google Account > Security > Less secure app access
+# Enable the IMAP Access at: Gmail Settings > Forwarding and POP / IMAP > IMAP Acess
 
 import time
 import ssl
@@ -22,18 +23,21 @@ import imaplib
 import email
 import traceback 
 import random
+import re
 
+# stand email server port config:
 SMTP_PORT_READ = 993
 SMTP_PORT_SEND = 587
 SMTP_PORT_SEND_SSL = 465
 
+# default email read config. 
 DEFAULT_CFG = {
-    'mailBox': 'inbox',
-    'sender': None,
-    'number': 10,
-    'randomNum': 0,
-    'interval': 0,
-    'returnFlg': False
+    'mailBox'   : 'inbox',  # mail folder name.
+    'sender'    : None,     # serch email based on sender. None: read all email.
+    'number'    : 10,       # numher of email will be fetched. 
+    'randomNum' : 0,        # if set > 0, download the the random number for email from the fetched email.
+    'interval'  : 0,        # time interval between fetch 2 emails.
+    'returnFlg' : False     # flag indentify whether return all the email contents.
 }
 
 #-----------------------------------------------------------------------------
@@ -43,15 +47,28 @@ class emailActor(object):
         HotMail: smtpPort[587], sslConn[True]
         Mailu: smtpPort[143], sslConn[True]
 
-    Args:
-        object (_type_): _description_
+        Args:
+            object (_type_): _description_
     """
-
     def __init__(self, account, password) -> None:
+        """ Each email actor will bind to one email account.
+            Args:
+                account (str): full email account.For example: liu_yuan_cheng@hotmail.com
+                password (str): password.
+        """
+        if not self._isEmailFmtValid(account):
+            return None
         self.account = account
         self.password = password
         self.emailReader = None
         self.emailSender = None
+
+#-----------------------------------------------------------------------------
+    def _isEmailFmtValid(self, emailStr):
+        if re.match("^[a-zA-Z0-9-_.]+@[a-zA-Z0-9]+\.[a-z]{1,3}$",emailStr):
+            return True
+        print(" Error the input email account format is not valid: %s" %str(emailStr))
+        return False
 
 #-----------------------------------------------------------------------------
     def initEmailReader(self, smtpServer, smtpPort=SMTP_PORT_READ, sslConn=True):
@@ -74,6 +91,7 @@ class emailActor(object):
             print("Login the email server failed.")
             print("Error: %s" % str(err))
             return False
+
 #-----------------------------------------------------------------------------
     def initEmailSender(self, smtpServer, smtpPort=SMTP_PORT_READ, sslConn=True):
         try:
@@ -85,6 +103,7 @@ class emailActor(object):
                 self.emailSender = smtplib.SMTP(smtpServer, smtpPort)
                 self.emailSender.starttls()
                 self.emailSender.login(self.account, self.password)
+            return True
         except Exception as err:
             print("Login the email server failed.")
             print("Error: %s" % str(err))
@@ -95,43 +114,6 @@ class emailActor(object):
         if self.emailReader:
             return self.emailReader.list()
         return None
-
-#-----------------------------------------------------------------------------
-    def sendEmail(self):
-        if self.emailSender:
-            self.emailSender.sendmail("sender_email_id", 'liu_yuan_cheng@hotmail.com', "test message from ncl gmail box")
-            self.emailSender.quit()
-
-#-----------------------------------------------------------------------------
-    def readLastMail(self, configDict=DEFAULT_CFG):
-        if not isinstance(configDict, dict):
-            print("The input config is invalid: %s" %str(configDict))
-            return None
-        configKeys = configDict.keys()
-        result = [] if 'returnFlg' in configKeys and configDict['returnFlg'] else None
-        if self.emailReader:
-            mailIds = self.getEmailIdList(emailBox=configDict['mailBox'], emailNum=configDict['number'], sender=configDict['sender'])
-            if mailIds is None :
-                print("Can not file email based on the config.")
-                return None
-            randMailIds = random.sample(mailIds, configDict['randomNum']) if 'randomNum' in configKeys and configDict['randomNum'] > 0 else mailIds
-            for mailId in randMailIds:
-                msg = self.getEmailDetail(mailId)
-                if msg:
-                    print("Get email: %s " %str(msg['subject']))
-                    if result is None:
-                        print("Email idx=%s info:" %str(mailId))
-                        print('From : ' + msg['from'] + '\n')
-                        print('To : ' + msg['to'] + '\n')
-                        print('Subject : ' + msg['subject'] + '\n')
-                    else:
-                        result.append(msg)
-                if 'interval' in configKeys and configDict['interval'] > 0:
-                    time.sleep(configDict['interval'])
-            print("Read email finish")
-            if result: return result
-        else:
-            print("Email send is not init.")
 
 #-----------------------------------------------------------------------------
     def getEmailIdList(self, emailBox='inbox', emailNum=10, sender=None):
@@ -168,6 +150,54 @@ class emailActor(object):
             return None
 
 #-----------------------------------------------------------------------------
+    def readLastMail(self, configDict=DEFAULT_CFG):
+        if not isinstance(configDict, dict):
+            print("The input config is invalid: %s" %str(configDict))
+            return None
+        configKeys = configDict.keys()
+        result = [] if 'returnFlg' in configKeys and configDict['returnFlg'] else None
+        if self.emailReader:
+            mailIds = self.getEmailIdList(emailBox=configDict['mailBox'], emailNum=configDict['number'], sender=configDict['sender'])
+            if mailIds is None :
+                print("Can not file email based on the config.")
+                return None
+            randMailIds = random.sample(mailIds, configDict['randomNum']) if 'randomNum' in configKeys and configDict['randomNum'] > 0 else mailIds
+            for mailId in randMailIds:
+                msg = self.getEmailDetail(mailId)
+                if msg:
+                    print("Get email: %s " %str(msg['subject']))
+                    if result is None:
+                        print("Email idx=%s info:" %str(mailId))
+                        print('From : ' + msg['from'] + '\n')
+                        print('To : ' + msg['to'] + '\n')
+                        print('Subject : ' + msg['subject'] + '\n')
+                    else:
+                        result.append(msg)
+                if 'interval' in configKeys and configDict['interval'] > 0:
+                    time.sleep(configDict['interval'])
+            print("Read email finish")
+            if result: return result
+        else:
+            print("Email send is not init.")
+            return None
+
+
+#-----------------------------------------------------------------------------
+    def sendEmailMsg(self, dests, message):
+        """ Send a sample message to email destination(s)
+        """
+        if self.emailSender:
+            if isinstance(dests, str): dests = (dests,) 
+            if isinstance(dests, list) or isinstance(dests, tuple):
+                for dest in dests:
+                    self.sendMsg(self.account, dest, message)
+
+#-----------------------------------------------------------------------------
+    def sendMsg(self, sender, receiver, message):
+        if self._isEmailFmtValid(sender) and self._isEmailFmtValid(sender):
+            self.emailSender.sendmail(sender, receiver, message)
+        
+#-----------------------------------------------------------------------------
     def close(self):
         if self.emailReader:
             self.emailReader.close()
@@ -175,6 +205,7 @@ class emailActor(object):
             self.emailReader = None
     
         if self.emailSender:
+            self.emailSender.quit()
             self.emailSender.close()
             self.emailSender = None
 
