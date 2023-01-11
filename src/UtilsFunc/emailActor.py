@@ -16,14 +16,22 @@
 # Turn on the "Less secure app access" setting at: Google Account > Security > Less secure app access
 # Enable the IMAP Access at: Gmail Settings > Forwarding and POP / IMAP > IMAP Acess
 
+import os
 import time
+import random
+import re
+
 import ssl
 import smtplib
 import imaplib
-import email
 import traceback 
-import random
-import re
+
+# import the email module
+import email
+from email import encoders
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 # stand email server port config:
 SMTP_PORT_READ = 993
@@ -181,6 +189,65 @@ class emailActor(object):
             print("Email send is not init.")
             return None
 
+#-----------------------------------------------------------------------------
+    def forwardEml(self, dests, emlFilePath):
+        """ Forward a export email file *.eml as email to destinations.
+            Args:
+                dests (_type_): _description_
+                emlFilePath (_type_): _description_
+        """
+        if not ('eml' in emlFilePath):
+            print('The file format must be and *eml')
+            return False
+        if os.path.exists(emlFilePath):
+            with open(emlFilePath, "rb") as file:
+                message = file.read()
+                self.sendMsg(self.account, dests, message)
+            return True
+        else:
+            print("The input eml file is not found, file path: %s" %str(emlFilePath))
+            return False
+
+#-----------------------------------------------------------------------------
+    def sendEmailHtml(self, dests, subjectStr, htmlContent, attachmentPath=None):
+        """ Send the html email 
+        """
+        # An Example of the html content:
+        # html = """\
+        #         <html>
+        #         <body>
+        #             <p>Hi,<br>
+        #             How are you?<br>
+        #             <a href="http://www.realpython.com">Real Python</a> 
+        #             has many great tutorials.
+        #             </p>
+        #         </body>
+        #     </html>
+        #     """
+        message = MIMEMultipart("alternative")
+        message["Subject"] = str(subjectStr)
+        message["From"] = self.account
+        message["To"] = str(dests)
+        message.attach(MIMEText(htmlContent, "html"))
+        # attach the attachment file to the email.
+        if not attachmentPath is None:
+            if os.path.exists(attachmentPath):
+                part = None
+                with open(attachmentPath, "rb") as attachment:
+                    # Add file as application/octet-stream
+                    # Email client can usually download this automatically as attachment
+                    part = MIMEBase("application", "octet-stream")
+                    part.set_payload(attachment.read())
+                encoders.encode_base64(part)
+                attachName = os.path.basename(attachmentPath)
+                part.add_header(
+                    "Content-Disposition",
+                    f"attachment; filename= {attachName}",
+                )
+                message.attach(part)
+        else:
+            print("The input attachment file is not found.")
+        self.sendEmailMsg(dests, message.as_string())
 
 #-----------------------------------------------------------------------------
     def sendEmailMsg(self, dests, message):
