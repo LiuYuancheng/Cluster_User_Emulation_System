@@ -5,7 +5,7 @@
 # Purpose:     This module is the main website host program to host the webpage 
 #              by using Flask frame work. 
 #  
-# Author:      Yuancheng Liu, Andy Lam Wei Jie
+# Author:      Yuancheng Liu
 #
 # Created:     2022/08/27
 # version:     v0.2
@@ -14,6 +14,9 @@
 #-----------------------------------------------------------------------------
 
 # CSS lib [bootstrap]: https://www.w3schools.com/bootstrap4/default.asp
+
+# https://www.w3schools.com/howto/howto_css_form_on_image.asp
+
 import os
 import json
 
