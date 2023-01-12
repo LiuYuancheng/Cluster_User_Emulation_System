@@ -12,6 +12,12 @@ if mode == 0:
     with open(gv.SQL_PATH) as fh:
         connection.executescript(fh.read())
     cur = connection.cursor()
+
+elif mode == 1:
+    print("Clean and reset the data jobs table.")
+    with open(gv.SQL_PATH) as fh:
+        connection.executescript(fh.read())
+    cur = connection.cursor()
     actId = 1
     actName = '09:01_ping'
     actDetail = 'Ping 30 destinations'
@@ -29,5 +35,9 @@ if mode == 0:
         (actId, actName, actDetail, actDesc, actOwner, actType, startT, depend, threadType, actState, nextT)\
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
         (actId, actName, actDetail, actDesc, actOwner, actType, startT, depend, threadType, actState, nextT))
+
+
+
+
 connection.commit()
 connection.close()

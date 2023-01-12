@@ -227,7 +227,7 @@ def scheduleBobActions():
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 def main(actorName):
-    gv.iScheduler = actionScheduler()
+    gv.iScheduler = actionScheduler(None)
     
     if actorName == 'Bob':
         scheduleBobActions()

@@ -68,5 +68,5 @@ PPT_CFG4  = os.path.join(ACTOR_CFG, 'pptxInput4.json.')
 
 OFF_FW_EXE = os.path.join(ACTOR_CFG, 'offFW_private.exe')
 
-
+iDataMgr = None
 iScheduler = None
