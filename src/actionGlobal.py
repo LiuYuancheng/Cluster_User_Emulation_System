@@ -36,6 +36,17 @@ if os.path.exists(gLibDir):
 import Log
 Log.initLogger(gTopDir, 'Logs', APP_NAME[0], APP_NAME[1], historyCnt=100, fPutLogsUnderDate=True)
 
+# job statnd parm
+JB_ST_PENDING = 'pending'
+JB_ST_ERROR = 'error'
+JB_ST_RUNNING = 'running'
+JB_ST_FINISH = 'finish'
+
+
+DB_PATH = os.path.join(dirpath, 'database.db')
+SQL_PATH = os.path.join(dirpath, 'schema.sql')
+
+
 # All the user's config file 
 ACTOR_DIR = os.path.join(DIR_PATH, 'UtilsFunc')
 ACTOR_CFG = os.path.join(ACTOR_DIR, 'BobConfig')
