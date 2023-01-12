@@ -26,6 +26,7 @@ from flask import Flask, render_template, request, flash, url_for, redirect
 from flask_login import LoginManager, login_required, current_user
 from werkzeug.exceptions import abort
 
+import dataManager
 import frontendGlobal as gv
 
 # Init the flask web app program.
@@ -37,8 +38,8 @@ def createApp():
     print("Check whether can connect to the monitor-hub backend server:")
     
     # Try to connect to the monitor-hub backend server.
-    #gv.iDataMgr = dataManager.DataManager(None)
-    #if not gv.iDataMgr: exit()
+    gv.iDataMgr = dataManager.DataManager(None)
+    if not gv.iDataMgr: exit()
     #gv.iDataMgr.start()
 
     # init the web host
@@ -92,6 +93,10 @@ def index():
         'state':1,
         'nextT': "2023-01-04 09:01:00"
     }]
+
+    result = gv.iDataMgr.getJobsState()
+    print(result)
+    dataDict['daily'] = result['daily']
     return render_template('index.html', posts=dataDict)
 
 #-----------------------------------------------------------------------------

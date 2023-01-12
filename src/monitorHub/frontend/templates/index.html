@@ -57,19 +57,19 @@
 
                         {% for post in posts['daily'] %}
                         <tr class="info">
-                            <td> <b>{{ post['id'] }}</b> </td>
-                            <td> {{ post['name'] }} </td>
+                            <td> <b>{{ post['actId'] }}</b> </td>
+                            <td> {{ post['actName'] }} </td>
                             <td>
                                 <a href="#" data-toggle="tooltip" data-placement="right"
-                                    title="{{post['descrip']}}">{{post['detail']}}</a>
+                                    title="{{post['actDesc']}}">{{post['actDetail']}}</a>
                             </td>
 
                             <td> <span class="badge badge-primary"> {{ post['startT'] }} </span> </td>
                             <td> {{ post['period'] }} </td>
-                            <td> {{ post['owner'] }} </td>
+                            <td> {{ post['actOwner'] }} </td>
 
                             <td>
-                                {% if post['type'] == 0 %}
+                                {% if post['actType'] == 0 %}
                                 <span class="badge badge-primary"> sequencial </span>
                                 {% else %}
                                 <span class="badge badge-warning"> parallel </span>
@@ -77,21 +77,21 @@
                             </td>
 
                             <td>
-                                {% if post['dep'] == 0 %}
+                                {% if post['depend'] == 0 %}
                                 <span class="badge badge-dark"> None </span>
                                 {% else %}
-                                <span class="badge badge-light"> Action: {{ post['dep'] }} </span>
+                                <span class="badge badge-light"> Action: {{ post['depend'] }} </span>
                                 {% endif %}
                             </td>
 
                             <td>
-                                {% if post['state'] == 0 %}
+                                {% if post['actState'] == "error" %}
                                 <span class="badge badge-danger"> error </span>
-                                {% elif post['state'] == 1 %}
+                                {% elif post['actState'] == "finish" %}
                                 <span class="badge badge-success"> finished </span>
-                                {% elif post['state'] == 2 %}
+                                {% elif post['actState'] == "pending" %}
                                 <span class="badge badge-info"> pending </span>
-                                {% elif post['state'] == 3 %}
+                                {% elif post['actState'] == "running" %}
                                 <span class="badge badge-primary"> Running  </span> <div class="spinner-border"></div>
                                 {% else %}
                                 <span class="badge badge-secondary"> deactivated </span>

@@ -13,12 +13,15 @@
 #-----------------------------------------------------------------------------
 
 import time
+import json
 import datetime
 from datetime import datetime, timedelta
 import threading
 import sqlite3
 
 import actionGlobal as gv
+import Log
+import udpCom
 
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
@@ -28,6 +31,7 @@ class DataManager(threading.Thread):
         threading.Thread.__init__(self)
         self.dbConn = None
         self.parent = parent
+        self.server = udpCom.udpServer(None, gv.UDP_PORT)
         self.terminate = False
         self.lastUpdate = datetime.now()
 
@@ -35,17 +39,46 @@ class DataManager(threading.Thread):
     def run(self):
         """ Thread run() function call by start(). """
         time.sleep(1)  
-        while not self.terminate:
-            print('Do the daily database backup and update')
-            Log.info('Do the daily database backup and update')
-            self._checkGpuRequest()
-            time.sleep(gv.ONE_HOUR)
+        #while not self.terminate:
+        self.server.serverStart(handler=self.msgHandler)
+        print('Do the daily database backup and update')
+        Log.info('Do the daily database backup and update')
+            
+        #self._checkGpuRequest()
+        #time.sleep(gv.ONE_HOUR)
 
+#-----------------------------------------------------------------------------
+    def parseIncomeMsg(self, msg):
+        req = msg.decode('UTF-8')
+        reqKey = reqType = reqJsonStr= None
+        try:
+            reqKey, reqType, reqJsonStr = req.split(';', 2)
+        except Exception as e:
+            Log.error('The income message format is incorrect.')
+            Log.exception(e)
+        return (reqKey.strip(), reqType.strip(), reqJsonStr)
+
+#-----------------------------------------------------------------------------
+    def msgHandler(self, msg):
+        print("Incomming message: %s" % str(msg))
+
+        # request message format: 
+        # data fetch: GET:<key>:<val1>:<val2>...
+        # data set: POST:<key>:<val1>:<val2>...
+        resp = b'REP:deny:{}'
+        (reqKey, reqType, reqJsonStr) = self.parseIncomeMsg(msg)
+        respStr = self.fetchAllActState()
+        resp =';'.join(('REP', 'actState', respStr))
+        if isinstance(resp, str): resp = resp.encode('utf-8')
+        return resp
+
+    #-----------------------------------------------------------------------------
     def _getDBconnection(self):
         conn = sqlite3.connect(gv.DB_PATH)
         conn.row_factory = sqlite3.Row
         return conn
 
+    #-----------------------------------------------------------------------------
     def registerActions(self, actDict):
         
         conn = self._getDBconnection()
@@ -58,7 +91,7 @@ class DataManager(threading.Thread):
             actId = actDict['actId']
             actName = actDict['actName']
             actDetail = actDict['actDetail']
-            actDesc = actDict['actDetail'] if 'actDetail' in actDict.keys() else ''
+            actDesc = actDict['actDesc'] if 'actDesc' in actDict.keys() else ''
             actOwner = actDict['actOwner'] if 'actOwner' in actDict.keys() else ''
             actType = actDict['actType']
             startT = actDict['startT']
@@ -78,6 +111,7 @@ class DataManager(threading.Thread):
 
         conn.close()
 
+    #-----------------------------------------------------------------------------
     def updateActStat(self, actId, actState):
         conn = self._getDBconnection()
         check = conn.execute("SELECT 1 FROM dailyActions WHERE actId=%s" %str(actId))
@@ -87,7 +121,24 @@ class DataManager(threading.Thread):
             conn.commit()
         conn.close()
 
+    #-----------------------------------------------------------------------------
+    def fetchAllActState(self):
+        respDict = {
+            'daily': None,
+            'random': None
+        }
+        conn = self._getDBconnection()
+        queryStr = 'SELECT * FROM dailyActions'
+        resp = conn.execute(queryStr).fetchall()
+        respDict['daily'] = [dict(row) for row in resp]
 
+        conn.close()
+        respStr = json.dumps(respDict)
+        return respStr
+
+
+#-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 def testCase(mode):
 
     if mode == 0:
@@ -105,6 +156,8 @@ def testCase(mode):
             'actState': 'pending'
         }
         dbmgr.registerActions(testDict)
+
+        dbmgr.fetchAllActState()
 
 
 if __name__ == "__main__":

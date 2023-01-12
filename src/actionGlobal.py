@@ -36,6 +36,8 @@ if os.path.exists(gLibDir):
 import Log
 Log.initLogger(gTopDir, 'Logs', APP_NAME[0], APP_NAME[1], historyCnt=100, fPutLogsUnderDate=True)
 
+UDP_PORT = 3001 # host UDP port
+
 # job statnd parm
 JB_ST_PENDING = 'pending'
 JB_ST_ERROR = 'error'
