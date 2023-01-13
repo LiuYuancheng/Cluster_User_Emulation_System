@@ -3,8 +3,9 @@
 # Name:        scheduler.py
 #
 # Purpose:     This module is a script use python <schedule> module to scheduler 
-#              the user's tasks (call different actor module to simulate a normal 
-#              user's daily action).   
+#              the user's regular or random tasks (call different actor module 
+#              to simulate a normal user's daily action or generate random network 
+#              traffic comm or local operation event).   
 #              <schedule> reference link: https://schedule.readthedocs.io/en/stable/
 #
 # Author:      Yuancheng Liu
@@ -26,7 +27,9 @@ import subprocess
 import schedule
 
 import actionGlobal as gv
+import dataManager 
 import actorFunctions
+
 import Log
 
 DIR_PATH = os.path.dirname(__file__)
@@ -35,28 +38,63 @@ print("Current source code location : %s" % DIR_PATH)
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 class userAction(object):
+
     def __init__(self, actionName='', timeStr=None, runFunc=None, threadFlg=False) -> None:
+        self.id = -1    # The action ID, 
         self.name = actionName
         self.timeStr = timeStr
         self.func = runFunc
+        self.jobType = 0
+        self.activeFunc = True
+        self.state = gv.JB_ST_PENDING
         self.threadFlg = threadFlg
+        self.optionalInfo = {} # optional info in the action
+        
+        self.scheduleJobRef = None
         self._jobthread = None
 
 #-----------------------------------------------------------------------------
+    def setID(self,newId):
+        self.id = newId
+
+#-----------------------------------------------------------------------------
+    def activeAction(self):
+        if self.id > 0:
+            self.scheduleJobRef = schedule.every().day.at(self.timeStr).do(self.runFunc)
+            self.activeFunc = True
+            #if gv.iDataMgr: gv.iDataMgr.updateActStat(self.id, self.state)
+        else:
+            print("The Action id is not valid: %s" % str(self.id))
+
+#-----------------------------------------------------------------------------
     def runFunc(self):
-        Log.info('Start to run job: %s' %str(self.name))
+        Log.info('Start to run job [%s]: %s' %(str(self.id), str(self.name)))
         if self.func:
+            self.state = gv.JB_ST_RUNNING
+            if gv.iDataMgr: gv.iDataMgr.updateActStat(self.id, self.state)
             try:
                 if self.threadFlg:
                     self._jobthread = threading.Thread(target=self.func)
                     self._jobthread.start()
+                    Log.info('Running...')
                 else:
                     self.func()
+                self.state = gv.JB_ST_FINISH
+                if gv.iDataMgr: gv.iDataMgr.updateActStat(self.id, self.state)
+                Log.info('=> Finish job[%s]:%s' %(str(self.id), str(self.name)))
             except Exception as err:
                 Log.error("Run job %s error :" %str(self.name))
                 Log.exception(err)
+                self.state = gv.JB_ST_ERROR
+                if gv.iDataMgr: gv.iDataMgr.updateActStat(self.id, self.state)
         else:
             Log.info('No function is added.')
+
+#-----------------------------------------------------------------------------
+    def getJobState(self):
+        if self.activeFunc:
+            return self.state
+        return None
 
 #-----------------------------------------------------------------------------
     def jobThreadJoin(self):
@@ -65,13 +103,51 @@ class userAction(object):
             self._jobthread.join()
 
 #-----------------------------------------------------------------------------
+    def addActionInfo(self, key, val):
+        self.optionalInfo[key] = val
+
+#-----------------------------------------------------------------------------
+    def getActionInfo(self, key):
+        if key in self.optionalInfo.keys():
+            return self.optionalInfo[key]
+        return None
+
+#-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 class actionScheduler(object):
 
     def __init__(self) -> None:
         # The action dictionary
-        self.actionDict = {}
-        self.terminate = False 
+        self.actionDictD = {}
+        self.actionDictR = {}
+        self.actionDictW = {}
+        #gv.iDataMgr = dataManager.DataManager(self)
+        self.terminate = False
+        self.count = 0
+
+    def getNewId(self):
+        self.count += 1
+        return self.count
+
+    def registerDailyAction(self, actionObj):
+        if actionObj:
+            newId = self.getNewId()
+            actionObj.setID(newId)
+            actionObj.activeAction()
+            regInfoDict = {
+                'actId'     : actionObj.id,
+                'actName'   : actionObj.name,
+                'actDetail' : actionObj.getActionInfo('actDetail'),
+                'actDesc'   : actionObj.getActionInfo('actDesc'),
+                'actOwner'  : actionObj.getActionInfo('actOwner'),
+                'actType'   : actionObj.jobType,
+                'startT'    : actionObj.timeStr,
+                'depend'    : actionObj.getActionInfo('depend'),
+                'threadType': 1 if actionObj.threadFlg else 0,
+                'actState'  : actionObj.state
+            }
+            
+            gv.iDataMgr.registerActions(regInfoDict)
 
     def addAction(self, actionObj):
         if actionObj:
@@ -85,6 +161,34 @@ class actionScheduler(object):
         while not self.terminate:
             schedule.run_pending()
             time.sleep(1)
+
+
+def testCaseEdit():
+    gv.iDataMgr = dataManager.DataManager(None)
+    gv.iScheduler = actionScheduler()
+    gv.iDataMgr .start()
+
+    timeStr = "09:01"
+    userAction_0901 = userAction(actionName='09:01_ping', timeStr=timeStr, runFunc=actorFunctions.func_0901, threadFlg=False)
+    userAction_0901.addActionInfo('actDetail', 'Ping 30 destinations')
+    userAction_0901.addActionInfo('actDesc', 'Ping a servers list to check the server connection.')
+    userAction_0901.addActionInfo('actOwner', 'Bob')
+    userAction_0901.addActionInfo('depend', 0)
+    gv.iScheduler.registerDailyAction(userAction_0901)
+    
+    timeStr = "09:10"
+    userAction_0910 = userAction(actionName='09:10_ping', timeStr=timeStr, runFunc=actorFunctions.func_0901, threadFlg=False)
+    userAction_0910.addActionInfo('actDetail', 'Ping 100+ destinations')
+    userAction_0910.addActionInfo('actDesc', 'Bob runs the ping client program.')
+    userAction_0910.addActionInfo('actOwner', 'Bob')
+    userAction_0910.addActionInfo('depend', 0)
+    gv.iScheduler.registerDailyAction(userAction_0910)
+
+    gv.iScheduler.startSimulate()
+
+    #gv.iScheduler.addAction(userAction_0901)
+
+
 
 #-----------------------------------------------------------------------------
 def scheduleBobActions():
@@ -227,7 +331,8 @@ def scheduleBobActions():
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 def main(actorName):
-    gv.iScheduler = actionScheduler(None)
+    gv.iDataMgr = dataManager.DataManager()
+    gv.iScheduler = actionScheduler()
     
     if actorName == 'Bob':
         scheduleBobActions()
@@ -302,6 +407,7 @@ def testCase(mode):
     #    time.sleep(1)
 
 if __name__ == '__main__':
+    testCaseEdit()
     #testCase(1)
-    main('Bob')
+    #main('Bob')
 
