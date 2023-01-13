@@ -23,8 +23,6 @@ import json
 from datetime import timedelta, datetime
 from http import server
 from flask import Flask, render_template, request, flash, url_for, redirect
-from flask_login import LoginManager, login_required, current_user
-from werkzeug.exceptions import abort
 
 import dataManager
 import frontendGlobal as gv
@@ -39,6 +37,7 @@ def createApp():
     
     # Try to connect to the monitor-hub backend server.
     gv.iDataMgr = dataManager.DataManager(None)
+    gv.iDataMgr.connectToScheduler()
     if not gv.iDataMgr: exit()
     #gv.iDataMgr.start()
 
@@ -48,9 +47,9 @@ def createApp():
     app.config['REMEMBER_COOKIE_DURATION'] = timedelta(seconds=gv.COOKIE_TIME)
     return app
 
-
 app = createApp()
 dataDict = {
+    "connected": gv.iDataMgr.schedulerConnected(),
     "daily":[],
     "random":[],
     "weekly":[]
@@ -94,9 +93,13 @@ def index():
         'nextT': "2023-01-04 09:01:00"
     }]
 
-    result = gv.iDataMgr.getJobsState()
-    print(result)
-    dataDict['daily'] = result['daily']
+    if gv.iDataMgr.schedulerConnected():
+        result = gv.iDataMgr.getJobsState()
+        print(result)
+        dataDict['daily'] = result['daily']
+    else:
+        dataDict['daily'] = []
+        
     return render_template('index.html', posts=dataDict)
 
 #-----------------------------------------------------------------------------
