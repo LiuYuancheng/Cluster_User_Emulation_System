@@ -18,7 +18,7 @@ import actorFunctions
 import actionScheduler
 from actionScheduler import userAction
 
-ACTOR_NAME = 'Bob (192.168.57.10)'
+ACTOR_NAME = 'Bob[192.168.57.10]'
 
 #-----------------------------------------------------------------------------
 def addOneAction(actionConfig):
@@ -125,6 +125,165 @@ def main():
     }
     addOneAction(action_1015)
 
+    action_1032 = {
+        'time': '10:32',
+        'name': '10:32_YouTube',
+        'actionFunc': actorFunctions.func_1032,
+        'parallelTH': False,
+        'actDetail': 'Watch some youTube videos',
+        'actDesc': ' Watch 5 YouTube videos'
+    }
+    addOneAction(action_1032)
+
+    action_1050 = {
+        'time': '10:50',
+        'name': '10:50_EditMs-Word',
+        'actionFunc': actorFunctions.func_1050,
+        'parallelTH': False,
+        'actDetail': 'Create and edit MS-Word Doc.',
+        'actDesc': 'Create the Report.docx file and write some thing in it.'
+    }
+    addOneAction(action_1050)
+
+    action_1125 = {
+        'time': '11:25',
+        'name': '11:25_EditMs-PowerPoint',
+        'actionFunc': actorFunctions.func_1125,
+        'parallelTH': False,
+        'actDetail': 'Create and edit MS-PPT Doc.',
+        'actDesc': 'Create the Report.pptx file and write some thing in it.'
+    }
+    addOneAction(action_1125)
+
+    action_1135 = {
+        'time': '11:35',
+        'name': '11:35_PlayGame',
+        'actionFunc': actorFunctions.func_1135,
+        'parallelTH': False,
+        'actDetail': 'Open Chrome and play Dino Game.',
+        'actDesc': 'Play google dinosaur jump game for 30 mins.'
+    }
+    addOneAction(action_1135)
+
+    action_1310 = {
+        'time': '13:10',
+        'name': '13:10_Ping_subnet2',
+        'actionFunc': actorFunctions.func_1310,
+        'parallelTH': False,
+        'actDetail': 'Ping ip addresses in subnet2',
+        'actDesc': 'Ping another 100 ip addresses in subnet2.'
+    }
+    addOneAction(action_1310)
+
+    action_1345 = {
+        'time': '13:35',
+        'name': '13:45_SSH_subnet2',
+        'actionFunc': actorFunctions.func_1345,
+        'parallelTH': False,
+        'actDetail': 'SSH to hosts in subnet2',
+        'actDesc': 'SSH to pingable host in subnet2.'
+    }
+    addOneAction(action_1345)
+
+    action_1410 = {
+        'time': '14:10',
+        'name': '14:10_TrunOff_FW',
+        'actionFunc': actorFunctions.func_1410,
+        'parallelTH': False,
+        'actDetail': 'Turn off Windows FW.',
+        'actDesc': 'Turn off the windows privcate network FW'
+    }
+    addOneAction(action_1410)
+
+    action_1430 = {
+        'time': '14:30',
+        'name': '14:30_Webdownload',
+        'actionFunc': actorFunctions.func_1430,
+        'parallelTH': False,
+        'actDetail': 'Download some thing from webs dict',
+        'actDesc': 'Follow urls list to download all the contents'
+    }
+    addOneAction(action_1430)
+
+    action_1450 = {
+        'time': '14:50',
+        'name': '14:50_UDP communication',
+        'actionFunc': actorFunctions.func_1450,
+        'parallelTH': False,
+        'actDetail': 'Send message/file by UDP',
+        'actDesc': 'Send randome UDP package, each package is about 400KB'
+    }
+    addOneAction(action_1450)
+    
+    action_1515 = {
+        'time': '15:15',
+        'name': '15:15_EditMs-PowerPoint',
+        'actionFunc': actorFunctions.func_1515,
+        'parallelTH': False,
+        'actDetail': 'Find and edit MS-PPT Doc',
+        'actDesc': 'Find the Report.pptx file and write some thing in it.'
+    }
+    addOneAction(action_1515)
+
+    action_1520 = {
+        'time': '15:20',
+        'name': '15:20_Play game',
+        'actionFunc': actorFunctions.func_1520,
+        'parallelTH': False,
+        'actDetail': 'Play a game',
+        'actDesc': 'Play google dinosaur jump game for 10 mins.'
+    }
+    addOneAction(action_1520)
+
+    action_1540 = {
+        'time': '15:40',
+        'name': '15:40_SendEmail',
+        'actionFunc': actorFunctions.func_1540,
+        'parallelTH': False,
+        'actDetail': 'Send emails',
+        'actDesc': 'Send 30 emails to other people.'
+    }
+    addOneAction(action_1540)
+
+    action_1600 = {
+        'time': '16:00',
+        'name': '16:00_WatchVideo',
+        'actionFunc': actorFunctions.func_1600,
+        'parallelTH': False,
+        'actDetail': 'Open a video file.',
+        'actDesc': 'Look for video file and open.'
+    }
+    addOneAction(action_1600)
+
+    action_1635 = {
+        'time': '16:35',
+        'name': '16:35_CheckPictures',
+        'actionFunc': actorFunctions.func_1635,
+        'parallelTH': False,
+        'actDetail': 'Check pictures in folder.',
+        'actDesc': 'Look for picture file and open.'
+    }
+    addOneAction(action_1635)
+
+    action_1700 = {
+        'time': '17:00',
+        'name': '17:00_UDP communication',
+        'actionFunc': actorFunctions.func_1450,
+        'parallelTH': False,
+        'actDetail': 'Send message/file by UDP.',
+        'actDesc': 'Send randome UDP package, each package is about 400KB'
+    }
+    addOneAction(action_1700)
+
+    action_1735 = {
+        'time': '17:35',
+        'name': '17:35_Write Report',
+        'actionFunc': actorFunctions.func_1050,
+        'parallelTH': False,
+        'actDetail': 'Bob finished his report.',
+        'actDesc': 'Open the report.docx and edit'
+    }
+    addOneAction(action_1735)
 
     gv.iScheduler.startSimulate()
 

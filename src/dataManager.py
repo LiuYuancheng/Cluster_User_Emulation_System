@@ -41,11 +41,10 @@ class DataManager(threading.Thread):
         time.sleep(1)  
         #while not self.terminate:
         self.server.serverStart(handler=self.msgHandler)
-        print('Do the daily database backup and update')
+        #print('Do the daily database backup and update')
         Log.info('Do the daily database backup and update')
             
-        #self._checkGpuRequest()
-        #time.sleep(gv.ONE_HOUR)
+
 
 #-----------------------------------------------------------------------------
     def parseIncomeMsg(self, msg):
@@ -65,10 +64,16 @@ class DataManager(threading.Thread):
         # request message format: 
         # data fetch: GET:<key>:<val1>:<val2>...
         # data set: POST:<key>:<val1>:<val2>...
+
         resp = b'REP:deny:{}'
         (reqKey, reqType, reqJsonStr) = self.parseIncomeMsg(msg)
-        respStr = self.fetchAllActState()
-        resp =';'.join(('REP', 'actState', respStr))
+        if reqKey=='GET':
+
+            if reqType == 'login':
+                resp = ';'.join(('REP', 'ready', '{}'))
+            elif reqType == 'jobState':
+                respStr = self.fetchAllActState()
+                resp =';'.join(('REP', 'actState', respStr))
         if isinstance(resp, str): resp = resp.encode('utf-8')
         return resp
 
@@ -134,6 +139,7 @@ class DataManager(threading.Thread):
 
         conn.close()
         respStr = json.dumps(respDict)
+        print(len(respStr))
         return respStr
 
 

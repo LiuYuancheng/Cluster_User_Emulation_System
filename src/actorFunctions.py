@@ -133,7 +133,7 @@ def func_1003():
     smtpServer = 'email.gt.org'
     smtpPort = 143
     actor = emailActor.emailActor(account, password)
-    actor.initEmailReader(smtpServer, smtpPort = smtpPort)
+    actor.initEmailReader(smtpServer, smtpPort = smtpPort, sslConn=False)
     print(actor.getMailboxList())
     print('=> read 2 random in last 3 email')
     readConfig2 = {
@@ -174,7 +174,7 @@ def func_1015():
     print("\n> Download result: download %s url, %s fail" %(str(count), str(failCount)))
 
 #-----------------------------------------------------------------------------
-def func_1040():
+def func_1032():
     # watch youTube video 
     watchActor = funcActor.webActor()
     count = failCount= 0
@@ -370,13 +370,17 @@ def func_1520():
     timeInterval = 10
     actor = dinoActor.dinoActor(playtime=60*timeInterval)
     actor.play()
-
+    
 #-----------------------------------------------------------------------------
-def func_1520():
-    # play the game
-    timeInterval = 10
-    actor = dinoActor.dinoActor(playtime=60*timeInterval)
-    actor.play()
+def func_1540():
+    intensity = 30 # send 3000 times
+    sleep_time = 10  # do not sleep
+    for counter in range(intensity):
+        print("send one email")
+        email_server = "mail.gt.org.txt"
+        email_gen.send_mail(email_server)
+
+    time.sleep(sleep_time)
 
 #-----------------------------------------------------------------------------
 def func_1555():
@@ -431,15 +435,7 @@ def func_1725():
 
 
 #-----------------------------------------------------------------------------
-def func_1810():
-    intensity = 30 # send 3000 times
-    sleep_time = 10  # do not sleep
-    for counter in range(intensity):
-        print("send one email")
-        email_server = "mail.gt.org.txt"
-        email_gen.send_mail(email_server)
 
-    time.sleep(sleep_time)
 
 #-----------------------------------------------------------------------------
 def testCase(mode):

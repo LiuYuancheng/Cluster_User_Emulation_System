@@ -55,5 +55,5 @@ def testCase(mode):
     connection.close()
 
 if __name__ == '__main__':
-    mode = 1
+    mode = 0
     testCase(mode)
