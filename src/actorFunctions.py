@@ -127,6 +127,27 @@ def func_0935():
     print("Finish")
 
 #-----------------------------------------------------------------------------
+def func_1003():
+    account = 'bob@gt.org'
+    password = '123'
+    smtpServer = 'email.gt.org'
+    smtpPort = 143
+    actor = emailActor.emailActor(account, password)
+    actor.initEmailReader(smtpServer, smtpPort = smtpPort)
+    print(actor.getMailboxList())
+    print('=> read 2 random in last 3 email')
+    readConfig2 = {
+        'mailBox': 'inbox',
+        'sender': None,
+        'number': 6,
+        'randomNum': 0,
+        'interval': 2,
+        'returnFlg': False
+    }
+    result = actor.readLastMail(configDict=readConfig2)
+    actor.close()
+
+#-----------------------------------------------------------------------------
 def func_1015():
     # download some web contents based on the url config. 
     soup = webDownload.urlDownloader(imgFlg=True, linkFlg=True, scriptFlg=True, caFlg=True)
@@ -407,13 +428,7 @@ def func_1725():
         print("error: %s" %str(err))
 
 #-----------------------------------------------------------------------------
-def func_1740():
-    account = 'bob@gt.org'
-    password = '123'
-    smtpServer = 'email.gt.org'
-    smtpPort = 143
-    actor = emailActor.emailActor(account, password, smtpServer, smtpPort=smtpPort)
-    actor.readLastMail(emailNum=2, interval= 10)
+
 
 #-----------------------------------------------------------------------------
 def func_1810():

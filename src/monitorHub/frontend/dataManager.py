@@ -22,8 +22,6 @@ import frontendGlobal as gv
 import Log
 import udpCom
 
-
-
 def parseIncomeMsg(msg):
     req = msg.decode('UTF-8')
     reqKey = reqType = reqJsonStr= None
