@@ -1,3 +1,3 @@
 @echo off
-python actionScheduler.py
+python ScheduleRun.py
 pause

@@ -2,7 +2,7 @@
 #-----------------------------------------------------------------------------
 # Name:        run.py
 #
-# Purpose:     Config the scheduler as one user them run the program
+# Purpose:     Config the scheduler as one user then run the program.
 #
 # Author:      Yuancheng Liu
 #
