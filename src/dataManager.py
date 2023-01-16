@@ -44,8 +44,6 @@ class DataManager(threading.Thread):
         #print('Do the daily database backup and update')
         Log.info('Do the daily database backup and update')
             
-
-
 #-----------------------------------------------------------------------------
     def parseIncomeMsg(self, msg):
         req = msg.decode('UTF-8')
