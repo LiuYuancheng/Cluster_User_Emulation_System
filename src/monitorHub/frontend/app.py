@@ -2,12 +2,12 @@
 #-----------------------------------------------------------------------------
 # Name:        app.py [python3]
 #
-# Purpose:     This module is the main website host program to host the webpage 
-#              by using Flask frame work. 
+# Purpose:     This module is the main website host program to host the scheduled
+#              tasks monitor Hub webpage by using python-Flask frame work. 
 #  
 # Author:      Yuancheng Liu
 #
-# Created:     2022/08/27
+# Created:     2022/01/13
 # version:     v0.2
 # Copyright:   National Cybersecurity R&D Laboratories
 # License:     
@@ -27,6 +27,8 @@ from flask import Flask, render_template, request, flash, url_for, redirect
 import dataManager
 import frontendGlobal as gv
 
+TEST_MD = False
+
 # Init the flask web app program.
 def createApp():
     """ Connect to the monitor hub server and init the flask.app.
@@ -37,9 +39,10 @@ def createApp():
     
     # Try to connect to the monitor-hub backend server.
     gv.iDataMgr = dataManager.DataManager(None)
-    gv.iDataMgr.connectToScheduler()
-    if not gv.iDataMgr: exit()
-    #gv.iDataMgr.start()
+    bobName = 'Bob'
+    bobIp = '127.0.0.1'
+    bobPort = 3001
+    gv.iDataMgr.addSchedulerPeer(bobName, bobIp, bobPort)
 
     # init the web host
     app = Flask(__name__)
@@ -48,59 +51,43 @@ def createApp():
     return app
 
 app = createApp()
-dataDict = {
-    "connected": gv.iDataMgr.schedulerConnected(),
-    "daily":[],
-    "random":[],
-    "weekly":[]
-}
 
-config_D = os.path.join(gv.dirpath, 'static', 'actionConfigD.json')
-config_R = os.path.join(gv.dirpath, 'static', 'actionConfigR.json')
-config_W = os.path.join(gv.dirpath, 'static', 'actionConfigW.json')
+taskInfoDict = {
+    "connected" : gv.iDataMgr.schedulerConnected(),
+    "updateT"   : None,
+    "daily"     : [],
+    "random"    : [],
+    "weekly"    : []
+} if TEST_MD else None 
 
-configDist = {
-    "daily": os.path.join(gv.dirpath, 'static', 'actionConfigD.json'),
-    "random": os.path.join(gv.dirpath, 'static', 'actionConfigR.json'),
-    "weekly": os.path.join(gv.dirpath, 'static', 'actionConfigW.json'),
-}
+if TEST_MD:
+    config_D = os.path.join(gv.dirpath, 'static', 'actionConfigD.json')
+    config_R = os.path.join(gv.dirpath, 'static', 'actionConfigR.json')
+    config_W = os.path.join(gv.dirpath, 'static', 'actionConfigW.json')
 
-for item in configDist.items():
-    key, config = item
-    if os.path.exists(config):
-        try:
-            with open(config, 'r') as fh:
-                dataDict[key] = json.load(fh)
-        except Exception as err:
-            print("Failed to load the json config file: %s" % str(err))
-            exit()
+    configDist = {
+        "daily": os.path.join(gv.dirpath, 'static', 'actionConfigD.json'),
+        "random": os.path.join(gv.dirpath, 'static', 'actionConfigR.json'),
+        "weekly": os.path.join(gv.dirpath, 'static', 'actionConfigW.json'),
+    }
+
+    for item in configDist.items():
+        key, config = item
+        if os.path.exists(config):
+            try:
+                with open(config, 'r') as fh:
+                    taskInfoDict[key] = json.load(fh)
+            except Exception as err:
+                print("Failed to load the json config file: %s" % str(err))
+                exit()
 
 #-----------------------------------------------------------------------------
-# web home request handling functions.
+# web home request handling functions. 
 @app.route('/')
 def index():
-    #Log.info('/index.html is accessed from IP: %s' %str(request.remote_addr))
-    posts = [{
-        'id': 1,
-        'name': "09:01_ping",
-        'detail':"Ping 100+ destinations",
-        'owner': "User:LYC",
-        'startT': "Every 1 day at 09:01:00",
-        'period': '10 mins',
-        'type':0,
-        'dep':0,
-        'state':1,
-        'nextT': "2023-01-04 09:01:00"
-    }]
+    taskInfoDict = gv.iDataMgr.getPeerTaskInfo('Bob', 'all')
 
-    if gv.iDataMgr.schedulerConnected():
-        result = gv.iDataMgr.getJobsState()
-        print(result)
-        dataDict['daily'] = result['daily']
-    else:
-        dataDict['daily'] = []
-        
-    return render_template('index.html', posts=dataDict)
+    return render_template('index.html', posts=taskInfoDict)
 
 #-----------------------------------------------------------------------------
 if __name__ == '__main__':

@@ -68,10 +68,10 @@ class DataManager(threading.Thread):
         if reqKey=='GET':
 
             if reqType == 'login':
-                resp = ';'.join(('REP', 'ready', '{}'))
+                resp = ';'.join(('REP', 'login', json.dumps({'state':'ready'})))
             elif reqType == 'jobState':
                 respStr = self.fetchAllActState()
-                resp =';'.join(('REP', 'actState', respStr))
+                resp =';'.join(('REP', 'jobState', respStr))
         if isinstance(resp, str): resp = resp.encode('utf-8')
         return resp
 
@@ -128,7 +128,8 @@ class DataManager(threading.Thread):
     def fetchAllActState(self):
         respDict = {
             'daily': None,
-            'random': None
+            'random': [],
+            'weekly':[]
         }
         conn = self._getDBconnection()
         queryStr = 'SELECT * FROM dailyActions'
