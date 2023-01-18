@@ -2,6 +2,18 @@
 
 **Program Design Purpose**: We want to create a "actor" can simulate a normal MS-Windows user to do the user action to generate user's event based on the time line setting.
 
+[TOC]
+
+------
+
+### Introduction
+
+We want to create an intelligent "actor” program which can simulate a normal MS-Windows user’s daily action ( different kinds of network access, system level operation and different app level operation) to generate user’s regular or random event based on the customer’s requirement. So, it can:
+
+- Be used to repeat/replay specified large numbers of users (blue team) activities in cyber exercise event.
+- Generate required network traffic flow for network security research project. 
+- Be used as repeatable user’s test environment for AI/ML trained module’s verification.
+
 
 
 ##### Actors Module: 

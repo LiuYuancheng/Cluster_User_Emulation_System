@@ -58,7 +58,7 @@ taskInfoDict = {
     "daily"     : [],
     "random"    : [],
     "weekly"    : []
-} if TEST_MD else None 
+} if TEST_MD else {} 
 
 if TEST_MD:
     config_D = os.path.join(gv.dirpath, 'static', 'actionConfigD.json')
@@ -85,9 +85,24 @@ if TEST_MD:
 # web home request handling functions. 
 @app.route('/')
 def index():
-    taskInfoDict = gv.iDataMgr.getPeerTaskInfo('Bob', 'all')
-
-    return render_template('index.html', posts=taskInfoDict)
+    peerName = 'Bob'
+    peerInfoDict = {
+        "name": peerName,
+        "connected" : False,
+        "updateT"   : None,
+        "daily"     : [],
+        "random"    : [],
+        "weekly"    : []
+    }
+    
+    result = gv.iDataMgr.getPeerConnInfo(peerName)
+    taskInfoDict = gv.iDataMgr.getPeerTaskInfo(peerName, 'all')
+    if result: peerInfoDict['connected'] = result[0]
+    if result: peerInfoDict['updateT'] = result[1]
+    if taskInfoDict and taskInfoDict['daily']: peerInfoDict['daily'] = taskInfoDict['daily']
+    if taskInfoDict and taskInfoDict['random']: peerInfoDict['random'] = taskInfoDict['random']
+    if taskInfoDict and taskInfoDict['weekly']: peerInfoDict['weekly'] = taskInfoDict['weekly']
+    return render_template('index.html', posts=peerInfoDict)
 
 #-----------------------------------------------------------------------------
 if __name__ == '__main__':

@@ -19,11 +19,12 @@
     <hr>
         {% if posts['connected'] %}
         <b> Scheduler: Bob [192.168.57.10] : </b>
-        <span class="badge badge-success"> Connected </span>
+        <span class="badge badge-success"> Connected </span> 
         {% else %}
         <b> Scheduler: Bob [192.168.57.10] : </b> 
         <span class="badge badge-warning"> Not Connected </span>
         {% endif %}
+        last update time : {{posts['updateT'] }}
     <p> </p>    
     
     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">

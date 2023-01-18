@@ -15,7 +15,8 @@
 import time
 import json
 import datetime
-from datetime import datetime, timedelta
+from datetime import datetime
+from copy import deepcopy
 import threading
 
 import frontendGlobal as gv
@@ -41,7 +42,7 @@ class PeerConnector(object):
         self.idaddress = ipaddress
         self.udpPort = udpPort
         self.connector = udpCom.udpClient((self.idaddress, self.udpPort))
-        self.lastUpdateT = datetime.now()
+        self.lastUpdateT = None
         self.connReadyFlg = self._loginScheduler()
 
     #-----------------------------------------------------------------------------
@@ -96,16 +97,13 @@ class PeerConnector(object):
             return None
 
     #-----------------------------------------------------------------------------
-    def getLastupdateT(self):
-        return self.lastUpdateT
+    def getConnState(self):
+        """ Get the connection state."""
+        return (self.connReadyFlg, self.lastUpdateT)
 
     #-----------------------------------------------------------------------------
     def matchInfo(self, ipaddress, udpPort):
         return (self.idaddress == ipaddress) and (self.udpPort == udpPort)
-
-    #-----------------------------------------------------------------------------
-    def schedulerConnected(self):
-        return self.connReadyFlg
 
     #-----------------------------------------------------------------------------
     def close(self):
@@ -135,7 +133,7 @@ class DataManager(object):
                 Log.info("addSchedulerPeer(): The <peerIp> and <peerPort> exist." )
                 return False
         connector = PeerConnector(peerName, peerIp, peerPort)
-        if connector.schedulerConnected():
+        if connector.getConnState()[0]:
             self.connectorDict[peerName] = connector
             return True
         return False
@@ -148,6 +146,15 @@ class DataManager(object):
             self.connectorDict.pop(peerName)
             return True  
         return False
+
+#-----------------------------------------------------------------------------
+    def getPeerConnInfo(self, peerName):
+        print(self.connectorDict.keys()     )
+        if peerName in self.connectorDict.keys():
+            return self.connectorDict[peerName].getConnState()
+            print(data)
+        return None
+
 
 #-----------------------------------------------------------------------------
     def getPeerTaskInfo(self, peerName, infoType):
