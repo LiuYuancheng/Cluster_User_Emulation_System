@@ -58,7 +58,7 @@ class PeerConnector(object):
             'peerName': self.uniqName,
             'ipAddr':   self.ipaddres,
             'updPort':  self.udpPort,
-            'updasteT': self.lastUpdateT,
+            'updateT': self.lastUpdateT,
             'connected': self.connReadyFlg
         }
 

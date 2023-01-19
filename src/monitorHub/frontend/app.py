@@ -85,6 +85,11 @@ if TEST_MD:
 # web home request handling functions. 
 @app.route('/')
 def index():
+    return render_template('index.html')
+
+
+@app.route('/schedulermgmt')
+def schedulermgmt():
     peerName = 'Bob'
     peerInfoDict = {
         "name": peerName,
@@ -102,7 +107,8 @@ def index():
     if taskInfoDict and taskInfoDict['daily']: peerInfoDict['daily'] = taskInfoDict['daily']
     if taskInfoDict and taskInfoDict['random']: peerInfoDict['random'] = taskInfoDict['random']
     if taskInfoDict and taskInfoDict['weekly']: peerInfoDict['weekly'] = taskInfoDict['weekly']
-    return render_template('index.html', posts=peerInfoDict)
+    return render_template('schedulermgmt.html', posts=peerInfoDict)
+
 
 #-----------------------------------------------------------------------------
 if __name__ == '__main__':
