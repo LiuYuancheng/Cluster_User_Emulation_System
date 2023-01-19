@@ -37,7 +37,8 @@ def parseIncomeMsg(msg):
 #-----------------------------------------------------------------------------
 class PeerConnector(object):
 
-    def __init__(self, uniqName, ipaddress, udpPort):
+    def __init__(self,id, uniqName, ipaddress, udpPort):
+        self.uniqID = id
         self.uniqName = uniqName
         self.ipaddres = ipaddress
         self.udpPort = udpPort
@@ -55,6 +56,7 @@ class PeerConnector(object):
     #-----------------------------------------------------------------------------
     def getOwnInfo(self, taskContFlg=True):
         infoDict = {
+            'id': self.uniqID,
             'peerName': self.uniqName,
             'ipAddr':   self.ipaddres,
             'updPort':  self.udpPort,
@@ -134,7 +136,8 @@ class PeerConnector(object):
 class DataManager(object):
 
     def __init__(self, parent) -> None:
-        self.schedulerInfo = {}
+        self.idCount = 0 
+        self.schedulerIds = {}
         self.connectorDict = {} # the connector dict.
 
 #-----------------------------------------------------------------------------
@@ -153,13 +156,15 @@ class DataManager(object):
             if peerConnector.matchInfo(peerIp, peerPort): 
                 Log.info("addSchedulerPeer(): The <peerIp> and <peerPort> exist." )
                 return False
-        connector = PeerConnector(peerName, peerIp, peerPort)
-        if connector.getConnState()[0]:
-            self.connectorDict[peerName] = connector
-            return True
-        return False
+        connector = PeerConnector( self.idCount, peerName, peerIp, peerPort)
+        #if connector.getConnState()[0]:
+        self.connectorDict[peerName] = connector
+        self.schedulerIds[str(self.idCount)] = peerName
+        self.idCount += 1
+        return True
+        #return False
 
-#----------------------------------------------  -------------------------------
+#-----------------------------------------------------------------------------
     def removeSchedulerPeer(self, peerName):
         if peerName in self.connectorDict.keys():
             self.connectorDict[peerName].close()
@@ -169,13 +174,22 @@ class DataManager(object):
         return False
 
 #-----------------------------------------------------------------------------
+    def getPeersInfo(self, NameList=None):
+        if NameList is None: NameList = self.connectorDict.keys() 
+        return [self.getOnePeerDetail(pName) for pName in NameList] 
+
+#-----------------------------------------------------------------------------
+    def getOnePeerDetail(self, peerName):
+        if peerName in self.connectorDict.keys():
+            return self.connectorDict[peerName].getOwnInfo()
+        return {}
+
+#-----------------------------------------------------------------------------
     def getPeerConnInfo(self, peerName):
-        print(self.connectorDict.keys()     )
+        #print(self.connectorDict.keys())
         if peerName in self.connectorDict.keys():
             return self.connectorDict[peerName].getConnState()
-            print(data)
         return None
-
 
 #-----------------------------------------------------------------------------
     def getPeerTaskInfo(self, peerName, infoType):
@@ -183,3 +197,8 @@ class DataManager(object):
             return self.connectorDict[peerName].getJobsState(infoType)
         return None
             
+#-----------------------------------------------------------------------------
+    def getPeerName(self, id):
+        if str(id) in self.schedulerIds.keys():
+            return self.schedulerIds[str(id)]
+        return None

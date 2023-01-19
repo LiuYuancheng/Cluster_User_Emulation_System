@@ -33,10 +33,14 @@
             </tr>
         </thead>
         <tbody>
-            {% for post in posts['scheduler'] %}
+            {% for post in posts %}
             <tr class="info">
                 <td> <b>{{ post['id'] }}</b> </td>
-                <td> {{ post['peerName'] }} </td>
+                <td> {{ post['peerName'] }} 
+                    <a href="{{ url_for('peerstate', postID=post['id'])}}" target="_blank">
+                        Link to task details
+                    </a>
+                </td>
                 <td> {{ post['ipAddr'] }} </td>
                 <td> {{ post['updPort'] }} </td>
                 <td>

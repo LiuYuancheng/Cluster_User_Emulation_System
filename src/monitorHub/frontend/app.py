@@ -29,6 +29,34 @@ import frontendGlobal as gv
 
 TEST_MD = False
 
+#-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
+def InitDataMgr():
+
+    gv.iDataMgr = dataManager.DataManager(None)
+    
+    bobInfo = {
+        'name': 'Victim_Bob',
+        'ipAddr': '127.0.0.1',
+        'udpPort': 3001
+    }
+    gv.iDataMgr.addSchedulerPeer(bobInfo['name'], bobInfo['ipAddr'], bobInfo['udpPort'])
+    return
+    aliceInfo = {
+        'name': 'T1_Alice',
+        'ipAddr': '192.168.58.10',
+        'udpPort': 3001
+    }
+    gv.iDataMgr.addSchedulerPeer(aliceInfo['name'], aliceInfo['ipAddr'], aliceInfo['udpPort'])
+
+    charlieInfo = {
+        'name': 'T2_Charlie',
+        'ipAddr': '192.168.59.10',
+        'udpPort': 3001
+    }
+    gv.iDataMgr.addSchedulerPeer(charlieInfo['name'], charlieInfo['ipAddr'], charlieInfo['udpPort'])
+
+#-----------------------------------------------------------------------------
 # Init the flask web app program.
 def createApp():
     """ Connect to the monitor hub server and init the flask.app.
@@ -38,11 +66,7 @@ def createApp():
     print("Check whether can connect to the monitor-hub backend server:")
     
     # Try to connect to the monitor-hub backend server.
-    gv.iDataMgr = dataManager.DataManager(None)
-    bobName = 'Bob'
-    bobIp = '127.0.0.1'
-    bobPort = 3001
-    gv.iDataMgr.addSchedulerPeer(bobName, bobIp, bobPort)
+
 
     # init the web host
     app = Flask(__name__)
@@ -50,6 +74,7 @@ def createApp():
     app.config['REMEMBER_COOKIE_DURATION'] = timedelta(seconds=gv.COOKIE_TIME)
     return app
 
+InitDataMgr()
 app = createApp()
 
 taskInfoDict = {
@@ -87,9 +112,38 @@ if TEST_MD:
 def index():
     return render_template('index.html')
 
-
+#-----------------------------------------------------------------------------
 @app.route('/schedulermgmt')
 def schedulermgmt():
+    scheudlerInfoDict = gv.iDataMgr.getPeersInfo()
+    print(scheudlerInfoDict)
+    return render_template('schedulermgmt.html', posts=scheudlerInfoDict)
+
+#-----------------------------------------------------------------------------
+@app.route('/<int:postID>')
+def peerstate(postID):
+    peerName = gv.iDataMgr.getPeerName(postID)
+    peerInfoDict = {
+        "name": peerName,
+        "connected" : False,
+        "updateT"   : None,
+        "daily"     : [],
+        "random"    : [],
+        "weekly"    : []
+    }
+    result = gv.iDataMgr.getPeerConnInfo(peerName)
+    taskInfoDict = gv.iDataMgr.getPeerTaskInfo(peerName, 'all')
+    if result: peerInfoDict['connected'] = result[0]
+    if result: peerInfoDict['updateT'] = result[1]
+    if taskInfoDict and taskInfoDict['daily']: peerInfoDict['daily'] = taskInfoDict['daily']
+    if taskInfoDict and taskInfoDict['random']: peerInfoDict['random'] = taskInfoDict['random']
+    if taskInfoDict and taskInfoDict['weekly']: peerInfoDict['weekly'] = taskInfoDict['weekly']
+    return render_template('peerstate.html',posts=peerInfoDict)
+
+
+#-----------------------------------------------------------------------------
+@app.route('/schedulermgmt_old')
+def schedulermgmt_old():
     peerName = 'Bob'
     peerInfoDict = {
         "name": peerName,

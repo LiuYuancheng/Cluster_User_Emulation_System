@@ -93,6 +93,7 @@ class udpClient(object):
         self.client.sendto(msg, self.ipAddr)
         if resp:
             try:
+                print("wait resp")
                 data, _ = self.client.recvfrom(self.bufferSize)
                 if b'BM;Send' in data:
                     _, _, messageSZ = data.decode(CODE_FMT).split(';') 
@@ -100,6 +101,11 @@ class udpClient(object):
                 return data
             except ConnectionResetError as error:
                 print("udpClient;sendMsg(): Can not connect to the server!")
+                print(error)
+                # self.disconnect() no need to diconnect if we want to do reconnect.
+                return None
+            except Exception as error:
+                print("udpClient;sendMsg(): The connected peer is not reponse in timeout period.")
                 print(error)
                 # self.disconnect() no need to diconnect if we want to do reconnect.
                 return None
