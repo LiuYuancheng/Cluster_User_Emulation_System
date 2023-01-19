@@ -39,11 +39,31 @@ class PeerConnector(object):
 
     def __init__(self, uniqName, ipaddress, udpPort):
         self.uniqName = uniqName
-        self.idaddress = ipaddress
+        self.ipaddres = ipaddress
         self.udpPort = udpPort
-        self.connector = udpCom.udpClient((self.idaddress, self.udpPort))
+        self.connector = udpCom.udpClient((self.ipaddres, self.udpPort))
         self.lastUpdateT = None
         self.connReadyFlg = self._loginScheduler()
+        self.taskCountDict = {
+            'total': 0,
+            'finish': 0,
+            'pending': 0, 
+            'error': 0,
+            'deactive': 0 
+        }
+
+    #-----------------------------------------------------------------------------
+    def getOwnInfo(self, taskContFlg=True):
+        infoDict = {
+            'peerName': self.uniqName,
+            'ipAddr':   self.ipaddres,
+            'updPort':  self.udpPort,
+            'updasteT': self.lastUpdateT,
+            'connected': self.connReadyFlg
+        }
+
+        if taskContFlg: infoDict.update(self.taskCountDict)
+        return infoDict
 
     #-----------------------------------------------------------------------------
     def _loginScheduler(self):
@@ -103,7 +123,7 @@ class PeerConnector(object):
 
     #-----------------------------------------------------------------------------
     def matchInfo(self, ipaddress, udpPort):
-        return (self.idaddress == ipaddress) and (self.udpPort == udpPort)
+        return (self.ipaddres == ipaddress) and (self.udpPort == udpPort)
 
     #-----------------------------------------------------------------------------
     def close(self):
@@ -114,6 +134,7 @@ class PeerConnector(object):
 class DataManager(object):
 
     def __init__(self, parent) -> None:
+        self.schedulerInfo = {}
         self.connectorDict = {} # the connector dict.
 
 #-----------------------------------------------------------------------------
