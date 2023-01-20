@@ -72,6 +72,10 @@ class DataManager(threading.Thread):
             elif reqType == 'jobState':
                 respStr = self.fetchAllActState()
                 resp =';'.join(('REP', 'jobState', respStr))
+            elif reqType == 'taskCount':
+                respStr = self.fetchCrtActCount(reqJsonStr)
+                resp =';'.join(('REP', 'taskCount', respStr))
+
         if isinstance(resp, str): resp = resp.encode('utf-8')
         return resp
 
@@ -141,13 +145,39 @@ class DataManager(threading.Thread):
         print(len(respStr))
         return respStr
 
+    #-----------------------------------------------------------------------------
+    def fetchCrtActCount(self, reqJsonStr):
+        """ fetch the current requests count.
+        Args:
+            reqJsonStr (_type_): _description_
+        """
+        reqDict = json.loads(reqJsonStr)
+        respDict = {'total': 0,
+                    'finish': 0,
+                    'running': 0,
+                    'pending': 0,
+                    'error': 0,
+                    'deactive': 0
+                    }
+
+        conn = self._getDBconnection()
+        queryStr = 'SELECT actState, count(*) FROM dailyActions GROUP BY actState'
+        resp = conn.execute(queryStr).fetchall()
+        if resp:
+            resp = dict(resp)
+            respDict.update(resp)
+            totalNum = sum(resp.values())
+            respDict['total'] = totalNum
+        conn.close()
+        respStr = json.dumps(respDict)
+        print(len(respStr))
+        return respStr
 
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 def testCase(mode):
-
+    dbmgr = DataManager(None)
     if mode == 0:
-        dbmgr = DataManager(None)
         testDict = {
             'actId' : 2,
             'actName': '09:10_ping [MT]',
@@ -163,7 +193,9 @@ def testCase(mode):
         dbmgr.registerActions(testDict)
 
         dbmgr.fetchAllActState()
+    elif mode == 2:
+        dbmgr.fetchCrtActCount(json.dumps({}))
 
 
 if __name__ == "__main__":
-    testCase(0)
+    testCase(2)

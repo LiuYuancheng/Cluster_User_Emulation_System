@@ -55,6 +55,7 @@ class PeerConnector(object):
 
     #-----------------------------------------------------------------------------
     def getOwnInfo(self, taskContFlg=True):
+        self.taskCountDict.update(self.fetchTaskCounts())
         infoDict = {
             'id': self.uniqID,
             'peerName': self.uniqName,
@@ -63,9 +64,23 @@ class PeerConnector(object):
             'updateT': self.lastUpdateT,
             'connected': self.connReadyFlg
         }
-
         if taskContFlg: infoDict.update(self.taskCountDict)
         return infoDict
+
+    #-----------------------------------------------------------------------------
+    def fetchTaskCounts(self):
+        rqstKey = 'GET'
+        rqstType = 'taskCount'
+        rqstDict = {'total' : 0,
+                    'finish': 0,
+                    'pending': 0, 
+                    'error' : 0,
+                    'deactive': 0 
+            }
+        result = self._queryToBE(rqstKey, rqstType, rqstDict)
+        
+        if result: rqstDict.update(result) 
+        return rqstDict
 
     #-----------------------------------------------------------------------------
     def _loginScheduler(self):

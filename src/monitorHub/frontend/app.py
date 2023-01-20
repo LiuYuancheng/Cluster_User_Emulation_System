@@ -140,30 +140,6 @@ def peerstate(postID):
     if taskInfoDict and taskInfoDict['weekly']: peerInfoDict['weekly'] = taskInfoDict['weekly']
     return render_template('peerstate.html',posts=peerInfoDict)
 
-
-#-----------------------------------------------------------------------------
-@app.route('/schedulermgmt_old')
-def schedulermgmt_old():
-    peerName = 'Bob'
-    peerInfoDict = {
-        "name": peerName,
-        "connected" : False,
-        "updateT"   : None,
-        "daily"     : [],
-        "random"    : [],
-        "weekly"    : []
-    }
-    
-    result = gv.iDataMgr.getPeerConnInfo(peerName)
-    taskInfoDict = gv.iDataMgr.getPeerTaskInfo(peerName, 'all')
-    if result: peerInfoDict['connected'] = result[0]
-    if result: peerInfoDict['updateT'] = result[1]
-    if taskInfoDict and taskInfoDict['daily']: peerInfoDict['daily'] = taskInfoDict['daily']
-    if taskInfoDict and taskInfoDict['random']: peerInfoDict['random'] = taskInfoDict['random']
-    if taskInfoDict and taskInfoDict['weekly']: peerInfoDict['weekly'] = taskInfoDict['weekly']
-    return render_template('schedulermgmt.html', posts=peerInfoDict)
-
-
 #-----------------------------------------------------------------------------
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000,  debug=False, threaded=True)
