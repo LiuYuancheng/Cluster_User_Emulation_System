@@ -27,6 +27,7 @@
                 <th>Last_Update </th>
                 <th>TotalTask</th>
                 <th>Finished</th>
+                <th>Running</th>
                 <th>Pending</th>
                 <th>Error</th>
                 <th>Deactived </th>
@@ -36,10 +37,10 @@
             {% for post in posts %}
             <tr class="info">
                 <td> <b>{{ post['id'] }}</b> </td>
-                <td> {{ post['peerName'] }} 
+                <td> {{ post['peerName'] }} [ 
                     <a href="{{ url_for('peerstate', postID=post['id'])}}" target="_blank">
                         Link to task details
-                    </a>
+                    </a> ]
                 </td>
                 <td> {{ post['ipAddr'] }} </td>
                 <td> {{ post['updPort'] }} </td>
@@ -53,6 +54,7 @@
                 <td> {{ post['updateT'] }} </td>
                 <td> {{ post['total'] }} </td>
                 <td> {{ post['finish'] }} </td>
+                <td> {{ post['running'] }} </td>
                 <td> {{ post['pending'] }} </td>
                 <td> {{ post['error'] }} </td>
                 <td> {{ post['deactive'] }} </td>

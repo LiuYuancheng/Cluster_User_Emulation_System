@@ -1,12 +1,12 @@
 #-----------------------------------------------------------------------------
 # Name:        dataManage.py
 #
-# Purpose:     Data manager class to store the specific functions and init the 
-#              data class.
+# Purpose:     Data manager class used to provide specific data fetch and process 
+#              functions and init the local data storage.
 #              
 # Author:      Yuancheng Liu 
 #
-# Version:     v_0.1
+# Version:     v_0.2
 # Created:     2023/01/11
 # Copyright:   
 # License:     
@@ -23,50 +23,108 @@ import actionGlobal as gv
 import Log
 import udpCom
 
+
+# Define all the module local untility functions here:
+#-----------------------------------------------------------------------------
+def parseIncomeMsg(msg):
+    """ parse the income message to tuple with 3 element: request key, type and jsonString
+        Args: msg (str): example: 'GET;dataType;{"user":"<username>"}'
+    """
+    req = msg.decode('UTF-8') if not isinstance(msg, str) else msg
+    reqKey = reqType = reqJsonStr= None
+    try:
+        reqKey, reqType, reqJsonStr = req.split(';', 2)
+    except Exception as err:
+        Log.error('parseIncomeMsg(): The income message format is incorrect.')
+        Log.exception(err)
+    return (reqKey.strip(), reqType.strip(), reqJsonStr)
+
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 class DataManager(threading.Thread):
-
+    """ The data manager is a module running parallel with the main thread to 
+        handler the data IO with dataBase and the monitor hub's data fetch request.
+    """
     def __init__(self, parent) -> None:
         threading.Thread.__init__(self)
-        self.dbConn = None
         self.parent = parent
-        self.server = udpCom.udpServer(None, gv.UDP_PORT)
         self.terminate = False
+        self.server = udpCom.udpServer(None, gv.UDP_PORT)
         self.lastUpdate = datetime.now()
 
     #-----------------------------------------------------------------------------
+    def _getDBconnection(self):
+        """ Connect to the database """
+        conn = sqlite3.connect(gv.DB_PATH)
+        conn.row_factory = sqlite3.Row
+        return conn
+
+    #-----------------------------------------------------------------------------
     def run(self):
-        """ Thread run() function call by start(). """
-        time.sleep(1)  
-        #while not self.terminate:
+        """ Thread run() function will be called by start(). """
+        time.sleep(1)
         self.server.serverStart(handler=self.msgHandler)
-        #print('Do the daily database backup and update')
-        Log.info('Do the daily database backup and update')
-            
-#-----------------------------------------------------------------------------
-    def parseIncomeMsg(self, msg):
-        req = msg.decode('UTF-8')
-        reqKey = reqType = reqJsonStr= None
-        try:
-            reqKey, reqType, reqJsonStr = req.split(';', 2)
-        except Exception as e:
-            Log.error('The income message format is incorrect.')
-            Log.exception(e)
-        return (reqKey.strip(), reqType.strip(), reqJsonStr)
+        print("DataManager running finished.")
 
-#-----------------------------------------------------------------------------
+    #-----------------------------------------------------------------------------
+    def fetchAllActState(self):
+        respDict = {
+            'daily': None,
+            'random': [],
+            'weekly':[]
+        }
+        conn = self._getDBconnection()
+        queryStr = 'SELECT * FROM dailyActions'
+        resp = conn.execute(queryStr).fetchall()
+        respDict['daily'] = [dict(row) for row in resp]
+        conn.close()
+        respStr = json.dumps(respDict)
+        #print(len(respStr))
+        return respStr
+
+    #-----------------------------------------------------------------------------
+    def fetchCrtActCount(self, reqJsonStr):
+        """ fetch the current requests count.
+            Args:
+                reqJsonStr (_type_): _description_
+        """
+        reqDict = json.loads(reqJsonStr)
+        respDict = {'total': 0,
+                    'finish': 0,
+                    'running': 0,
+                    'pending': 0,
+                    'error': 0,
+                    'deactive': 0
+                    }
+
+        conn = self._getDBconnection()
+        queryStr = 'SELECT actState, count(*) FROM dailyActions GROUP BY actState'
+        resp = conn.execute(queryStr).fetchall()
+        if resp:
+            resp = dict(resp)
+            respDict.update(resp)
+            totalNum = sum(resp.values())
+            respDict['total'] = totalNum
+        conn.close()
+        respStr = json.dumps(respDict)
+        #print(len(respStr))
+        return respStr
+
+    #-----------------------------------------------------------------------------
     def msgHandler(self, msg):
+        """ Function to handle the data-fetch/control request from the monitor-hub.
+            Args:
+                msg (str/bytes): _description_
+            Returns:
+                bytes: message bytes reply to the monitor hub side.
+        """
         print("Incomming message: %s" % str(msg))
-
         # request message format: 
         # data fetch: GET:<key>:<val1>:<val2>...
         # data set: POST:<key>:<val1>:<val2>...
-
         resp = b'REP:deny:{}'
-        (reqKey, reqType, reqJsonStr) = self.parseIncomeMsg(msg)
+        (reqKey, reqType, reqJsonStr) = parseIncomeMsg(msg)
         if reqKey=='GET':
-
             if reqType == 'login':
                 resp = ';'.join(('REP', 'login', json.dumps({'state':'ready'})))
             elif reqType == 'jobState':
@@ -75,22 +133,32 @@ class DataManager(threading.Thread):
             elif reqType == 'taskCount':
                 respStr = self.fetchCrtActCount(reqJsonStr)
                 resp =';'.join(('REP', 'taskCount', respStr))
-
+        elif reqKey=='GET':
+            pass
+            # TODO: Handle all the control request here.
         if isinstance(resp, str): resp = resp.encode('utf-8')
         return resp
 
     #-----------------------------------------------------------------------------
-    def _getDBconnection(self):
-        conn = sqlite3.connect(gv.DB_PATH)
-        conn.row_factory = sqlite3.Row
-        return conn
-
-    #-----------------------------------------------------------------------------
     def registerActions(self, actDict):
+        """ Added the action in database.
+            input <actDict> example:
+            regInfoDict = {
+                'actId': actionObj.id,
+                'actName': actionObj.name,
+                'actDetail': actionObj.getActionInfo('actDetail'),
+                'actDesc': actionObj.getActionInfo('actDesc'),
+                'actOwner': actionObj.getActionInfo('actOwner'),
+                'actType': actionObj.jobType,
+                'startT': actionObj.timeStr,
+                'depend': actionObj.getActionInfo('depend'),
+                'threadType': 1 if actionObj.threadFlg else 0,
+                'actState': actionObj.state
+            }
         
+        """
         conn = self._getDBconnection()
         actId = actDict['actId']
-
         check = conn.execute("SELECT 1 FROM dailyActions WHERE actId=%s" %str(actId))
         if check.fetchone():
             print("The action task is registered")
@@ -128,51 +196,6 @@ class DataManager(threading.Thread):
             conn.commit()
         conn.close()
 
-    #-----------------------------------------------------------------------------
-    def fetchAllActState(self):
-        respDict = {
-            'daily': None,
-            'random': [],
-            'weekly':[]
-        }
-        conn = self._getDBconnection()
-        queryStr = 'SELECT * FROM dailyActions'
-        resp = conn.execute(queryStr).fetchall()
-        respDict['daily'] = [dict(row) for row in resp]
-
-        conn.close()
-        respStr = json.dumps(respDict)
-        print(len(respStr))
-        return respStr
-
-    #-----------------------------------------------------------------------------
-    def fetchCrtActCount(self, reqJsonStr):
-        """ fetch the current requests count.
-        Args:
-            reqJsonStr (_type_): _description_
-        """
-        reqDict = json.loads(reqJsonStr)
-        respDict = {'total': 0,
-                    'finish': 0,
-                    'running': 0,
-                    'pending': 0,
-                    'error': 0,
-                    'deactive': 0
-                    }
-
-        conn = self._getDBconnection()
-        queryStr = 'SELECT actState, count(*) FROM dailyActions GROUP BY actState'
-        resp = conn.execute(queryStr).fetchall()
-        if resp:
-            resp = dict(resp)
-            respDict.update(resp)
-            totalNum = sum(resp.values())
-            respDict['total'] = totalNum
-        conn.close()
-        respStr = json.dumps(respDict)
-        print(len(respStr))
-        return respStr
-
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 def testCase(mode):
@@ -196,6 +219,6 @@ def testCase(mode):
     elif mode == 2:
         dbmgr.fetchCrtActCount(json.dumps({}))
 
-
+#-----------------------------------------------------------------------------
 if __name__ == "__main__":
     testCase(2)

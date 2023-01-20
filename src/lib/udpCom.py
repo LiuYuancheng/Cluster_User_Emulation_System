@@ -93,7 +93,6 @@ class udpClient(object):
         self.client.sendto(msg, self.ipAddr)
         if resp:
             try:
-                print("wait resp")
                 data, _ = self.client.recvfrom(self.bufferSize)
                 if b'BM;Send' in data:
                     _, _, messageSZ = data.decode(CODE_FMT).split(';') 
