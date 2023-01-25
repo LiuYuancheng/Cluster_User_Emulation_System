@@ -114,7 +114,7 @@
                             <td>
                                 <form action="{{ url_for('changeTask', peerName = posts['name'], jobID=post['actId'], action='delete')}}" method="POST">
                                     <input type="submit" value="Delete tasks" class="btn btn-danger btn-sm"
-                                        onclick=" return confirm('Are you sure you want to delete the task?')">
+                                        onclick=" return confirm('Are you sure you want to delete the task ? If confirm deleted, the job task will not be recovered!')">
                                 </form>
                             </td>
                         </tr>

@@ -2,7 +2,8 @@
 # Name:        dataManage.py
 #
 # Purpose:     Data manager class used to provide specific data fetch and process 
-#              functions and init the local data storage.
+#              functions and init the local data storage. This manager is used by 
+#              the scheduler obj.
 #              
 # Author:      Yuancheng Liu 
 #
@@ -23,27 +24,27 @@ import actionGlobal as gv
 import Log
 import udpCom
 
-
-# Define all the module local untility functions here:
+# Define all the local untility functions here:
 #-----------------------------------------------------------------------------
 def parseIncomeMsg(msg):
-    """ parse the income message to tuple with 3 element: request key, type and jsonString
+    """ parse the income message to tuple with 3 elements: request key, type and jsonString
         Args: msg (str): example: 'GET;dataType;{"user":"<username>"}'
     """
     req = msg.decode('UTF-8') if not isinstance(msg, str) else msg
-    reqKey = reqType = reqJsonStr= None
     try:
         reqKey, reqType, reqJsonStr = req.split(';', 2)
+        return (reqKey.strip(), reqType.strip(), reqJsonStr)
     except Exception as err:
         Log.error('parseIncomeMsg(): The income message format is incorrect.')
         Log.exception(err)
-    return (reqKey.strip(), reqType.strip(), reqJsonStr)
+        return('','',json.dumps({}))
 
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 class DataManager(threading.Thread):
     """ The data manager is a module running parallel with the main thread to 
-        handler the data IO with dataBase and the monitor hub's data fetch request.
+        handle the data-IO with dataBase and the monitor hub's data fetching/
+        changing request.
     """
     def __init__(self, parent) -> None:
         threading.Thread.__init__(self)
@@ -53,6 +54,14 @@ class DataManager(threading.Thread):
         self.lastUpdate = datetime.now()
 
     #-----------------------------------------------------------------------------
+    def run(self):
+        """ Thread run() function will be called by start(). """
+        time.sleep(1)
+        self.server.serverStart(handler=self.msgHandler)
+        print("DataManager running finished.")
+
+    # define all the private function here:
+    #-----------------------------------------------------------------------------
     def _getDBconnection(self):
         """ Connect to the database """
         conn = sqlite3.connect(gv.DB_PATH)
@@ -60,11 +69,49 @@ class DataManager(threading.Thread):
         return conn
 
     #-----------------------------------------------------------------------------
-    def run(self):
-        """ Thread run() function will be called by start(). """
-        time.sleep(1)
-        self.server.serverStart(handler=self.msgHandler)
-        print("DataManager running finished.")
+    def _deleteTask(self, taskID):
+        """ Cancel the task in the scheduler and remove the task record in the DB 
+            based on the input task id(unique)
+        Args:
+            taskID (int): task ID in DB
+        Returns:
+            _type_: _description_
+        """
+        # delate from scheduler: 
+        if gv.iScheduler and gv.iScheduler.removeAction(taskID):
+            conn = self._getDBconnection()
+            queryStr = "SELECT actId FROM dailyActions WHERE actId =%s " %(taskID)
+            result = conn.execute(queryStr).fetchone()
+            conn.commit()
+            if result is None: return None
+            # delete the user from users table 
+            queryStr =  "DELETE FROM dailyActions WHERE actId =%s " %(taskID)
+            conn.execute(queryStr)
+            conn.commit()
+            conn.close()
+            return True
+        return False
+
+#-----------------------------------------------------------------------------
+    def changeTask(self, reqJsonStr):
+        """ Change the scheduler's task.
+            Args:
+                reqJsonStr (_type_): _description_
+            Returns:
+                _type_: _description_
+        """
+        reqDict = json.loads(reqJsonStr)
+        respDict = {
+            'taskId': reqDict['taskId'],
+            'action': reqDict['action'],
+        }
+        if reqDict['action'] == 'delete':
+            result = self._deleteTask(reqDict['taskId'])
+            print(result)
+        else:
+            pass
+        respStr = json.dumps(respDict)
+        return respStr
 
     #-----------------------------------------------------------------------------
     def fetchAllActState(self):
@@ -81,34 +128,6 @@ class DataManager(threading.Thread):
         respStr = json.dumps(respDict)
         #print(len(respStr))
         return respStr
-
-#-----------------------------------------------------------------------------
-    def changeTask(self, reqJsonStr):
-        reqDict = json.loads(reqJsonStr)
-        respDict = {
-            'taskId': reqDict['taskId'],
-            'action': 'delete',
-        }
-        if reqDict['action'] == 'delete':
-            result = self._deleteTask(reqDict['taskId'])
-            print(result)
-        respStr = json.dumps(respDict)
-        #print(len(respStr))
-        return respStr
-            
-#-----------------------------------------------------------------------------
-    def _deleteTask(self, taskID):
-        conn = self._getDBconnection()
-        queryStr = "SELECT actId FROM dailyActions WHERE actId =%s " %(taskID)
-        result = conn.execute(queryStr).fetchone()
-        conn.commit()
-        if result is None: return None
-        # delete the user from users table 
-        queryStr =  "DELETE FROM dailyActions WHERE actId =%s " %(taskID)
-        conn.execute(queryStr)
-        conn.commit()
-        conn.close()
-        return True
 
     #-----------------------------------------------------------------------------
     def fetchCrtActCount(self, reqJsonStr):

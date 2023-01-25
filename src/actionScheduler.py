@@ -63,6 +63,14 @@ class userAction(object):
             print("The Action id is not valid: %s" % str(self.id))
 
 #-----------------------------------------------------------------------------
+    def cancelAction(self):
+        if self.id > 0:
+            schedule.cancel_job(self.scheduleJobRef)
+            self.activeFunc = False
+        else:
+            print("The Action id is not valid: %s" % str(self.id))
+
+#-----------------------------------------------------------------------------
     def runFunc(self):
         Log.info('Start to run job [%s]: %s' %(str(self.id), str(self.name)))
         if self.func:
@@ -127,10 +135,12 @@ class actionScheduler(object):
         gv.iDataMgr .start()
         Log.info("Scheduler: %s init ready." %str(self.actorName ))
 
+#-----------------------------------------------------------------------------
     def getNewId(self):
         self.taskCount += 1
         return self.taskCount
 
+#-----------------------------------------------------------------------------
     def registerDailyAction(self, actionObj):
         if actionObj:
             newId = self.getNewId()
@@ -150,19 +160,40 @@ class actionScheduler(object):
             }
 
             gv.iDataMgr.registerActions(regInfoDict)
-            #self.actionDictD[str(actionObj.id)] = actionObj
+            self.actionDictD[str(actionObj.id)] = actionObj
             Log.info("Registered action id: %s , name: %s in DB." %(str(regInfoDict['actId']), regInfoDict['actId']))
 
+#-----------------------------------------------------------------------------
     def addAction(self, actionObj):
         if actionObj:
             #self.actionDict[actionObj.name] = actionObj
             schedule.every().day.at(actionObj.timeStr).do(actionObj.runFunc)
 
-    def startSimulate(self):
-        print("Actor: %s start all the below jobs:" %str(self.actorName) )
+#-----------------------------------------------------------------------------
+    def removeAction(self, actionID):
+        if str(actionID) in self.actionDictD.keys():
+            print("remove the action [ %s ]" %str(actionID))
+            try:
+                actionObj = self.actionDictD[str(actionID)]
+                actionObj.cancelAction()
+                self._printAllJobs()
+                return True
+            except Exception as error: 
+                print("Cancel jobs error: %s" %str(error))
+                return False
+        else:
+            print("The id is not registered")
+            return False
+
+#-----------------------------------------------------------------------------
+    def _printAllJobs(self):
+        print("Actor: %s will execute all current jobs:" %str(self.actorName) )
         for job in schedule.get_jobs():
             print(job.__str__)
-       
+
+#-----------------------------------------------------------------------------
+    def startSimulate(self):
+        self._printAllJobs()
         while not self.terminate:
             schedule.run_pending()
             time.sleep(1)
