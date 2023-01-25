@@ -43,7 +43,8 @@ JB_ST_PENDING = 'pending'
 JB_ST_ERROR = 'error'
 JB_ST_RUNNING = 'running'
 JB_ST_FINISH = 'finish'
-
+JB_ST_ACTIVE = 'active'
+JB_ST_DEACT = 'deactive'
 
 DB_PATH = os.path.join(dirpath, 'database.db')
 SQL_PATH = os.path.join(dirpath, 'schema.sql')

@@ -118,6 +118,19 @@ class PeerConnector(object):
         else:
             Log.error("queryBE: input missing: %s" %str(rqstKey, rqstType, rqstDict))
         return (k, t, result)
+    #-----------------------------------------------------------------------------
+    def changeTask(self, jobID, action):
+        rqstKey = 'POST'
+        rqstType = 'changeTsk'
+        rqstDict = {
+            'taskId': jobID,
+            'action': action
+        }
+        result = self._queryToBE(rqstKey, rqstType, rqstDict)
+        if result:
+            print("Action Done")
+            return True
+        return False
 
     #-----------------------------------------------------------------------------
     def getJobsState(self, jobType):
@@ -212,6 +225,11 @@ class DataManager(object):
         self.idCount += 1
         return True
         #return False
+
+#-----------------------------------------------------------------------------
+    def changeTaskState(self, peerName, jobID, action):
+        if peerName in self.connectorDict.keys():
+            self.connectorDict[peerName].changeTask(jobID, action)
 
 #-----------------------------------------------------------------------------
     def removeSchedulerPeer(self, peerName):

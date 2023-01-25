@@ -82,6 +82,34 @@ class DataManager(threading.Thread):
         #print(len(respStr))
         return respStr
 
+#-----------------------------------------------------------------------------
+    def changeTask(self, reqJsonStr):
+        reqDict = json.loads(reqJsonStr)
+        respDict = {
+            'taskId': reqDict['taskId'],
+            'action': 'delete',
+        }
+        if reqDict['action'] == 'delete':
+            result = self._deleteTask(reqDict['taskId'])
+            print(result)
+        respStr = json.dumps(respDict)
+        #print(len(respStr))
+        return respStr
+            
+#-----------------------------------------------------------------------------
+    def _deleteTask(self, taskID):
+        conn = self._getDBconnection()
+        queryStr = "SELECT actId FROM dailyActions WHERE actId =%s " %(taskID)
+        result = conn.execute(queryStr).fetchone()
+        conn.commit()
+        if result is None: return None
+        # delete the user from users table 
+        queryStr =  "DELETE FROM dailyActions WHERE actId =%s " %(taskID)
+        conn.execute(queryStr)
+        conn.commit()
+        conn.close()
+        return True
+
     #-----------------------------------------------------------------------------
     def fetchCrtActCount(self, reqJsonStr):
         """ fetch the current requests count.
@@ -133,7 +161,10 @@ class DataManager(threading.Thread):
             elif reqType == 'taskCount':
                 respStr = self.fetchCrtActCount(reqJsonStr)
                 resp =';'.join(('REP', 'taskCount', respStr))
-        elif reqKey=='GET':
+        elif reqKey=='POST':
+            if reqType == 'changeTsk':
+                respStr = self.changeTask(reqJsonStr)
+                resp =';'.join(('REP', 'changeTsk', respStr))
             pass
             # TODO: Handle all the control request here.
         if isinstance(resp, str): resp = resp.encode('utf-8')
@@ -218,7 +249,14 @@ def testCase(mode):
         dbmgr.fetchAllActState()
     elif mode == 2:
         dbmgr.fetchCrtActCount(json.dumps({}))
+    elif mode == 3:
+        rqstDict = {
+            'taskId': 1,
+            'action': 'delete'
+        
+        }
+        dbmgr.changeTask(json.dumps(rqstDict))
 
 #-----------------------------------------------------------------------------
 if __name__ == "__main__":
-    testCase(2)
+    testCase(3)

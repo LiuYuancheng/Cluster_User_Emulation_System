@@ -141,5 +141,13 @@ def peerstate(postID):
     return render_template('peerstate.html',posts=peerInfoDict)
 
 #-----------------------------------------------------------------------------
+@app.route('/<string:peerName>/<int:jobID>/<string:action>', methods=('POST',))
+def changeTask(peerName, jobID, action):
+
+    peerInfo = gv.iDataMgr.getOnePeerDetail(peerName)
+    posts = gv.iDataMgr.changeTaskState(peerName, jobID, action)
+    return redirect(url_for('peerstate', postID=peerInfo['id']))
+
+#-----------------------------------------------------------------------------
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000,  debug=False, threaded=True)
