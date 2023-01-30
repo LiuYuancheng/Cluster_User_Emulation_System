@@ -21,59 +21,38 @@ import os
 import json
 
 from datetime import timedelta, datetime
-from http import server
 from flask import Flask, render_template, request, flash, url_for, redirect
 
 import dataManager
 import frontendGlobal as gv
+import ConfigLoader
 
-TEST_MD = False
+TEST_MD = False # Test mode flag.
 
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 def InitDataMgr():
-
     gv.iDataMgr = dataManager.DataManager(None)
-    
-    bobInfo = {
-        'name': 'Victim_Bob',
-        'ipAddr': '127.0.0.1',
-        'udpPort': 3001
-    }
-    gv.iDataMgr.addSchedulerPeer(bobInfo['name'], bobInfo['ipAddr'], bobInfo['udpPort'])
-    return
-    aliceInfo = {
-        'name': 'T1_Alice',
-        'ipAddr': '192.168.58.10',
-        'udpPort': 3001
-    }
-    gv.iDataMgr.addSchedulerPeer(aliceInfo['name'], aliceInfo['ipAddr'], aliceInfo['udpPort'])
-
-    charlieInfo = {
-        'name': 'T2_Charlie',
-        'ipAddr': '192.168.59.10',
-        'udpPort': 3001
-    }
-    gv.iDataMgr.addSchedulerPeer(charlieInfo['name'], charlieInfo['ipAddr'], charlieInfo['udpPort'])
+    ld = ConfigLoader.ConfigLoader(gv.gGonfigPath, mode='r')
+    for line in ld.getLines():
+        try:
+            peerInfo = json.loads(line)
+            gv.iDataMgr.addSchedulerPeer(peerInfo['name'], peerInfo['ipAddr'], peerInfo['udpPort'])
+        except Exception as err:
+            print("The peer's info line format Invalid: %s" %str(line))
+            continue
 
 #-----------------------------------------------------------------------------
 # Init the flask web app program.
 def createApp():
-    """ Connect to the monitor hub server and init the flask.app.
-        Returns:
-            _type_: flask.app()
-    """
-    print("Check whether can connect to the monitor-hub backend server:")
-    
-    # Try to connect to the monitor-hub backend server.
-
-
-    # init the web host
+    """ Create the flask App."""
     app = Flask(__name__)
     app.config['SECRET_KEY'] = gv.APP_SEC_KEY
     app.config['REMEMBER_COOKIE_DURATION'] = timedelta(seconds=gv.COOKIE_TIME)
     return app
 
+#-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 InitDataMgr()
 app = createApp()
 
@@ -122,28 +101,12 @@ def schedulermgmt():
 #-----------------------------------------------------------------------------
 @app.route('/<int:postID>')
 def peerstate(postID):
-    peerName = gv.iDataMgr.getPeerName(postID)
-    peerInfoDict = {
-        "name": peerName,
-        "connected" : False,
-        "updateT"   : None,
-        "daily"     : [],
-        "random"    : [],
-        "weekly"    : []
-    }
-    result = gv.iDataMgr.getPeerConnInfo(peerName)
-    taskInfoDict = gv.iDataMgr.getPeerTaskInfo(peerName, 'all')
-    if result: peerInfoDict['connected'] = result[0]
-    if result: peerInfoDict['updateT'] = result[1]
-    if taskInfoDict and taskInfoDict['daily']: peerInfoDict['daily'] = taskInfoDict['daily']
-    if taskInfoDict and taskInfoDict['random']: peerInfoDict['random'] = taskInfoDict['random']
-    if taskInfoDict and taskInfoDict['weekly']: peerInfoDict['weekly'] = taskInfoDict['weekly']
+    peerInfoDict = dataManager.buildPeerInfoDict(postID)
     return render_template('peerstate.html',posts=peerInfoDict)
-
+ 
 #-----------------------------------------------------------------------------
 @app.route('/<string:peerName>/<int:jobID>/<string:action>', methods=('POST',))
 def changeTask(peerName, jobID, action):
-
     peerInfo = gv.iDataMgr.getOnePeerDetail(peerName)
     posts = gv.iDataMgr.changeTaskState(peerName, jobID, action)
     return redirect(url_for('peerstate', postID=peerInfo['id']))

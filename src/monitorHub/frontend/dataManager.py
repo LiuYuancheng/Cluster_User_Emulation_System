@@ -36,6 +36,7 @@ def parseIncomeMsg(msg):
         Log.exception(err)
     return (reqKey.strip(), reqType.strip(), reqJsonStr)
 
+
 # Define all class here:
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
@@ -270,3 +271,33 @@ class DataManager(object):
         if str(id) in self.schedulerIds.keys():
             return self.schedulerIds[str(id)]
         return None
+
+# Define all general function and test case here:
+#-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
+
+def buildPeerInfoDict(peerId):
+    """ Build the peer all information dictionary based on the input peer ID.
+    Args:
+        peerId (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    peerName = gv.iDataMgr.getPeerName(peerId)
+    peerInfoDict = {
+        "name": peerName,
+        "connected" : False,
+        "updateT"   : None,
+        "daily"     : [],
+        "random"    : [],
+        "weekly"    : []
+    }
+    result = gv.iDataMgr.getPeerConnInfo(peerName)
+    taskInfoDict = gv.iDataMgr.getPeerTaskInfo(peerName, 'all')
+    if result: peerInfoDict['connected'] = result[0]
+    if result: peerInfoDict['updateT'] = result[1]
+    if taskInfoDict and taskInfoDict['daily']: peerInfoDict['daily'] = taskInfoDict['daily']
+    if taskInfoDict and taskInfoDict['random']: peerInfoDict['random'] = taskInfoDict['random']
+    if taskInfoDict and taskInfoDict['weekly']: peerInfoDict['weekly'] = taskInfoDict['weekly']
+    return peerInfoDict

@@ -22,7 +22,7 @@ import os, sys
 print("Current working directory is : %s" % os.getcwd())
 dirpath = os.path.dirname(__file__)
 print("Current source code location : %s" % dirpath)
-APP_NAME = ('NCL_BM_HUB', 'frontend')
+APP_NAME = ('Monitor_Hub', 'frontend')
 
 TOPDIR = 'src'
 LIBDIR = 'lib'
@@ -46,6 +46,7 @@ UPDATE_PERIODIC = 15
 COOKIE_TIME = 30
 #-------<GLOBAL VARIABLES (start with "g")>-------------------------------------
 # VARIABLES are the built in data type.
+gGonfigPath = os.path.join(dirpath, 'peerConfig.txt')
 
 #-------<GLOBAL INSTANCES (start with "i")>-------------------------------------
 # INSTANCES are the object.
