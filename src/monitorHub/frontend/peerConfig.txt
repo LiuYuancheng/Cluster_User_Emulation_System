@@ -1,0 +1,7 @@
+# Add your connect peer under below format in one line: 
+# { "name": "<peer_Unique_Name>", "ipAddr": "<IP_v4 address>", "udpPort": <udp_port> }
+
+# Seet all the peer here:
+{ "name": "Victim_Bob", "ipAddr": "127.0.0.1", "udpPort": 3001 }
+# { "name": "T1_Alice", "ipAddr": "192.168.58.10", "udpPort": 3001 }
+# { "name": "T2_Charlie", "ipAddr": "192.168.59.10", "udpPort": 3001 }

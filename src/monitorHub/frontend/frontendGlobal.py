@@ -40,10 +40,10 @@ Log.initLogger(gTopDir, 'Logs', APP_NAME[0], APP_NAME[1], historyCnt=100, fPutLo
 APP_NAME = 'Action_monitor_HUB [Ver:0.X]'
 
 RC_TIME_OUT = 10    # reconnection time out.
-BE_IP = ('127.0.0.1', 3001)     # backend server IP address.
 APP_SEC_KEY = 'secrete-key-goes-here'
 UPDATE_PERIODIC = 15
 COOKIE_TIME = 30
+
 #-------<GLOBAL VARIABLES (start with "g")>-------------------------------------
 # VARIABLES are the built in data type.
 gGonfigPath = os.path.join(dirpath, 'peerConfig.txt')
