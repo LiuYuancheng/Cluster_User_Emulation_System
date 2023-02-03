@@ -1,6 +1,11 @@
 # Windows_User_Simulator
 
-**Program Design Purpose**: We want to create a "actor" can simulate a normal MS-Windows user to do the user action to generate user's event based on the time line setting.
+**Program Design Purpose**: We want to create a distributed and no-centralized single/multiple users’ activities emulator system to simulate and monitor a mid size cluster of users’ normal network traffic actions and the local activities events. The system can be applied to support below scenario : 
+
+- Auto repeat/replay specified numbers of users (blue team) activities (benign-traffic) or or attack-action (red team) in cyber exercise event.
+- Generate required network traffic flow with different network protocols for network security research project. 
+- Be used to build the repeatable users’ test environment for AI/ML trained model’s testing and verification.
+- Provide library API for customer to build customized complex “Human type” action. 
 
 [TOC]
 
@@ -8,11 +13,11 @@
 
 ### Introduction
 
-We want to create an intelligent "actor” program which can simulate a normal MS-Windows user’s daily action ( different kinds of network access, system level operation and different app level operation) to generate user’s regular or random event based on the customer’s requirement. So, it can:
+The Cluster Users Emulator is a multiple users’ action emulation system running in a network/compute cluster system which can satisfy the customers’ requirement about:
 
-- Be used to repeat/replay specified large numbers of users (blue team) activities in cyber exercise event.
-- Generate required network traffic flow for network security research project. 
-- Be used as repeatable user’s test environment for AI/ML trained module’s verification.
+- Network-traffic / node activities / group-users interactive action generation. 
+- Robotic process / tasks automation. 
+- System tasks’ process monitoring and control.
 
 
 
