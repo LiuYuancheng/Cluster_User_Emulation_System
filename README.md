@@ -16,8 +16,82 @@
 The Cluster Users Emulator is a multiple users’ action emulation system running in a network/compute cluster system which can satisfy the customers’ requirement about:
 
 - Network-traffic / node activities / group-users interactive action generation. 
+
 - Robotic process / tasks automation. 
+
 - System tasks’ process monitoring and control.
+
+  
+
+#### System structure 
+
+The user Emulator system can be deployed on single compute node, real network system, VMs based SDN (software defined network). The product contents three parts, the “User actions repository”, the “User action emulator/scheduler” and the “scheduler monitor hub”. (The 3 parts relationship is shown in the below system deployment structure diagram)
+
+![](doc/img/RM_diagram_system.png)
+
+- **User Actions Repository** : Provide the library APIs repository to simulate simple user’s normal activities/events under hardware, network, OS and App level. (Such as starting the online meeting, send/receive email, upload/download files, edit MS-Office doc, On/Off Windows FW, watch online/offline video…)
+- **User Action Emulator**: A RPA type scheduler to invoke the lib from action repository to build more complex “Human type” activities and run the tasks based on the users’ timeline playbook configuration.
+- **Scheduler Monitor Hub**: A no-centralized monitor website host which provides plug and play tasks state view function for the customer to monitor and control all/parts of their schedulers in a computers/servers cluster. 
+
+The modules relationship diagram is shown below: 
+
+![](doc/img/RM_diagram_module.png)
+
+`Version: 0.1`
+
+
+
+------
+
+### System Design
+
+We want to create an intelligent "actor” program which can simulate a normal MS-Windows user’s daily action ( different kinds of network access, system level operation and different app level operation) to generate user’s regular or random event based on the customer’s requirement. So, it can:
+
+- Be used to repeat/replay specified large numbers of users (blue team) activities in cyber exercise event.
+- Generate required network traffic flow for network security research project. 
+- Be used as repeatable user’s test environment for AI/ML trained module’s verification.
+
+##### System Work Flow Diagram
+
+The system will work under the below work diagram 
+
+![](doc/img/RM_Diagram_workflow.png)
+
+
+
+#### User Actions Repository
+
+User Actions Repository is library APIs repository to simulate simple user’s normal activities/events under hardware, network, OS and App level. (Such as starting the online meeting, send/receive email, upload/download files, edit MS-Office doc, On/Off Windows FW, watch online/offline video…)
+
+Currently we provide 5 main repositories with 18 kinds of basic user action functions and 28 kinds of pre-built complex user’s actors components. The 5 main feature repositories covers: 
+
+- Network traffic action generators. 
+- Application operation action generators. 
+- User’s human activities action generators.
+- System control action generators.
+- Other action generators.
+
+The Introduction link of User Action Repository [click [here](ReadMe_User_Actions_Repository.md) ] 
+
+
+
+#### **User Action Emulator**
+
+User Actor Emulator is a RPA type scheduler to invoke the lib from action repository to build more complex “Human type” activities and run the tasks based on the users’ timeline playbook configuration.
+
+
+
+
+
+------
+
+
+
+
+
+
+
+
 
 
 
