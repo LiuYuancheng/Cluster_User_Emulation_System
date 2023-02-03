@@ -1,5 +1,3 @@
-
-
 # User Actions Repository
 
 **Program Design Purpose**: 
@@ -48,13 +46,51 @@ The network traffic action generators module will provide below lib functions:
 
 
 
+#### **Application event actors repository** 
+
+| **Index** | **Actor module name** | **Function provided**                          |
+| --------- | --------------------- | ---------------------------------------------- |
+| 1         | zoomActor             | Join/Start a zoom meeting                      |
+| 2         | musicActor            | Search audio files and play one by one.        |
+| 3         | VideoActor            | Search video/movie files and play one  by one. |
+| 4         | msFileActor(Word)     | Create/edit MS-word(*.docx) file               |
+| 5         | msFileActor(PPT)      | Create/edit MS-powerpoint(*.pptx) file         |
+| 6         | msTeamsActor          | Join teams meeting, send a message.            |
+| 7         | fileActor             | Check pdf file and parse the info.             |
 
 
 
+#### **Human activities repository** 
+
+| Index | **Actor module name**  | **Function provided**                                        |
+| ----- | ---------------------- | ------------------------------------------------------------ |
+| 1     | mouse_keyboard Actor   | Replay recorded user mouse +  keyboard action, Simulate user's mouse+keyboard action based on pre-config |
+| 2     | TelegramActor          | Send message to phone by telegram                            |
+| 3     | gameActor(dino/sudoku) | Play google dino game. play sudoku  game.                    |
+| 4     | PaintActor             | Draw picture with MS-Paint app.                              |
 
 
 
+#### **System Operation Actors** **Repository**
+
+| **Index** | **Actor module name** | **Function provided**                                        |
+| --------- | --------------------- | ------------------------------------------------------------ |
+| 1         | CmdActor              | Run Window/Linux commend under cmd or PowerShell.            |
+| 2         | SettingActor          | Change some OS setting (on/off  firewall, change display bg, sort desktop, reboot) |
 
 
 
+#### **Other Action Repository**
 
+| **Index** | **Actor module name** | **Function provided**                                        |
+| --------- | --------------------- | ------------------------------------------------------------ |
+| 1         | SerialConnector       | Send and read message to/from COM  port.                     |
+| 2         | camEchoServer         | Computer built in camera/usb camera  video read record. Start a HLS server. |
+| 3         | ScreanRecorder        | snapshot the screen under frequency.                         |
+| 4         | DBHandler             | DataBase (SQLite3, influxDB, arangodb)  access action simulator. |
+
+
+
+------
+
+> Last edit by LiuYuancheng(liu_yuan_cheng@hotmail.com) at 03/02/2023, if you have any problem or find anu bug, please send me a message .

@@ -39,6 +39,34 @@ The modules relationship diagram is shown below:
 
 `Version: 0.1`
 
+------
+
+### Product overview 
+
+There are several kinds of well-developed network traffic generators, task scheduler tools and the tasks progress monitors hub in the market. But most of these tools’ functions are very general and don’t cover all the three areas ( emulation, management and monitoring), so the customer still speed a lot of time and effort to build their system. Our Cluster Users Emulator is aimed to provide a packaged all-in-one light solution allow our customers to simulate a groups of different users’ complex human type action, then schedule these events and monitor / control them without spending much workload to play with several different tools. 
+
+#### SWOT Business Analysis
+
+![](doc/img/RM_diagram_swot.png)
+
+##### **Who may be interested about using it:** 
+
+- Customers whose system config setting and requirements keep updating, or need flexible tool to integrate different apps. 
+- Customer who wants to create some complex “human type” action especially related UI operation and Windows platform.
+- Customer who needs different kinds of pre-configured activities scenario and try to avoid spending much development effort on the events/traffic generation details. 
+- Researcher who want to automatically repeat specific scenario with small changes for their experiments.
+
+##### **Why user choose using it :** 
+
+- **Open** : Our product is open source and focuses on more specific activities generation tasks, so compare with other general tools, our product is more suitable for the customer to create complex scenario. 
+- **Reusable**: Our product can provide activities library for customer to reuse and integrate to their software/program. 
+- **Flexible**: Our pre-build user cluster’s activities scenario can be easily changed to match customers’ requirement to help reduce the customer’s development effort. 
+
+##### **User Action emulator demo video:** 
+
+- https://www.youtube.com/watch?v=jgm3gQhzUq4&t=57s
+- https://www.youtube.com/watch?v=wZsRmYPcPTQ
+
 
 
 ------
@@ -71,13 +99,36 @@ Currently we provide 5 main repositories with 18 kinds of basic user action func
 - System control action generators.
 - Other action generators.
 
-The Introduction link of User Action Repository [click [here](ReadMe_User_Actions_Repository.md) ] 
+**The detail document link of User Action Repository** [click [here](ReadMe_User_Actions_Repository.md) ] 
 
 
 
 #### **User Action Emulator**
 
-User Actor Emulator is a RPA type scheduler to invoke the lib from action repository to build more complex “Human type” activities and run the tasks based on the users’ timeline playbook configuration.
+User Actor Emulator is a RPA type scheduler to invoke the lib from action repository to build more complex “Human type” activities and run the tasks based on the users’ timeline playbook configuration. The emulator program provides four levels of components to build/implement the customers requirement: 
+
+- **Basic action function[lvl-0] :** Do one basic action such as file send tcp request, file copy, run cmd. 
+- **User action [lvl-1]:** Grouped basic functions with a schedule config file to implement complex user’s action such read and write email, join a zoom meeting. 
+- **Actor [lvl-2]:** Grouped user actions with a schedule config file to implement human normal activity such as edit a PPT and share to the cloud, play a sample game, surf the internet and download the contents. 
+- **User emulator [lvl-3]:** Schedule the actors with a customized timeline so the emulator can implement a specific user’s daily event, such as a network admin.
+
+The components relationship is shown below:
+
+![](doc/img/RM_Diagram_components.png)
+
+**The detail document link of  User Action Emulator** [click [here](ReadMe_User_Actions_Emulator.md) ] 
+
+
+
+#### **Scheduler Monitor Hub**
+
+The Scheduler Monitor hub is a no-centralized monitor website host which provides plug and play tasks state view function for the customer to monitor and control all/parts of their schedulers in a computers/servers cluster. The emulator's task monitor Page/ tasks view is shown below:
+
+![](doc/img/RM_diagram_Monitor_page1.png)
+
+The scheduler monitor hub program provide a website for the customer to check each user emulator’s tasks execution state and do some basic control**.** As shown in the workflow diagram section, the user can connect to the monitor hub server to view the webpage or plug their own laptop in the cluster to “Fetch” the emulators’ state basic their local setting.
+
+**The detail document link of  Scheduler Monitor Hub** [click [here](ReadMe_User_Actions_Emulator.md) ] 
 
 
 
@@ -85,134 +136,41 @@ User Actor Emulator is a RPA type scheduler to invoke the lib from action reposi
 
 ------
 
+### Program Setup [under editing]
+
+###### Development Environment : python 3.7.4
+
+Additional Lib/Software Need: 
+
+###### Hardware Needed : None
+
+###### Program  Folder Structure;
 
 
 
+######  
+
+------
+
+### Program Usage
 
 
 
+#### Program Execution 
 
+##### User action Emulator
 
+Your can use program execution 1 or program execution 2
 
+- Program execution 1: Run `src/runScheduler_win.bat`
+- Program execution 2: cd to `src/actionScheduler` run `python ScheduleRun.py`
 
-##### Actors Module: 
+##### Scheduler Monitor Hub
 
-Actor module are the basic components to simulate one kind of normal user's  action such as file editing, surf the internet, access multi-media  and so on. 
+Your can use program execution 1 or program execution 2
 
-
-
-Network traffic action generator
-
-| Actor module name | function provided        | traffic/protocol type                                        |
-| ----------------- | ------------------------ | ------------------------------------------------------------ |
-| pingActor         | ping                     | Internet Control Message Protocol (ICMP)                     |
-| webActor          | http(s)                  | Fetch a website, send http(s) request.                       |
-| webDownloader     | http(s)                  | Download website components: https web cert, css, html, js, images, downloadable link. |
-|                   | Page screen shot         | whole webpage to image.                                      |
-| transferActor     | ftp(s)                   | Upload and download a file                                   |
-|                   | sftp                     | Transfer files via sftp                                      |
-|                   | nfs/smb                  | Copy a file or directory to or from a nfs or smb share.      |
-| sshConnector      | ssh/scp                  | ssh connection or scp file transfer                          |
-| sshForwarder      | ssh                      | forward port thought open port.                              |
-| udpCom            | udp                      | Any kinds of UDP message communication or file transfer.     |
-| tcpCom            | tcp                      | Any kinds of TCP message communication or file transfer.     |
-| emailActor        | SMTP/IMAP4,POP,IMAP_SSL  | Email receive and send (Gmail, Hotmail, Mailu)               |
-| camEchoClient     | RTSP                     | Real-Time Streaming(IP camera)                               |
-|                   | HLS                      | HTTP Live Streaming such as video web site.                  |
-| pcapReplayActor   | replaying packet in pcap | parsing pcap file and send the packet to the specific destination. |
-| telnetActor       | telnet                   | remote login/Open a telnet connection and issue commands     |
-
-
-
-System App Action genreator
-
-| Actor module name | function provided                                          |      |
-| ----------------- | ---------------------------------------------------------- | ---- |
-| zoomActor         | Join zoom meeting                                          |      |
-| musicActor        | Search audio files and play one by one                     |      |
-| videoActor        | Search video/picture files and play one by one             |      |
-| msFileActor(Word) | Create/edit MS-word(*.docx) file                           |      |
-| msFileActor(PPT)  | Create/edit MS-powerpoint(*.pptx) file                     |      |
-| msTeamsActor      | Join teams meeting, send a message.                        |      |
-| fileActor         | file search, copy, move, delete, execute, rename, compress |      |
-| pdfReader         | Check pdf file and parse the info.                         |      |
-|                   |                                                            |      |
-
-
-
-User action generator
-
-| Actor module name      | function provided                                         |      |
-| ---------------------- | --------------------------------------------------------- | ---- |
-| mouse_keyboard Actor   | Replay recorded user mouse + keyboard action              |      |
-|                        | Simulate user's mouse+keyboard action based on pre-config |      |
-| TelegramActor          | Send message to phone by telegram                         |      |
-| gameActor(dino/sudoku) | Play google dino game. play sudoku game.                  |      |
-|                        |                                                           |      |
-
-
-
-Other action generator
-
-| Actor module name | function provided                                            |      |
-| ----------------- | ------------------------------------------------------------ | ---- |
-| SerialConnector   | Send and read message to/from COM port.                      |      |
-| camEchoServer     | Computer built in camera/usb camera video read record. Start a HLS server. |      |
-| ScreanRecorder    | snapshot the screen under frequency.                         |      |
-| DBHandler         | DataBase (SQLite3, influxDB, arangodb) access action simulator. |      |
-|                   |                                                              |      |
-
-
-
-System control action generator 
-
-| Actor module name | function provided                                            |      |
-| ----------------- | ------------------------------------------------------------ | ---- |
-| CmdActor          | Run window commend under cmd or powershell.                  |      |
-| SettingActor      | Change some OS setting (on/off firewall, change display bg, sort desktop, reboot) |      |
-|                   |                                                              |      |
-
-
-
-
-
-Example Timeline: 
-
-Bob is a system technical support officer. He login his Windows server at 8:50 am
-
-| Time  | Action                                                       | action time (testCase setting) | current progress                |
-| ----- | ------------------------------------------------------------ | ------------------------------ | ------------------------------- |
-| 9:01  | Ping a servers list to check the server's connection. (open console ping the dest one by one, sequential ) | 10 min                         | done                            |
-| 9:10  | Bob runs the ping client program ping 100 servers need to check and record down the result.(run pingClient.py, multi-thread parallel ping) | 10 min                         | done                            |
-| 9:13  | During watching the ping result refresh, bob run server network checking cmd in terminal one by one (ipconfig, Tracert www.google.com.sg , Pathping www.google.com.sg, Getmac, Nslookup www.google.com.sg) | 5 min                          | done                            |
-| 9:20  | Bob ssh to 12 Ubuntu servers and run some cmd  record done the result.(run sshConnector.py do server one by one sequential) | 12min                          | done                            |
-| 9:32  | Bob use "Tree" cmd to search some files.                     | 2 min                          | done                            |
-| 9:35  | Bob start a zoom meeting with his colleague to discuss for half hour | 30 min                         | done                            |
-| 10:05 | Write down and draw some diagram based on the meeting.       | 8 min                          | X: need the screen to be 1080P  |
-| 10:15 | Bob search some question in google.(run WebScreenShoter.py do web access and random link click action one by one sequential) | 15 min                         | Done                            |
-| 10:30 | Bob find what he want, and download the related web's cert, image, js, css,  file.(run WebDownloader.py do the download) | 5 min                          | Done                            |
-| 10:35 | Bob send this friend some message and image(video) by telegram .(run telegramClient.py do the message sending) | 5 min                          | x : use YC's telegram password, |
-| 10:40 | Bob watch YouTube video for 30 min                           | 30min                          | Done                            |
-| 10:48 | Bob read checked the email for 2 min                         | 2min                           | x : use YC's telegram password, |
-| 10:50 | Bob Open a word document and write a report.                 | 25 min                         | Done                            |
-| 11:25 | Bob made one presentation slides.                            | 13 min                         | Done                            |
-| 11:35 | Bob feel tired and play the google dino game for a short while. | 10 min                         | Done                            |
-| 12:00 | Bob went for lunch                                           | 60min                          |                                 |
-| 13:10 | Bob ping 100 random address  in the subnet 192.168.56.0/24 to check the connection. | 30 min                         | Done                            |
-| 13:45 | Bob ssh to 10 random host to run the cmd in the subnet 192.168.57.0/24 | 20 min                         | Done                            |
-| 14:10 | Bob turn off his private firewall for 30min                  | 1min                           | Done                            |
-| 14:30 | Bob turn search the web and download pic, js, cert file      | 20min                          | Done                            |
-| 14:50 | Bob send 2000+ UDP message to 100 different ip 192.168.57.0/24 each IP send 20 UPD message. | 20 min                         | Done                            |
-| 15:15 | Bob edit the ppt and pause the test result in.               | 3 min                          | Done                            |
-| 15:20 | Bob play game for 10 min                                     | 10 min                         | Done                            |
-| 15:40 | Bob run server network checking cmd in terminal one by one (ipconfig, Tracert www.google.com.sg , Pathping www.google.com.sg, Getmac, Nslookup www.google.com.sg) | 5 min                          | Done                            |
-| 15:55 | Bob start to pause more result he collected just now in this report | 2 min                          | Done                            |
-| 16:00 | Bob watch local video and listen the music for 30 min        | 30 min                         | Done                            |
-| 16:35 | Bob check and open all pictures in the picture window        | 15min                          | Done                            |
-| 17:00 | Bob send 2000+ UDP message to 100 different ip 192.168.58.0/24 each IP send 20 UPD message. | 20 min                         | Done                            |
-| 17:25 | Bob edit the ppt and pause the test result in.               | 5min                           | Done                            |
-| 17:35 | Bob edit his daily work report word file                     | 10 min                         | Done                            |
-| 17:50 | Bob logout his account.                                      |                                |                                 |
+- Program execution 1: Run `src/runMonitor_win.bat`
+- Program execution 2: cd to `src/monitorHub/frontend` run `python app.py`
 
 
 
@@ -222,3 +180,16 @@ remove access the windows vm:
 ssh -L 127.0.0.1:3389:192.168.57.10:3389 -p 6022 -J rp_fyp_ctf@gateway.ncl.sg ls23@172.18.178.10
 ```
 
+
+
+
+
+------
+
+### Program Use Case 
+
+
+
+------
+
+> Last edit by LiuYuancheng(liu_yuan_cheng@hotmail.com) at 03/02/2023, if you have any problem or find anu bug, please send me a message .
