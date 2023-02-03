@@ -44,8 +44,8 @@
 
     <div class="tab-content">
         <div class="tab-pane fade show active" id="pills-cr1-pro" role="tabpanel" aria-labelledby="pills-cr1-pro-tab">
+            <button type="button" onclick="downloadCSVFile()" class="float-right"> Export as CSV </button>    
             <div class="table-responsive">
-
                 <table class="table table-bordered table-dark">
                     <thead>
                         <tr class="table table-primary">
@@ -125,7 +125,7 @@
             </div>
             <a href="#">
                 <button type="button" class="btn btn-success">[+] Add a new action </button>
-            </a>
+            </a> 
         </div>
         <div class="tab-pane fade" id="pills-cr1-res" role="tabpanel" aria-labelledby="pills-cr1-res-tab">
             <div class="table-responsive">
@@ -282,9 +282,6 @@
 
             </div>
 
-
-
-
         </div>
     </div>
 
@@ -293,6 +290,55 @@
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
     });
+
+    var csv_data =  {{posts["daily"] | tojson | safe}};
+    var updateName = {{posts["name"] | tojson | safe}};
+    var updateTime = {{posts["updateT"] | tojson | safe}};
+
+    function downloadCSVFile() {
+        // Create CSV file object and feed
+        // our csv_data into it
+        var csvContent = [updateName, updateTime, 'Idx, Time, State, Task, Detail'];
+
+        for (var element of csv_data) {
+            var line =  jsonToCSVline(element);
+            csvContent.push(line)
+        }
+        csvTxt = csvContent.join('\n');
+
+        CSVFile = new Blob([csvTxt], {
+            type: "text/csv"
+        });
+
+        // Create to temporary link to initiate
+        // download process
+        var temp_link = document.createElement('a');
+
+        // Download csv file
+        temp_link.download = "Tasks_Info.csv";
+        var url = window.URL.createObjectURL(CSVFile);
+        temp_link.href = url;
+
+        // This link should not be displayed
+        temp_link.style.display = "none";
+        document.body.appendChild(temp_link);
+
+        // Automatically click the link to
+        // trigger download
+        temp_link.click();
+        document.body.removeChild(temp_link);
+    }
+
+    function jsonToCSVline(jsonObj) {
+        var csvLine = [];
+        csvLine.push(jsonObj["actId"]);
+        csvLine.push(jsonObj["startT"]);
+        csvLine.push(jsonObj["actState"]);
+        csvLine.push(jsonObj["actName"]);
+        csvLine.push(jsonObj["actDetail"]);
+        return csvLine.join(",");
+    }
+
 </script>
 
 {% endblock %}
