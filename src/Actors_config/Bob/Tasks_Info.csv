@@ -1,0 +1,27 @@
+Victim_Bob
+Fri, 03 Feb 2023 15:38:37 GMT
+Idx, Time, State, Task, Detail
+1,09:01,pending,09:01_ping,Ping 30 destinations
+2,09:10,pending,09:10_ping[MT],Ping 100+ destinations
+3,09:13,pending,09:13_cmdRun,Run Win_Network cmds
+4,09:20,pending,09:20_sshTest,SSH login to NCL server run cmds
+5,09:32,pending,09:32_FileSearch,Search User dir to file and files.
+6,09:35,pending,09:35_Zoom,Open the Zoom and join meeting.
+7,10:03,pending,10:03_CheckEmail,Check unread email.
+8,10:15,pending,10:15_DownloadWeb,Follow urls list to download all the contents.
+9,10:32,running,10:32_YouTube,Watch some youTube videos
+10,10:50,running,10:50_EditMs-Word,Create and edit MS-Word Doc.
+11,11:25,pending,11:25_EditMs-PowerPoint,Create and edit MS-PPT Doc.
+12,11:35,pending,11:35_PlayGame,Open Chrome and play Dino Game.
+13,13:10,pending,13:10_Ping_subnet2,Ping ip addresses in subnet2
+14,13:35,finish,13:45_SSH_subnet2,SSH to hosts in subnet2
+15,14:10,running,14:10_TrunOff_FW,Turn off Windows FW.
+16,14:30,finish,14:30_Webdownload,Download some thing from webs dict
+17,14:50,pending,14:50_UDP communication,Send message/file by UDP
+18,15:15,pending,15:15_EditMs-PowerPoint,Find and edit MS-PPT Doc
+19,15:20,error,15:20_Play game,Play a game
+20,15:40,pending,15:40_SendEmail,Send emails
+21,16:00,pending,16:00_WatchVideo,Open a video file.
+22,16:35,pending,16:35_CheckPictures,Check pictures in folder.
+23,17:00,pending,17:00_UDP communication,Send message/file by UDP.
+24,17:35,pending,17:35_Write Report,Bob finished his report.
