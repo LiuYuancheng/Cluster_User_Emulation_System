@@ -1,0 +1,15 @@
+T1_Alice
+Mon, 06 Feb 2023 15:50:55 GMT
+Idx, Time, State, Task, Detail
+1,09:05,pending,09:05_checkEmail,Check new emails
+2,09:20,pending,09:20_YouTube,Play YouTube music videos
+3,09:23,pending,09:23_EditMs-Word,Create and edit MS-Word Doc for meeting
+4,10:00,pending,10:00_Zoom,Open Zoom and join meeting
+5,13:00,pending,13:00_EditMs-PowerPoint,Find and edit MS-PPT file
+6,15:00,pending,15:00_Play game,Play google dinosaur game
+7,15:15,finish,15:15_Webdownload,Click some links in a online shopping website
+8,15:45,finish,15:45_DownloadWeb,Follow urls list to download all the contents.
+9,16:00,error,16:00_checkEmail,Write and reply emails
+10,17:00,finish,17:00_Telegram,Open Telegram and send messages to chats
+11,17:15,finish,17:15_SearchWeb,Research some information for slides proposal
+12,17:35,finish,17:35_EditMs-Word,Find and continue edit MS-Word doc
