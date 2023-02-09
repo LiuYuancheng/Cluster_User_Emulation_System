@@ -40,11 +40,12 @@ class kypoActor(object):
             print("Load the user crediential file error: %s" %str(err))
             return None
         print(self.configJson)
-        self.webActor = browserActor(os.path.join(dirpath, self.configJson['Driver_file']))
+        self.configJson['Driver_file'] = os.path.join(dirpath, self.configJson['Driver_file'])
         self.keyActor = keyEventActor(winOS=False)
 
 #-----------------------------------------------------------------------------
     def accessPage(self, username, password):
+        self.webActor = browserActor(self.configJson['Driver_file'])
         ipAddr = self.configJson['Kypo_ip']
         accessTK = self.configJson['Acc_token']
         accessPF = self.configJson['Acc_pfix']
@@ -103,14 +104,15 @@ class kypoActor(object):
         self.keyActor.repeatPress(keyTab, repeat=3, Interval=0.5)
         self.keyActor.pressAndrelease(keyEnter)
         time.sleep(3) # wait logout finish.
+        self.webActor.closeBrowser()
+        self.webActor = None
 
 #-----------------------------------------------------------------------------
     def startAccess(self):
         for item in self.usersList:
             self.accessPage(item['name'], item['password'])
         print("Finished all")
-        self.webActor.closeBrowser()
-
+        
 #-----------------------------------------------------------------------------
 def main():
     keypoActor = kypoActor('kypoConfig.txt')
