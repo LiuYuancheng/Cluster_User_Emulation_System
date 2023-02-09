@@ -1,0 +1,16 @@
+# Setup the Kypo config here
+
+# Kypo-CRP web IP
+Kypo_ip:192.168.200.207
+
+# Couse access token
+Acc_token:cs4238
+
+# Couse access postFix
+Acc_pfix:4714
+
+# user crediention file
+User_Cred:oidc-initial-users.yaml
+
+# browser driver file
+Driver_file:chromedriver.exe
