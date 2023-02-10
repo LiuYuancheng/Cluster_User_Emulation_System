@@ -2,6 +2,12 @@
 
 {% block title %} User Action scheduler Monitor {% endblock %}
 
+{% block link %} <link rel="stylesheet" href="https://cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css"> {% endblock %}
+
+{% block script %} <script type="text/javascript" src="https://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script> {% endblock %}
+
+
+
 {% block style%}
 <style>
     /* Make the image fully responsive 
@@ -44,9 +50,10 @@
 
     <div class="tab-content">
         <div class="tab-pane fade show active" id="pills-cr1-pro" role="tabpanel" aria-labelledby="pills-cr1-pro-tab">
+            
             <button type="button" onclick="downloadCSVFile()" class="float-right"> Export as CSV </button>    
             <div class="table-responsive">
-                <table class="table table-bordered table-dark">
+                <table class="table table-bordered table-dark"> 
                     <thead>
                         <tr class="table table-primary">
                             <th>Action Id</th>
@@ -291,6 +298,11 @@
         $('[data-toggle="tooltip"]').tooltip();
     });
 
+    $(document).ready(function() {
+        $('#example').DataTable();
+    } );
+
+
     var csv_data =  {{posts["daily"] | tojson | safe}};
     var updateName = {{posts["name"] | tojson | safe}};
     var updateTime = {{posts["updateT"] | tojson | safe}};
@@ -338,6 +350,8 @@
         csvLine.push(jsonObj["actDetail"]);
         return csvLine.join(",");
     }
+
+
 
 </script>
 

@@ -2,13 +2,14 @@
 #-----------------------------------------------------------------------------
 # Name:        kypoActor.py
 #
-# Purpose:     This module will simulator a student to login the kypo-Crp
-#              platfrom, type in the couse access token, then log out.
+# Purpose:     This module will simulate the students to login the kypo-Crp
+#              platfrom with their credential, type in the given couse access 
+#              token to access the lab training questions, then log out.
 #
 # Author:      Yuancheng Liu
 #
 # Version:     v_0.1
-# Created:     2023/02/09
+# Created:     2023/02/08
 # Copyright:   n.a
 # License:     n.a
 #-----------------------------------------------------------------------------
