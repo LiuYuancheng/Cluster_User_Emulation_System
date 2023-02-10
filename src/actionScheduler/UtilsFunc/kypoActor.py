@@ -2,14 +2,13 @@
 #-----------------------------------------------------------------------------
 # Name:        kypoActor.py
 #
-# Purpose:     This module will simulate the students to login the kypo-Crp
-#              platfrom with their credential, type in the given couse access 
-#              token to access the lab training questions, then log out.
+# Purpose:     This module will simulator a student to login the kypo-Crp
+#              platfrom, type in the couse access token, then log out.
 #
 # Author:      Yuancheng Liu
 #
 # Version:     v_0.1
-# Created:     2023/02/08
+# Created:     2023/02/09
 # Copyright:   n.a
 # License:     n.a
 #-----------------------------------------------------------------------------
@@ -46,6 +45,7 @@ class kypoActor(object):
 
 #-----------------------------------------------------------------------------
     def accessPage(self, username, password):
+        startT = time.time()
         self.webActor = browserActor(self.configJson['Driver_file'])
         ipAddr = self.configJson['Kypo_ip']
         accessTK = self.configJson['Acc_token']
@@ -84,8 +84,19 @@ class kypoActor(object):
         self.webActor.openUrls(urlitem)
         self.keyActor.repeatPress(keyTab, repeat=4, Interval=0.5)
         self.keyActor.pressAndrelease(keyEnter)
+        #time.sleep(2000)
+        # for 1st time login
+        self.keyActor.repeatPress(keyTab, repeat=18, Interval=0.5)
+        self.keyActor.pressAndrelease(keyEnter)
         time.sleep(2)
-
+        print("-access training")
+        urlitem = {
+            'cmdID': 'kypo-training',
+            'url': 'https://%s/training-run' %str(ipAddr),
+            'interval': 2,
+        }
+        self.webActor.openUrls(urlitem)
+        #
         self.keyActor.repeatPress(keyTab, repeat=7, Interval=0.5)
         self.keyActor.typeStr(accessTK)
         self.keyActor.repeatPress(keyTab, repeat=2, Interval=0.5)
@@ -107,6 +118,7 @@ class kypoActor(object):
         time.sleep(3) # wait logout finish.
         self.webActor.closeBrowser()
         self.webActor = None
+        print("used %s sec" %str(time.time()-startT))
 
 #-----------------------------------------------------------------------------
     def startAccess(self):
