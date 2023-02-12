@@ -1,0 +1,112 @@
+<!-- user page templage base.html -->
+{% extends 'mgmbase.html'%}
+
+{% block mgmContent %}
+<h4> Users Account Management </h4>
+<div class="table-responsive">
+    <table class="table table-dark">
+        <thead>
+            <tr class="table table-info">
+                <!-- <th>Index</th> -->
+                <th>User ID </th>
+                <th>Login Email</th>
+                <th>User Name </th>
+                <th>User Type </th>
+                <th>User State </th>
+                <th>State control</th>
+                <th>Password reset</th>
+                <th>Delete User </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in posts %}
+            <tr class="info">
+                <td> {{ post['id'] }} </td>
+                <td> {{ post['email'] }} </td>
+                <td> {{ post['userName'] }} </td>
+                <td>
+                    {% if post['authority'] == 5 %}
+                        <span class="badge badge-success"> admin </span>
+                    {% else %}
+                        <span class="badge badge-info"> user </span>
+                    {% endif %}
+                </td>
+                
+                <td>
+                    {% if post['active'] > 0 %}
+                        <span class="badge badge-success"> Active </span>
+                    {% else %}
+                        <span class="badge badge-dark"> Disabled </span>
+                    {% endif %} 
+                </td>
+
+                <td>
+                    {% if post['active'] > 0 %}
+                        <form action="{{ url_for('changeAcc', postEmail=post['email'], action='disable')}}" method="POST">
+                            <input type="submit" value="Disable" class="btn btn-dark btn-sm"
+                                onclick=" return confirm('Disable the account ?')">
+                        </form>
+                
+                    {% else %}
+                        <form action="{{ url_for('changeAcc', postEmail=post['email'], action='enable')}}" method="POST">
+                            <input type="submit" value="Enable" class="btn btn-success btn-sm"
+                                onclick=" return confirm('Active the account ?')">
+                        </form>
+                    {% endif %}
+                </td> 
+                
+                <td>
+                    {% if post['authority'] != 5 %}
+                        <form action="{{ url_for('changeAcc', postEmail=post['email'], action='reset')}}" method="POST">
+                            <input type="submit" value="Reset Password" class="btn btn-warning btn-sm"
+                                onclick=" return confirm('Are you sure you want to change the account password?')">
+                        </form>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if post['authority'] != 5 %}
+                    <form action="{{ url_for('changeAcc', postEmail=post['email'], action='delete')}}" method="POST">
+                        <input type="submit" value="Delete Account" class="btn btn-danger btn-sm"
+                            onclick=" return confirm('Are you sure you want to delete the account?')">
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% with message=get_flashed_messages() %}
+        {% if message[0] %}
+            <form class="form-inline">
+                Account: &emsp; {{ message[0] }} 
+                
+                {% if message[1] == 'reset' %}
+                    's new password is set to : &emsp;
+                    <kbd id="copyme"> {{ message[2] }} </kbd> &emsp;
+                    <button type="button" class="btn btn-primary btn-xs" onclick="clip_div('copyme')">copy to clipboard</button>
+                {% elif message[1] == 'delete' %}
+                    account delete result {{message[2]}}                
+                {% endif %}
+
+            </form>
+            <script>
+                function clip_text(a_string){
+                    var input = document.createElement('input')
+                    input.id="__copyText__";
+                    input.value = a_string; // OOPS! document.getElementById(divId).innerText;
+                    document.body.appendChild(input);
+                    input.select();
+                    document.execCommand("copy");
+                    var txt = input.value
+                    input.remove()
+                    console.log("OK COPIED: '"+txt+"'")
+                }
+                function clip_div(divId){
+                   return clip_text(document.getElementById(divId).innerText)
+                }
+            </script>
+        {% endif%}
+    {% endwith%}
+</div>
+{% endblock %}
