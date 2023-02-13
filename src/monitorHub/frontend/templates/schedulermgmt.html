@@ -14,7 +14,6 @@
 {% endblock %}
 
 {% block mgmContent %}
-
 <div class="table-responsive">
     <table class="table table-bordered table-dark">
         <thead>
@@ -37,9 +36,9 @@
             {% for post in posts %}
             <tr class="info">
                 <td> <b>{{ post['id'] }}</b> </td>
-                <td> {{ post['peerName'] }} [ 
+                <td> {{ post['peerName'] }} [
                     <a href="{{ url_for('peerstate', postID=post['id'])}}" target="_blank">
-                        Link to task details
+                        Link to tasks detail
                     </a> ]
                 </td>
                 <td> {{ post['ipAddr'] }} </td>
@@ -62,10 +61,5 @@
             {% endfor %}
         </tbody>
     </table>
-
 </div>
-
-
-
-
 {% endblock %}

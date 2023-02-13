@@ -34,265 +34,154 @@
     
     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
         <li class="nav-item">
-            <a class="nav-link active" id="pills-cr1-pro-tab" data-toggle="pill" href="#pills-cr1-pro" role="tab"
-                aria-controls="pills-cr1-pro" aria-selected="true">Daily Actions</a>
+            <a class="nav-link active" id="pills-daily-tab" data-toggle="pill" href="#pills-daily" role="tab"
+                aria-controls="pills-daily" aria-selected="true">Daily Actions</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="pills-cr1-res-tab" data-toggle="pill" href="#pills-cr1-res" role="tab"
-                aria-controls="pills-cr1-res" aria-selected="false">Periodically Action</a>
+            <a class="nav-link" id="pills-random-tab" data-toggle="pill" href="#pills-random" role="tab"
+                aria-controls="pills-random" aria-selected="false">Periodically Action</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="pills-s17-cr2-tab" data-toggle="pill" href="#pills-s17-cr2" role="tab"
-                aria-controls="pills-s17-cr2" aria-selected="false">Weekly Actions</a>
+            <a class="nav-link" id="pills-weekly-tab" data-toggle="pill" href="#pills-weekly" role="tab"
+                aria-controls="pills-weekly" aria-selected="false">Weekly Actions</a>
         </li>
     </ul>
-
+    {% set tableTagList = [ ["daily", "pills-daily", "pills-daily-tab"], 
+                            ["random", "pills-random", "pills-random-tab"],
+                            ["weekly", "pills-weekly", "pills-weekly-tab"]] %}
 
     <div class="tab-content">
-        <div class="tab-pane fade show active" id="pills-cr1-pro" role="tabpanel" aria-labelledby="pills-cr1-pro-tab">
+
+        {% for tableTag in tableTagList %}
+
+
+            {% set tableId = tableTag[0] %}
+            {% set tableName = tableTag[1] %}
+            {% set tableLabel = tableTag[2] %}
+            <div class="tab-pane fade show active" id="{{tableName}}" role="tabpanel" aria-labelledby="{{tableLabel}}">
             
-            <button type="button" onclick="downloadCSVFile()" class="float-right"> Export as CSV </button>    
-            <div class="table-responsive">
-                <table class="table table-bordered table-dark"> 
-                    <thead>
-                        <tr class="table table-primary">
-                            <th>Action Id</th>
-                            <th>Action name</th>
-                            <th>Description</th>
-                            <th>Start time</th>
-                            <th>Action period(sec)</th>
-                            <th>Owner</th>
-                            <th>Action type</th>
-                            <th>Dependency</th>
-                            <th>Current state</th>
-                            <th>Next run </th>
-                            <th>Config </th>
-                            <th>Delete </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        {% for post in posts['daily'] %}
-                        <tr class="info">
-                            <td> <b>{{ post['actId'] }}</b> </td>
-                            <td> {{ post['actName'] }} </td>
-                            <td>
-                                <a href="#" data-toggle="tooltip" data-placement="right"
-                                    title="{{post['actDesc']}}">{{post['actDetail']}}</a>
-                            </td>
-
-                            <td> <span class="badge badge-primary">  Every 1 day start at: {{ post['startT'] }} </span> </td>
-                            <td> {{ post['period'] }} </td>
-                            <td> {{ post['actOwner'] }} </td>
-
-                            <td>
-                                {% if post['actType'] == 0 %}
-                                <span class="badge badge-primary"> sequencial </span>
-                                {% else %}
-                                <span class="badge badge-warning"> parallel </span>
-                                {% endif %}
-                            </td>
-
-                            <td>
-                                {% if post['depend'] == 0 %}
-                                <span class="badge badge-dark"> None </span>
-                                {% else %}
-                                <span class="badge badge-light"> Action: {{ post['depend'] }} </span>
-                                {% endif %}
-                            </td>
-
-                            <td>
-                                {% if post['actState'] == "error" %}
-                                <span class="badge badge-danger"> error </span>
-                                {% elif post['actState'] == "finish" %}
-                                <span class="badge badge-success"> finished </span>
-                                {% elif post['actState'] == "pending" %}
-                                <span class="badge badge-info"> pending </span>
-                                {% elif post['actState'] == "running" %}
-                                <span class="badge badge-primary"> Running  </span> <div class="spinner-border"></div>
-                                {% else %}
-                                <span class="badge badge-secondary"> deactivated </span>
-                                {% endif %}
-                            </td>
-
-                            <td> <span class="badge badge-secondary"> {{ post['nextT'] }} </span> </td>
-                            <td> <a href="#"> <span class="badge badge-warning">Edit</span></a></td>
-
-                            <td>
-                                <form action="{{ url_for('changeTask', peerName = posts['name'], jobID=post['actId'], action='delete')}}" method="POST">
-                                    <input type="submit" value="Delete tasks" class="btn btn-danger btn-sm"
-                                        onclick=" return confirm('Are you sure you want to delete the task ? If confirm deleted, the job task will not be recovered!')">
-                                </form>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-
+                <button type="button" onclick="downloadCSVFile()" class="float-right"> Export as CSV </button>    
+                <div class="table-responsive">
+                    <table class="table table-bordered table-dark"> 
+                        <thead>
+                            <tr class="table table-primary">
+                                <th>Action Id</th>
+                                <th>Action name</th>
+                                <th>Description</th>
+                                <th>Start time</th>
+                                <th>Action period(sec)</th>
+                                <th>Owner</th>
+                                <th>Action type</th>
+                                <th>Dependency</th>
+                                <th>Current state</th>
+                                <th>Next run </th>
+                                <th>Config </th>
+                                <th>Delete </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+    
+                            {% for post in posts[tableId] %}
+                            <tr class="info">
+                                <td> <b>{{ post['actId'] }}</b> </td>
+                                <td> {{ post['actName'] }} </td>
+                                <td>
+                                    <a href="#" data-toggle="tooltip" data-placement="right"
+                                        title="{{post['actDesc']}}">{{post['actDetail']}}</a>
+                                </td>
+    
+                                <td> <span class="badge badge-primary">  Every 1 day start at: {{ post['startT'] }} </span> </td>
+                                <td> {{ post['period'] }} </td>
+                                <td> {{ post['actOwner'] }} </td>
+    
+                                <td>
+                                    {% if post['actType'] == 0 %}
+                                    <span class="badge badge-primary"> sequencial </span>
+                                    {% else %}
+                                    <span class="badge badge-warning"> parallel </span>
+                                    {% endif %}
+                                </td>
+    
+                                <td>
+                                    {% if post['depend'] == 0 %}
+                                    <span class="badge badge-dark"> None </span>
+                                    {% else %}
+                                    <span class="badge badge-light"> Action: {{ post['depend'] }} </span>
+                                    {% endif %}
+                                </td>
+    
+                                <td>
+                                    {% if post['actState'] == "error" %}
+                                    <span class="badge badge-danger"> error </span>
+                                    {% elif post['actState'] == "finish" %}
+                                    <span class="badge badge-success"> finished </span>
+                                    {% elif post['actState'] == "pending" %}
+                                    <span class="badge badge-info"> pending </span>
+                                    {% elif post['actState'] == "running" %}
+                                    <span class="badge badge-primary"> Running  </span> <div class="spinner-border"></div>
+                                    {% else %}
+                                    <span class="badge badge-secondary"> deactivated </span>
+                                    {% endif %}
+                                </td>
+    
+                                <td> <span class="badge badge-secondary"> {{ post['nextT'] }} </span> </td>
+                                <td> 
+                                    <button type="button" data-id = "{{post['id']}}" class="open-AddBookDialog btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">
+                                        Config
+                                    </button>
+                                </td>
+    
+                                <td>
+                                    <form action="{{ url_for('changeTask', peerName = posts['name'], jobID=post['actId'], action='delete')}}" method="POST">
+                                        <input type="submit" value="Delete tasks" class="btn btn-danger btn-sm"
+                                            onclick=" return confirm('Are you sure you want to delete the task ? If confirm deleted, the job task will not be recovered!')">
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+    
+                </div>
+                <a href="#">
+                    <button type="button" class="btn btn-success">[+] Add a new action </button>
+                </a> 
             </div>
-            <a href="#">
-                <button type="button" class="btn btn-success">[+] Add a new action </button>
-            </a> 
-        </div>
-        <div class="tab-pane fade" id="pills-cr1-res" role="tabpanel" aria-labelledby="pills-cr1-res-tab">
-            <div class="table-responsive">
+    
+        {% endfor %}
 
-                <table class="table table-bordered table-dark">
-                    <thead>
-                        <tr class="table table-info">
-                            <th>Action Id</th>
-                            <th>Action name</th>
-                            <th>Description</th>
-                            <th>Start time</th>
-                            <th>Action period </th>
-                            <th>Owner</th>
-                            <th>Action type</th>
-                            <th>Dependency</th>
-                            <th>Current state</th>
-                            <th>Next run </th>
-                            <th>Config </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        {% for post in posts['random'] %}
-                        <tr class="info">
-                            <td> <b>{{ post['id'] }}</b> </td>
-                            <td> {{ post['name'] }} </td>
-                            <td>
-                                <a href="#" data-toggle="tooltip" data-placement="right"
-                                    title="{{post['descrip']}}">{{post['detail']}}</a>
-                            </td>
-
-                            <td> <span class="badge badge-primary"> {{ post['startT'] }} </span> </td>
-                            <td> {{ post['period'] }} </td>
-                            <td> {{ post['owner'] }} </td>
-
-                            <td>
-                                {% if post['type'] == 0 %}
-                                <span class="badge badge-primary"> sequencial </span>
-                                {% else %}
-                                <span class="badge badge-warning"> parallel </span>
-                                {% endif %}
-                            </td>
-
-                            <td>
-                                {% if post['dep'] == 0 %}
-                                <span class="badge badge-dark"> None </span>
-                                {% else %}
-                                <span class="badge badge-light"> Action: {{ post['dep'] }} </span>
-                                {% endif %}
-                            </td>
-
-                            <td>
-                                {% if post['state'] == 0 %}
-                                <span class="badge badge-danger"> error </span>
-                                {% elif post['state'] == 1 %}
-                                <span class="badge badge-success"> finished </span>
-                                {% elif post['state'] == 2 %}
-                                <span class="badge badge-info"> pending </span>
-                                {% elif post['state'] == 3 %}
-                                <span class="badge badge-primary"> Running  </span> <div class="spinner-border"></div>
-                                {% else %}
-                                <span class="badge badge-secondary"> deactivated </span>
-                                {% endif %}
-                            </td>
-
-                            <td> <span class="badge badge-secondary"> {{ post['nextT'] }} </span> </td>
-
-                            <td>
-
-                                <a href="#"> <span class="badge badge-warning">Edit</span></a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-
-            </div>
-
-        </div>
-        <div class="tab-pane fade" id="pills-s17-cr2" role="tabpanel" aria-labelledby="pills-s17-cr2-tab">
-            <div class="table-responsive">
-
-                <table class="table table-bordered">
-                    <thead>
-                        <tr class="table table-warning">
-                            <th>Action Id</th>
-                            <th>Action name</th>
-                            <th>Description</th>
-                            <th>Start time</th>
-                            <th>Action period </th>
-                            <th>Owner</th>
-                            <th>Action type</th>
-                            <th>Dependency</th>
-                            <th>Current state</th>
-                            <th>Next run </th>
-                            <th>Config </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        {% for post in posts['weekly'] %}
-                        <tr class="info">
-                            <td> <b>{{ post['id'] }}</b> </td>
-                            <td> {{ post['name'] }} </td>
-                            <td>
-                                <a href="#" data-toggle="tooltip" data-placement="right"
-                                    title="{{post['descrip']}}">{{post['detail']}}</a>
-                            </td>
-
-                            <td> <span class="badge badge-primary"> {{ post['startT'] }} </span> </td>
-                            <td> {{ post['period'] }} </td>
-                            <td> {{ post['owner'] }} </td>
-
-                            <td>
-                                {% if post['type'] == 0 %}
-                                <span class="badge badge-primary"> sequencial </span>
-                                {% else %}
-                                <span class="badge badge-warning"> parallel </span>
-                                {% endif %}
-                            </td>
-
-                            <td>
-                                {% if post['dep'] == 0 %}
-                                <span class="badge badge-dark"> None </span>
-                                {% else %}
-                                <span class="badge badge-light"> Action: {{ post['dep'] }} </span>
-                                {% endif %}
-                            </td>
-
-                            <td>
-                                {% if post['state'] == 0 %}
-                                <span class="badge badge-danger"> error </span>
-                                {% elif post['state'] == 1 %}
-                                <span class="badge badge-success"> finished </span>
-                                {% elif post['state'] == 2 %}
-                                <span class="badge badge-info"> pending </span>
-                                {% elif post['state'] == 3 %}
-                                <span class="badge badge-primary"> Running  </span> <div class="spinner-border"></div>
-                                {% else %}
-                                <span class="badge badge-secondary"> deactivated </span>
-                                {% endif %}
-                            </td>
-
-                            <td> <span class="badge badge-secondary"> {{ post['nextT'] }} </span> </td>
-
-                            <td>
-                                <a href="#"> <span class="badge badge-danger">Remove</span></a>
-                                <a href="#"> <span class="badge badge-warning">Edit</span></a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-
-            </div>
-
-        </div>
     </div>
 
 </div>
+
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h6 class="modal-title"> Task Configuration</h6>
+        </div>
+        <hr>
+        <div class="modal-body">
+
+            <label> Setup the task time:</label>
+            <input type="time" id="appt" name="appt" min="09:00" max="18:00" required>
+            <p> Active or de-active the task</p>
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="switch1" name="example">
+                <label class="custom-control-label" for="switch1"> Active task </label>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-success" data-dismiss="modal">Submit</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </div>
+      </div>
+    </div>
+  </div>
+
 <script>
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
@@ -302,6 +191,20 @@
         $('#example').DataTable();
     } );
 
+    $(document).on("click", ".open-AddBookDialog", function () {
+        var cardId = $(this).data('id');
+        //var servername = $(this).data('server');
+        //const element = document.getElementById("gpuName");
+        //element.innerHTML = servername;
+        $(".modal-body #gpuIndex").val( cardId );
+        $(".modal-body #bookId").val( cardId );
+    });
+
+    $(document).ready(function(){
+        $('[data-toggle="popover"]').popover(
+            { trigger: 'focus'}
+        );   
+    });
 
     var csv_data =  {{posts["daily"] | tojson | safe}};
     var updateName = {{posts["name"] | tojson | safe}};
@@ -350,8 +253,6 @@
         csvLine.push(jsonObj["actDetail"]);
         return csvLine.join(",");
     }
-
-
 
 </script>
 
