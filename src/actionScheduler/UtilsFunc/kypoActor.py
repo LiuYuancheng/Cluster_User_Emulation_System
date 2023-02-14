@@ -75,7 +75,7 @@ class kypoActor(object):
         self.keyActor.pressAndrelease(keyEnter)
         time.sleep(5)
         # access the taining page
-        print("-access training")
+        print(" - access training")
         urlitem = {
             'cmdID': 'kypo-training',
             'url': 'https://%s/training-run' %str(ipAddr),
@@ -84,12 +84,11 @@ class kypoActor(object):
         self.webActor.openUrls(urlitem)
         self.keyActor.repeatPress(keyTab, repeat=4, Interval=0.5)
         self.keyActor.pressAndrelease(keyEnter)
-        #time.sleep(2000)
         # for 1st time login
         self.keyActor.repeatPress(keyTab, repeat=18, Interval=0.5)
         self.keyActor.pressAndrelease(keyEnter)
         time.sleep(2)
-        print("-access training")
+        print("- access training")
         urlitem = {
             'cmdID': 'kypo-training',
             'url': 'https://%s/training-run' %str(ipAddr),
