@@ -3,7 +3,7 @@
 **Program Design Purpose**: We want to create a distributed and no-centralized single/multiple users’ activities emulator system to simulate and monitor a mid size cluster of users’ normal network traffic actions and the local activities events. The system can be applied to support below scenario : 
 
 - Auto repeat/replay specified numbers of users (blue team) activities (benign-traffic) or or attack-action (red team) in cyber exercise event.
-- Generate required network traffic flow with different network protocols for network security research project. 
+- Generate required network traffic flow with different network protocols for network security research project or network honeypot built. 
 - Be used to build the repeatable users’ test environment for AI/ML trained model’s testing and verification.
 - Provide library API for customer to build customized complex “Human type” action. 
 

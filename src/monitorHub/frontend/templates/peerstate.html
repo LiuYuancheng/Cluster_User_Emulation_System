@@ -46,9 +46,9 @@
                 aria-controls="pills-weekly" aria-selected="false">Weekly Actions</a>
         </li>
     </ul>
-    {% set tableTagList = [ ["daily", "pills-daily", "pills-daily-tab"], 
-                            ["random", "pills-random", "pills-random-tab"],
-                            ["weekly", "pills-weekly", "pills-weekly-tab"]] %}
+    {% set tableTagList = [ ["daily", "pills-daily", "pills-daily-tab", "tab-pane fade show active"], 
+                            ["random", "pills-random", "pills-random-tab", "tab-pane fade"],
+                            ["weekly", "pills-weekly", "pills-weekly-tab", "tab-pane fade"]] %}
 
     <div class="tab-content">
 
@@ -58,7 +58,8 @@
             {% set tableId = tableTag[0] %}
             {% set tableName = tableTag[1] %}
             {% set tableLabel = tableTag[2] %}
-            <div class="tab-pane fade show active" id="{{tableName}}" role="tabpanel" aria-labelledby="{{tableLabel}}">
+            {% set tableClass = tableTag[3] %}
+            <div class= "{{tableClass}}" id="{{tableName}}" role="tabpanel" aria-labelledby="{{tableLabel}}">
             
                 <button type="button" onclick="downloadCSVFile()" class="float-right"> Export as CSV </button>    
                 <div class="table-responsive">
