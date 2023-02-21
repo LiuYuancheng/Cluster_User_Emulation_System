@@ -2,8 +2,8 @@
 # Name:        dataManage.py
 #
 # Purpose:     Data manager class used to provide specific data fetch and process 
-#              functions and init the local data storage. This manager is used by 
-#              the scheduler obj.
+#              functions and init the local data storage/DB. This manager is used 
+#              by the scheduler(<actionScheduler>) obj.
 #              
 # Author:      Yuancheng Liu 
 #
@@ -58,7 +58,7 @@ class DataManager(threading.Thread):
         """ Thread run() function will be called by start(). """
         time.sleep(1)
         self.server.serverStart(handler=self.msgHandler)
-        print("DataManager running finished.")
+        gv.gDebugPrint("DataManager running finished.", logType=gv.LOG_INFO)
 
     # define all the private function here:
     #-----------------------------------------------------------------------------
@@ -70,21 +70,21 @@ class DataManager(threading.Thread):
 
     #-----------------------------------------------------------------------------
     def _deleteTask(self, taskID):
-        """ Cancel the task in the scheduler and remove the task record in the DB 
+        """ Cancel the task in the scheduler and remove the task record from the DB 
             based on the input task id(unique)
-        Args:
-            taskID (int): task ID in DB
-        Returns:
-            _type_: _description_
+            Args:
+                taskID (int): task ID in DB
+            Returns:
+                _type_: _description_
         """
-        # delate from scheduler: 
+        # delete from the scheduler: 
         if gv.iScheduler and gv.iScheduler.removeAction(taskID):
             conn = self._getDBconnection()
             queryStr = "SELECT actId FROM dailyActions WHERE actId =%s " %(taskID)
             result = conn.execute(queryStr).fetchone()
             conn.commit()
             if result is None: return None
-            # delete the user from users table 
+            # delete the action from daily-action table. 
             queryStr =  "DELETE FROM dailyActions WHERE actId =%s " %(taskID)
             conn.execute(queryStr)
             conn.commit()
@@ -92,9 +92,9 @@ class DataManager(threading.Thread):
             return True
         return False
 
-#-----------------------------------------------------------------------------
+    #-----------------------------------------------------------------------------
     def changeTask(self, reqJsonStr):
-        """ Change the scheduler's task.
+        """ Change the scheduler's task state.
             Args:
                 reqJsonStr (_type_): _description_
             Returns:
@@ -165,7 +165,7 @@ class DataManager(threading.Thread):
             Returns:
                 bytes: message bytes reply to the monitor hub side.
         """
-        print("Incomming message: %s" % str(msg))
+        gv.gDebugPrint("Incomming message: %s" % str(msg), logType=gv.LOG_INFO)
         # request message format: 
         # data fetch: GET:<key>:<val1>:<val2>...
         # data set: POST:<key>:<val1>:<val2>...
@@ -190,7 +190,7 @@ class DataManager(threading.Thread):
         return resp
 
     #-----------------------------------------------------------------------------
-    def registerActions(self, actDict):
+    def registerActions(self, actDict, actType=gv.JB_TP_DAILY):
         """ Added the action in database.
             input <actDict> example:
             regInfoDict = {
@@ -209,7 +209,9 @@ class DataManager(threading.Thread):
         """
         conn = self._getDBconnection()
         actId = actDict['actId']
-        check = conn.execute("SELECT 1 FROM dailyActions WHERE actId=%s" %str(actId))
+        tableList = ('dailyActions', 'randomActions', 'weeklyActions')
+        queryStr = "SELECT 1 FROM %s WHERE actId=%s" %(tableList[actType], str(actId))
+        check = conn.execute(queryStr)
         if check.fetchone():
             print("The action task is registered")
         else:
@@ -225,15 +227,12 @@ class DataManager(threading.Thread):
             actState = actDict['actState']
             tomorrow = datetime.now() + timedelta(1)
             nextT =  tomorrow.strftime('%Y-%m-%d') + ' ' + startT
-            
-            conn.execute('INSERT INTO dailyActions \
+            queryStr = 'INSERT INTO %s \
                 (actId, actName, actDetail, actDesc, actOwner, actType, startT, depend, threadType, actState, nextT)\
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                (actId, actName, actDetail, actDesc, actOwner, actType, startT, depend, threadType, actState, nextT))
-            
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)' %str(tableList[actType])
+            conn.execute(queryStr,(actId, actName, actDetail, actDesc, actOwner, actType, startT, depend, threadType, actState, nextT))
             # comit the insert.
             conn.commit()
-
         conn.close()
 
     #-----------------------------------------------------------------------------

@@ -36,9 +36,21 @@ if os.path.exists(gLibDir):
 import Log
 Log.initLogger(gTopDir, 'Logs', APP_NAME[0], APP_NAME[1], historyCnt=100, fPutLogsUnderDate=True)
 
+#------<CONSTANTS>-------------------------------------------------------------
 UDP_PORT = 3001 # host UDP port
 
-# job statnd parm
+DEBUG_FLG = False
+LOG_INFO = 0
+LOG_WARN = 1
+LOG_ERR = 2
+LOG_EXCEPT = 3
+
+# job type
+JB_TP_DAILY = 0
+JB_TP_RANDOM = 1
+JB_TP_WEEKLY = 2
+
+# job state parm
 JB_ST_PENDING = 'pending'
 JB_ST_ERROR = 'error'
 JB_ST_RUNNING = 'running'
@@ -71,5 +83,18 @@ PPT_CFG4  = os.path.join(ACTOR_CFG, 'pptxInput4.json.')
 
 OFF_FW_EXE = os.path.join(ACTOR_CFG, 'offFW_private.exe')
 
+#-------<GLOBAL VARIABLES (start with "g")>-------------------------------------
+def gDebugPrint(msg, prt=True, logType=None):
+    if prt: print(msg)
+    if logType == LOG_WARN:
+        Log.warning(msg)
+    elif logType == LOG_ERR:
+        Log.error(msg)
+    elif logType == LOG_EXCEPT:
+        Log.exception(msg)
+    elif logType == LOG_INFO or DEBUG_FLG:
+        Log.info(msg)
+
+#-------<GLOBAL INSTANCES (start with "i")>-------------------------------------
 iDataMgr = None
 iScheduler = None

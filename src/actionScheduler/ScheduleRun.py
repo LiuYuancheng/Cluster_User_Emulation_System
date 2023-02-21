@@ -16,13 +16,13 @@ import actionGlobal as gv
 
 import actorFunctions
 import actionScheduler
-from actionScheduler import userAction
+from actionScheduler import UserAction, RandomAction, WeeklyAction
 
 ACTOR_NAME = 'Bob[192.168.57.10]'
 
 #-----------------------------------------------------------------------------
 def addOneAction(actionConfig):
-    actor = userAction(actionName=actionConfig['name'],
+    actor = UserAction(actionName=actionConfig['name'],
                        timeStr=actionConfig['time'],
                        runFunc=actionConfig['actionFunc'],
                        threadFlg=actionConfig['parallelTH'])
@@ -39,6 +39,10 @@ def addOneAction(actionConfig):
     actor.addActionInfo('depend', dependentAct)
 
     gv.iScheduler.registerDailyAction(actor)
+
+#-----------------------------------------------------------------------------
+def addRandomAction(actionConfig):
+    pass
 
 #-----------------------------------------------------------------------------
 def main():
