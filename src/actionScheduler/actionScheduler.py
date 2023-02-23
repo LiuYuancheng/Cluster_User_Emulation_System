@@ -146,7 +146,8 @@ class RandomAction(UserAction):
     def activeAction(self, flg=True):
         """ Active and de-active the action execution."""
         if self.id > 0:
-            self.scheduleJobRef = schedule.every(5).to(10).seconds.do(self.runFunc)
+            timeS, timeE = int(self.randInt[0]), int(self.randInt[1])
+            self.scheduleJobRef = schedule.every(timeS).to(timeE).seconds.do(self.runFunc)
             self.activeFunc = flg
             #if gv.iDataMgr: gv.iDataMgr.updateActStat(self.id, self.state)
         else:
@@ -179,7 +180,6 @@ class WeeklyAction(UserAction):
                     schedule.every().saturday.at(self.timeStr).do(self.runFunc)
                 else:
                     schedule.every().sunday.at(self.timeStr).do(self.runFunc)
-            self.scheduleJobRef = schedule.every(5).to(10).seconds.do(self.runFunc)
             self.activeFunc = flg
             #if gv.iDataMgr: gv.iDataMgr.updateActStat(self.id, self.state)
         else:
@@ -250,7 +250,7 @@ class actionScheduler(object):
         if actionObj:
             regInfoDict = self._getActionRegInfo(actionObj)
             regInfoDict['startT'] = actionObj.timeStr
-            gv.iDataMgr.registerActions(regInfoDict, actType=gv.JB_TP_DAILY)
+            gv.iDataMgr.registerActions(regInfoDict, jobType=gv.JB_TP_DAILY)
             self.actionDictD[str(actionObj.id)] = actionObj
             gv.gDebugPrint("Registered daily-action id:[%s], name:[%s] in DB." %(str(regInfoDict['actId']), regInfoDict['actName']), 
                             logType=gv.LOG_INFO)
@@ -260,7 +260,7 @@ class actionScheduler(object):
         if actionObj:
             regInfoDict = self._getActionRegInfo(actionObj)
             regInfoDict['startT'] = str(actionObj.randInt)
-            gv.iDataMgr.registerActions(regInfoDict, actType=gv.JB_TP_RANDOM)
+            gv.iDataMgr.registerActions(regInfoDict, jobType=gv.JB_TP_RANDOM)
             self.actionDictR[str(actionObj.id)] = actionObj
             gv.gDebugPrint("Registered random-action id:[%s] , name:[%s] in DB." %(str(regInfoDict['actId']), regInfoDict['actName']), 
                             logType=gv.LOG_INFO)
@@ -270,7 +270,7 @@ class actionScheduler(object):
         if actionObj:
             regInfoDict = self._getActionRegInfo(actionObj)
             regInfoDict['startT'] = ';'.join((str(actionObj.weekIdxList), str(actionObj.timeStr)))
-            gv.iDataMgr.registerActions(regInfoDict, actType=gv.JB_TP_WEEKLY)
+            gv.iDataMgr.registerActions(regInfoDict, jobType=gv.JB_TP_WEEKLY)
             self.actionDictW[str(actionObj.id)] = actionObj
             gv.gDebugPrint("Registered weekly-action id:[%s] , name:[%s] in DB." %(str(regInfoDict['actId']), regInfoDict['actName']), 
                             logType=gv.LOG_INFO)

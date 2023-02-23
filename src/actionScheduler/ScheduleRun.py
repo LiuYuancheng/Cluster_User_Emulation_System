@@ -12,6 +12,7 @@
 # License:     n.a
 #-----------------------------------------------------------------------------
 
+import datetime
 import actionGlobal as gv
 
 import actorFunctions
@@ -42,7 +43,46 @@ def addOneAction(actionConfig):
 
 #-----------------------------------------------------------------------------
 def addRandomAction(actionConfig):
-    pass
+    actor = RandomAction(actionName=actionConfig['name'],
+                       randInt=actionConfig['randomInt'],
+                       runFunc=actionConfig['actionFunc'],
+                       threadFlg=True)
+
+    if 'actDetail' in actionConfig.keys():
+        actor.addActionInfo('actDetail', actionConfig['actDetail'])
+
+    if 'actDesc' in actionConfig.keys():
+        actor.addActionInfo('actDesc', actionConfig['actDesc'])
+
+    owner = actionConfig['actOwner'] if 'actOwner' in actionConfig.keys() else ACTOR_NAME
+    actor.addActionInfo('actOwner', owner)
+
+    dependentAct = actionConfig['depend'] if 'depend' in actionConfig.keys() else 0
+    actor.addActionInfo('depend', dependentAct)
+    
+    gv.iScheduler.registerRandomAction(actor)
+
+#-----------------------------------------------------------------------------
+def addWeeklyAction(actionConfig):
+    actor = WeeklyAction(actionName=actionConfig['name'],
+                       weekIdxList=actionConfig['weeklist'],
+                       timeStr=actionConfig['time'],
+                       runFunc=actionConfig['actionFunc'],
+                       threadFlg=True)
+
+    if 'actDetail' in actionConfig.keys():
+        actor.addActionInfo('actDetail', actionConfig['actDetail'])
+
+    if 'actDesc' in actionConfig.keys():
+        actor.addActionInfo('actDesc', actionConfig['actDesc'])
+
+    owner = actionConfig['actOwner'] if 'actOwner' in actionConfig.keys() else ACTOR_NAME
+    actor.addActionInfo('actOwner', owner)
+
+    dependentAct = actionConfig['depend'] if 'depend' in actionConfig.keys() else 0
+    actor.addActionInfo('depend', dependentAct)
+    
+    gv.iScheduler.registerWeeklyAction(actor)
 
 #-----------------------------------------------------------------------------
 def main():
@@ -288,6 +328,35 @@ def main():
         'actDesc': 'Open the report.docx and edit'
     }
     addOneAction(action_1735)
+
+    # add the random task
+    def printTime():
+        print(datetime.datetime.now())
+    action_rand1 = {
+        'name': 'random_print_time ',
+        'randomInt': (30, 60),
+        'actionFunc': printTime,
+        'parallelTH': False,
+        'actDetail': 'just a print',
+        'actDesc': 'Print the time in a time period to test the randome task.',
+        'actOwner': 'admin:LYC'
+    }
+    addRandomAction(action_rand1)
+
+    # add the weekly 
+    def printDate():
+        print(datetime.datetime.today())
+    action_weekly1 = {
+        'name': 'weekly_print_date',
+        'weeklist': [1, 7],
+        'time': '17:35',
+        'actionFunc': printDate,
+        'parallelTH': False,
+        'actDetail': 'just a print',
+        'actDesc': 'Print the date on Mon and Sun.',
+        'actOwner': 'admin:LYC'
+    }
+    addWeeklyAction(action_weekly1)
 
     gv.iScheduler.startSimulate()
 

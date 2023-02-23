@@ -121,9 +121,19 @@ class DataManager(threading.Thread):
             'weekly':[]
         }
         conn = self._getDBconnection()
+        # fetch the daily action 
         queryStr = 'SELECT * FROM dailyActions'
         resp = conn.execute(queryStr).fetchall()
         respDict['daily'] = [dict(row) for row in resp]
+        # fetch the random action
+        queryStr = 'SELECT * FROM randomActions'
+        resp = conn.execute(queryStr).fetchall()
+        respDict['random'] = [dict(row) for row in resp]
+        # fetch the weekly action
+        queryStr = 'SELECT * FROM weeklyActions'
+        resp = conn.execute(queryStr).fetchall()
+        respDict['weekly'] = [dict(row) for row in resp]
+
         conn.close()
         respStr = json.dumps(respDict)
         #print(len(respStr))
@@ -190,7 +200,7 @@ class DataManager(threading.Thread):
         return resp
 
     #-----------------------------------------------------------------------------
-    def registerActions(self, actDict, actType=gv.JB_TP_DAILY):
+    def registerActions(self, actDict, jobType=gv.JB_TP_DAILY):
         """ Added the action in database.
             input <actDict> example:
             regInfoDict = {
@@ -210,7 +220,7 @@ class DataManager(threading.Thread):
         conn = self._getDBconnection()
         actId = actDict['actId']
         tableList = ('dailyActions', 'randomActions', 'weeklyActions')
-        queryStr = "SELECT 1 FROM %s WHERE actId=%s" %(tableList[actType], str(actId))
+        queryStr = "SELECT 1 FROM %s WHERE actId=%s" %(tableList[jobType], str(actId))
         check = conn.execute(queryStr)
         if check.fetchone():
             print("The action task is registered")
@@ -229,7 +239,8 @@ class DataManager(threading.Thread):
             nextT =  tomorrow.strftime('%Y-%m-%d') + ' ' + startT
             queryStr = 'INSERT INTO %s \
                 (actId, actName, actDetail, actDesc, actOwner, actType, startT, depend, threadType, actState, nextT)\
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)' %str(tableList[actType])
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)' %str(tableList[jobType])
+
             conn.execute(queryStr,(actId, actName, actDetail, actDesc, actOwner, actType, startT, depend, threadType, actState, nextT))
             # comit the insert.
             conn.commit()
