@@ -3,10 +3,11 @@
 # Setup the host UDP port here.
 # Format HOST_PORT:<int>
 HOST_PORT:3001
+# HOST_PORT:3002 # Alice test use port 3002
 
 # Set the actor profile's name here (the file will be import, example: if you 
 # want to import file scheduleProfile_Bob.py as user profile, use scheduleProfile_Bob):
 # Format: PROFILE:<python Module file Name>
-PROFILE:scheduleProfile_Bob
-# PROFILE:scheduleProfile_Alice
+PROFILE:scheduleProfile_Alice
+#PROFILE:scheduleProfile_Bob
 # PROFILE:scheduleProfile_Charlie
