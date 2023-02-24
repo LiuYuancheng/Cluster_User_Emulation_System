@@ -11,14 +11,13 @@
 # Copyright:   n.a
 # License:     n.a
 #-----------------------------------------------------------------------------
-
+import importlib
 import actionGlobal as gv
 import actionScheduler
 from actionScheduler import UserAction, RandomAction, WeeklyAction
 
 # Import the user's profile.
-import scheduleProfile as sProfiling
-
+sProfiling = importlib.import_module(gv.CONFIG_DICT['PROFILE'])
 ACTOR_NAME = sProfiling.ACTOR_NAME
 
 #-----------------------------------------------------------------------------

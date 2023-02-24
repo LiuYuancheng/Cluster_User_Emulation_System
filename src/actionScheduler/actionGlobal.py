@@ -36,8 +36,21 @@ if os.path.exists(gLibDir):
 import Log
 Log.initLogger(gTopDir, 'Logs', APP_NAME[0], APP_NAME[1], historyCnt=100, fPutLogsUnderDate=True)
 
+import ConfigLoader
+gGonfigPath = os.path.join(dirpath, 'scheduleCfg.txt')
+iConfigLoader = ConfigLoader.ConfigLoader(gGonfigPath, mode='r')
+if iConfigLoader is None:
+    print("Error: The config file %s is not exist.Program exit!" %str(gGonfigPath))
+    exit()
+
+CONFIG_DICT = iConfigLoader.getJson()
+
 #------<CONSTANTS>-------------------------------------------------------------
-UDP_PORT = 3001 # host UDP port
+UDP_PORT = int(CONFIG_DICT['HOST_PORT']) # host UDP port
+PROFILE_PATH = os.path.join(dirpath, CONFIG_DICT['PROFILE']+'.py')
+if not os.path.exists(PROFILE_PATH):
+    print("Error: The user proFile %s is not exist.Program exit!" %str(PROFILE_PATH))
+    exit()
 
 DEBUG_FLG = False
 LOG_INFO = 0
