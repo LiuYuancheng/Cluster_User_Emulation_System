@@ -39,6 +39,12 @@ Log.initLogger(gTopDir, 'Logs', APP_NAME[0], APP_NAME[1], historyCnt=100, fPutLo
 #------<CONSTANTS>-------------------------------------------------------------
 APP_NAME = 'Action_monitor_HUB [Ver:0.X]'
 
+DEBUG_FLG = False
+LOG_INFO = 0
+LOG_WARN = 1
+LOG_ERR = 2
+LOG_EXCEPT = 3
+
 RC_TIME_OUT = 10    # reconnection time out.
 APP_SEC_KEY = 'secrete-key-goes-here'
 UPDATE_PERIODIC = 15
@@ -47,6 +53,19 @@ COOKIE_TIME = 30
 #-------<GLOBAL VARIABLES (start with "g")>-------------------------------------
 # VARIABLES are the built in data type.
 gGonfigPath = os.path.join(dirpath, 'peerConfig.txt')
+
+
+#-------<GLOBAL VARIABLES (start with "g")>-------------------------------------
+def gDebugPrint(msg, prt=True, logType=None):
+    if prt: print(msg)
+    if logType == LOG_WARN:
+        Log.warning(msg)
+    elif logType == LOG_ERR:
+        Log.error(msg)
+    elif logType == LOG_EXCEPT:
+        Log.exception(msg)
+    elif logType == LOG_INFO or DEBUG_FLG:
+        Log.info(msg)
 
 #-------<GLOBAL INSTANCES (start with "i")>-------------------------------------
 # INSTANCES are the object.

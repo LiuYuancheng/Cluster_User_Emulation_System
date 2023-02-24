@@ -61,7 +61,7 @@ class PeerConnector(object):
             'error': 0,
             'deactive': 0
         }
-        print("Peer Connector Inited.")
+        gv.gDebugPrint("Peer Connector Inited.", logType=gv.LOG_INFO)
 
     #-----------------------------------------------------------------------------
     def _fetchTaskCounts(self):
@@ -75,13 +75,13 @@ class PeerConnector(object):
     #-----------------------------------------------------------------------------
     def _loginScheduler(self):
         """ Try to connect to the scheduler."""
-        print("Try to connnect to the scheduler [%s]..." %str(self.ipaddres))
+        gv.gDebugPrint("Try to connnect to the scheduler [%s]..." %str(self.ipaddres), logType=gv.LOG_INFO)
         rqstKey = 'GET'
         rqstType = 'login'
         rqstDict = {'user': self.uniqName}
         result = self._queryToBE(rqstKey, rqstType, rqstDict)
         if result:
-            print("Scheduler online, state: ready")
+            gv.gDebugPrint("Scheduler online, state: ready", logType=gv.LOG_INFO)
             return True
         return False
 
@@ -105,8 +105,8 @@ class PeerConnector(object):
                 resp = self.connector.sendMsg(rqst, resp=True)
                 if resp:
                     k, t, data = parseIncomeMsg(resp)
-                    if k != 'REP': print('The msg reply key %s is invalid' % k)
-                    if t != rqstType: print('The reply type doesnt match.%s' %str((rqstType, t)))
+                    if k != 'REP': gv.gDebugPrint('The msg reply key %s is invalid' % k, logType=gv.LOG_WARN)
+                    if t != rqstType: gv.gDebugPrint('The reply type doesnt match.%s' %str((rqstType, t)), logType=gv.LOG_WARN)
                     try:
                         result = json.loads(data)
                         self.lastUpdateT = datetime.now()
@@ -129,7 +129,7 @@ class PeerConnector(object):
         }
         result = self._queryToBE(rqstKey, rqstType, rqstDict)
         if result:
-            print("Action Done")
+            gv.gDebugPrint("Action Done")
             return True
         return False
 
@@ -146,7 +146,7 @@ class PeerConnector(object):
             result = self._queryToBE(rqstKey, rqstType, rqstDict)
             return result
         else:
-            print("getDailyJobsState(): the input jobType is not valid: %s" %str(jobType))
+            gv.gDebugPrint("getDailyJobsState(): the input jobType is not valid: %s" %str(jobType), logType=gv.LOG_WARN)
             return None
 
     #-----------------------------------------------------------------------------

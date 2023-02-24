@@ -20,12 +20,7 @@ from actionScheduler import UserAction, RandomAction, WeeklyAction
 sProfiling = importlib.import_module(gv.CONFIG_DICT['PROFILE'])
 ACTOR_NAME = sProfiling.ACTOR_NAME
 
-#-----------------------------------------------------------------------------
-def addOneAction(actionConfig):
-    actor = UserAction(actionName=actionConfig['name'],
-                       timeStr=actionConfig['time'],
-                       runFunc=actionConfig['actionFunc'],
-                       threadFlg=actionConfig['parallelTH'])
+def _addInfo2Actor(actor, actionConfig):
     if 'actDetail' in actionConfig.keys():
         actor.addActionInfo('actDetail', actionConfig['actDetail'])
 
@@ -38,6 +33,13 @@ def addOneAction(actionConfig):
     dependentAct = actionConfig['depend'] if 'depend' in actionConfig.keys() else 0
     actor.addActionInfo('depend', dependentAct)
 
+#-----------------------------------------------------------------------------
+def addOneAction(actionConfig):
+    actor = UserAction(actionName=actionConfig['name'],
+                       timeStr=actionConfig['time'],
+                       runFunc=actionConfig['actionFunc'],
+                       threadFlg=actionConfig['parallelTH'])
+    _addInfo2Actor(actor, actionConfig)
     gv.iScheduler.registerDailyAction(actor)
 
 #-----------------------------------------------------------------------------
@@ -46,19 +48,7 @@ def addRandomAction(actionConfig):
                        randInt=actionConfig['randomInt'],
                        runFunc=actionConfig['actionFunc'],
                        threadFlg=True)
-
-    if 'actDetail' in actionConfig.keys():
-        actor.addActionInfo('actDetail', actionConfig['actDetail'])
-
-    if 'actDesc' in actionConfig.keys():
-        actor.addActionInfo('actDesc', actionConfig['actDesc'])
-
-    owner = actionConfig['actOwner'] if 'actOwner' in actionConfig.keys() else ACTOR_NAME
-    actor.addActionInfo('actOwner', owner)
-
-    dependentAct = actionConfig['depend'] if 'depend' in actionConfig.keys() else 0
-    actor.addActionInfo('depend', dependentAct)
-    
+    _addInfo2Actor(actor, actionConfig)
     gv.iScheduler.registerRandomAction(actor)
 
 #-----------------------------------------------------------------------------
@@ -69,18 +59,7 @@ def addWeeklyAction(actionConfig):
                        runFunc=actionConfig['actionFunc'],
                        threadFlg=True)
 
-    if 'actDetail' in actionConfig.keys():
-        actor.addActionInfo('actDetail', actionConfig['actDetail'])
-
-    if 'actDesc' in actionConfig.keys():
-        actor.addActionInfo('actDesc', actionConfig['actDesc'])
-
-    owner = actionConfig['actOwner'] if 'actOwner' in actionConfig.keys() else ACTOR_NAME
-    actor.addActionInfo('actOwner', owner)
-
-    dependentAct = actionConfig['depend'] if 'depend' in actionConfig.keys() else 0
-    actor.addActionInfo('depend', dependentAct)
-    
+    _addInfo2Actor(actor, actionConfig)
     gv.iScheduler.registerWeeklyAction(actor)
 
 #-----------------------------------------------------------------------------

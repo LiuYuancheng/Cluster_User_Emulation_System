@@ -39,7 +39,7 @@ def InitDataMgr():
             peerInfo = json.loads(line)
             gv.iDataMgr.addSchedulerPeer(peerInfo['name'], peerInfo['ipAddr'], peerInfo['udpPort'])
         except Exception as err:
-            print("The peer's info line format Invalid: %s" %str(line))
+            gv.gDebugPrint("The peer's info line format Invalid: %s" %str(line), logType=gv.LOG_ERR)
             continue
 
 #-----------------------------------------------------------------------------
@@ -56,35 +56,6 @@ def createApp():
 InitDataMgr()
 app = createApp()
 
-taskInfoDict = {
-    "connected" : gv.iDataMgr.schedulerConnected(),
-    "updateT"   : None,
-    "daily"     : [],
-    "random"    : [],
-    "weekly"    : []
-} if TEST_MD else {} 
-
-if TEST_MD:
-    config_D = os.path.join(gv.dirpath, 'static', 'actionConfigD.json')
-    config_R = os.path.join(gv.dirpath, 'static', 'actionConfigR.json')
-    config_W = os.path.join(gv.dirpath, 'static', 'actionConfigW.json')
-
-    configDist = {
-        "daily": os.path.join(gv.dirpath, 'static', 'actionConfigD.json'),
-        "random": os.path.join(gv.dirpath, 'static', 'actionConfigR.json'),
-        "weekly": os.path.join(gv.dirpath, 'static', 'actionConfigW.json'),
-    }
-
-    for item in configDist.items():
-        key, config = item
-        if os.path.exists(config):
-            try:
-                with open(config, 'r') as fh:
-                    taskInfoDict[key] = json.load(fh)
-            except Exception as err:
-                print("Failed to load the json config file: %s" % str(err))
-                exit()
-
 #-----------------------------------------------------------------------------
 # web home request handling functions. 
 @app.route('/')
@@ -95,7 +66,7 @@ def index():
 @app.route('/schedulermgmt')
 def schedulermgmt():
     scheudlerInfoDict = gv.iDataMgr.getPeersInfo()
-    print(scheudlerInfoDict)
+    gv.gDebugPrint("Receive the peer Info %s" %str(scheudlerInfoDict), logType=gv.LOG_INFO)
     return render_template('schedulermgmt.html', posts=scheudlerInfoDict)
 
 #-----------------------------------------------------------------------------
