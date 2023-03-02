@@ -16,7 +16,7 @@ import datetime
 import actionGlobal as gv
 import actorFunctionsCharlie as actorFunctions
 
-ACTOR_NAME = "Charlie[192.168.57.10]"
+ACTOR_NAME = "Charlie[192.168.59.10]"
 
 dailyTaskList = []
 randomTaskList = []
