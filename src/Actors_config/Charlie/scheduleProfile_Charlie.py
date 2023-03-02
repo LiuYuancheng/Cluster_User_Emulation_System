@@ -14,7 +14,7 @@
 
 import datetime
 import actionGlobal as gv
-import actorFunctionsAlice as actorFunctions
+import actorFunctionsCharlie as actorFunctions
 
 ACTOR_NAME = "Charlie[192.168.57.10]"
 
