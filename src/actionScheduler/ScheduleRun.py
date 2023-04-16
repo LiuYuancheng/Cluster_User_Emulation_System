@@ -12,6 +12,7 @@
 # License:     n.a
 #-----------------------------------------------------------------------------
 import importlib
+import pyfiglet
 import actionGlobal as gv
 import actionScheduler
 from actionScheduler import UserAction, RandomAction, WeeklyAction
@@ -105,6 +106,10 @@ def addWeeklyAction(actionConfig):
 
 #-----------------------------------------------------------------------------
 def main():
+
+    ascii_banner = pyfiglet.figlet_format("CUE Scheduler")
+    print(ascii_banner)
+
     gv.iScheduler = actionScheduler.actionScheduler(actorName=ACTOR_NAME)
     gv.gDebugPrint("Add %s daily actions to scheduler: " %str(len(sProfiling.dailyTaskList)), logType=gv.LOG_INFO)
     for dailyAction in sProfiling.dailyTaskList:
