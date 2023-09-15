@@ -1,0 +1,62 @@
+[
+    {
+        "repoName": "Vicuna-7B",
+        "repoUrl": "https://huggingface.co/lmsys/vicuna-7b-v1.5",
+        "size": 13
+    },
+    {
+        "repoName": "Vicuna-33B",
+        "repoUrl": "https://huggingface.co/lmsys/vicuna-33b-v1.3",
+        "size": 70
+    },
+
+    {
+        "repoName": "Llama-2-70b-chat",
+        "repoUrl": "https://huggingface.co/meta-llama/Llama-2-70b-chat-hf",
+        "size": 70
+    },
+    {
+        "repoName": "WizardLM-13b-v1.2",
+        "repoUrl": "https://huggingface.co/WizardLM/WizardLM-13B-V1.2",
+        "size": 26
+    },
+    {
+        "repoName": "Vicuna-13B",
+        "repoUrl": "https://huggingface.co/lmsys/vicuna-13b-v1.5",
+        "size": 28
+    },
+
+    {
+        "repoName": "MPT-30B-chat",
+        "repoUrl": "https://huggingface.co/mosaicml/mpt-30b-chat",
+        "size": 62
+    },
+    {
+        "repoName": "Guanaco-33B",
+        "repoUrl": "https://huggingface.co/timdettmers/guanaco-33b-merged",
+        "size": 61
+    },
+    {
+        "repoName": "CodeLlama-34B-instruct",
+        "repoUrl": "https://huggingface.co/codellama/CodeLlama-34b-Instruct-hf",
+        "size": 140
+    },
+
+    {
+        "repoName": "Llama-2-13b-chat",
+        "repoUrl": "https://huggingface.co/meta-llama/Llama-2-13b-chat-hf",
+        "size": 140
+    },
+
+    {
+        "repoName": "Llama-2-7b-chat",
+        "repoUrl": "https://huggingface.co/meta-llama/Llama-2-7b-chat-hf",
+        "size": 140
+    },
+
+    {
+        "repoName": "GPT4All-13B-Snoozy",
+        "repoUrl": "https://huggingface.co/nomic-ai/gpt4all-13b-snoozy",
+        "size": 55
+    }
+]
