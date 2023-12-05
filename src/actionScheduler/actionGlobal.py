@@ -46,11 +46,18 @@ if iConfigLoader is None:
 CONFIG_DICT = iConfigLoader.getJson()
 
 #------<CONSTANTS>-------------------------------------------------------------
+OWN_ID = CONFIG_DICT['Own_ID'] if 'Own_ID' in CONFIG_DICT.keys() else 'Test_Scheduler'
+OWN_IP = CONFIG_DICT['OWN_IP'] if 'OWN_IP' in CONFIG_DICT.keys() else '127.0.0.1'
 UDP_PORT = int(CONFIG_DICT['HOST_PORT']) # host UDP port
+
 PROFILE_PATH = os.path.join(dirpath, CONFIG_DICT['PROFILE']+'.py')
 if not os.path.exists(PROFILE_PATH):
     print("Error: The user proFile %s is not exist.Program exit!" %str(PROFILE_PATH))
     exit()
+
+RPT_MD = CONFIG_DICT['RPT_MD'] if 'RPT_MD' in CONFIG_DICT.keys() else False
+HUB_IP = CONFIG_DICT['HUB_IP'] if 'HUB_IP' in CONFIG_DICT.keys() else '127.0.0.1'
+HUB_PORT = int(CONFIG_DICT['HUB_PORT'] ) if 'HUB_PORT' in CONFIG_DICT.keys() else 5000
 
 DEBUG_FLG = False
 LOG_INFO = 0

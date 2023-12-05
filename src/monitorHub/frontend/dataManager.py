@@ -21,6 +21,8 @@ import frontendGlobal as gv
 import Log
 import udpCom
 
+SCH_ID_PREFIX = 'Emu'
+
 # Define all the module local untility functions here:
 #-----------------------------------------------------------------------------
 def parseIncomeMsg(msg):
@@ -119,6 +121,7 @@ class PeerConnector(object):
         else:
             Log.error("queryBE: input missing: %s" %str(rqstKey, rqstType, rqstDict))
         return (k, t, result)
+    
     #-----------------------------------------------------------------------------
     def changeTask(self, jobID, action):
         rqstKey = 'POST'
@@ -202,15 +205,17 @@ class DataManager(object):
         self.idCount = 0 
         self.schedulerIds = {}  # the id -> name mapping dict.
         self.connectorDict = {} # the connector dict.
+        self.schedulerDetailDict = {}   # dictionary to store the schduler's detail information.
 
 #-----------------------------------------------------------------------------
-    def addSchedulerPeer(self, peerName, peerIp, peerPort):
+    def addSchedulerPeer(self, peerName, peerIp, peerPort, linkMode=0):
         """ Add the scheduler peer in the data manager
 
             Args:
                 peerName (str): scheduler's unique name.
                 peerIp (str): ip address
                 peerPort (int): udp port
+                linkMode (int): the scheduler communication mode. 0-fetch, 1-reprot, 2-mix
         """
         if peerName in self.connectorDict.keys():
             Log.info("addSchedulerPeer(): The peerName: %s is exist, can not add." %str(peerName))
@@ -219,7 +224,7 @@ class DataManager(object):
             if peerConnector.matchInfo(peerIp, peerPort): 
                 Log.info("addSchedulerPeer(): The <peerIp> and <peerPort> exist." )
                 return False
-        connector = PeerConnector( self.idCount, peerName, peerIp, peerPort)
+        connector = PeerConnector(self.idCount, peerName, peerIp, peerPort)
         #if connector.getConnState()[0]:
         self.connectorDict[peerName] = connector
         self.schedulerIds[str(self.idCount)] = peerName

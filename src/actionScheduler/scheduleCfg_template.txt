@@ -1,9 +1,25 @@
+# This is the config file template for the module <ScheduleRun.py>
+# Setup the paramter with below format (every line follows <key>:<val> format, the
+# key can not be changed):
+
 # Add your connect peer under below format in one line:
+
+#Set the OwnID
+Own_ID:Test_Template
+
+# Set the OwnIP address
+OWN_IP:127.0.0.1
 
 # Setup the host UDP port here.
 # Format HOST_PORT:<int>
 HOST_PORT:3001
 # HOST_PORT:3002 # Alice test use port 3002
+
+# Set the report Mode (If the schdule is not in the hub list, set the flag to true and config the 
+# hub ip address, the schudler will auto register to the hub when it start)
+RPT_MD:True
+HUB_IP:127.0.0.1
+HUB_PORT:5000
 
 # Set the actor profile's name here (the file will be import, example: if you 
 # want to import file scheduleProfile_Bob.py as user profile, use scheduleProfile_Bob):

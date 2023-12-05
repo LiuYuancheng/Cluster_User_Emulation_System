@@ -1,0 +1,15 @@
+# Add your connect peer under below format in one line: 
+# { "name": "<peer_Unique_Name>", "ipAddr": "<IP_v4 address>", "udpPort": <udp_port>, "lkMode":<link mode>}
+# Key details:
+# name: (necessory) the schduler's unique name. 
+# ipAddr : (optional if lkMode > 0) the server's IP address of the schduler
+# udpPort : (optional if lkMode > 0) the schduler's UDP Comm port.
+# lkMode : (optional default 0) : 
+# - 0 fetch mode, hub will fetch state from the schduler via UDP.
+# - 1 report mode, the hub will wait the schduler report its state via http. 
+# - 2 mixed mode, do both fetch and report.
+
+# Set all the peer here:
+# { "name": "Victim_Bob", "ipAddr": "127.0.0.1", "udpPort": 3001, "lkMode": 0 }
+{ "name": "T1_Alice", "ipAddr": "127.0.0.1", "udpPort": 3002, "lkMode": 0 }
+# { "name": "T2_Charlie", "ipAddr": "192.168.59.10", "udpPort": 3001, "lkMode":0 }

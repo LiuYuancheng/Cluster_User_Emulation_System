@@ -18,6 +18,7 @@
 
 import os
 import time
+import requests
 import threading
 import schedule
 
@@ -290,3 +291,27 @@ class actionScheduler(object):
         else:
             gv.gDebugPrint("The id is not registered", logType=gv.LOG_ERR)
             return False
+
+    #-----------------------------------------------------------------------------
+    def reportTohub(self):
+        """ Report to the hub the schduler's inforamtion to register."""
+        if not gv.RPT_MD: return None
+        jsonDict = {
+            'name': gv.OWN_ID,
+            'ipAddr': gv.OWN_IP,
+            'udpPort': gv.UDP_PORT,
+            'report': gv.RPT_MD
+        }
+        reportUrl = "http://%s:%s/dataPost/" % (gv.HUB_IP, str(gv.HUB_PORT))
+        reportUrl += str(jsonDict['name'])
+        self.postData(reportUrl, jsonDict)
+
+    #-----------------------------------------------------------------------------
+    def postData(self, postUrl, jsonDict):
+        try:
+            res = requests.post(postUrl, json=jsonDict)
+            if res.ok: 
+                print("http server reply: %s" %str(res.json()))
+                return res.json()
+        except Exception as err:
+            print("http server not reachable, error: %s" %str(err))

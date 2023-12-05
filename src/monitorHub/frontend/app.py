@@ -21,7 +21,7 @@ import os
 import json
 
 from datetime import timedelta, datetime
-from flask import Flask, render_template, request, flash, url_for, redirect
+from flask import Flask, render_template, request, flash, url_for, redirect, jsonify
 
 import dataManager
 import frontendGlobal as gv
@@ -37,7 +37,9 @@ def InitDataMgr():
     for line in ld.getLines():
         try:
             peerInfo = json.loads(line)
-            gv.iDataMgr.addSchedulerPeer(peerInfo['name'], peerInfo['ipAddr'], peerInfo['udpPort'])
+            lkMode = int(peerInfo['lkMode']) if 'lkMode' in peerInfo.keys() else 0
+            gv.iDataMgr.addSchedulerPeer(peerInfo['name'], peerInfo['ipAddr'], peerInfo['udpPort'], 
+                                         linkMode=lkMode)
         except Exception as err:
             gv.gDebugPrint("The peer's info line format Invalid: %s" %str(line), logType=gv.LOG_ERR)
             continue
@@ -81,6 +83,22 @@ def changeTask(peerName, jobID, action):
     peerInfo = gv.iDataMgr.getOnePeerDetail(peerName)
     posts = gv.iDataMgr.changeTaskState(peerName, jobID, action)
     return redirect(url_for('peerstate', postID=peerInfo['id']))
+
+
+#-----------------------------------------------------------------------------
+# Data post request handling 
+@app.route('/dataPost/<string:peerName>', methods=('POST',))
+def peerRegister(peerName):
+    """ handler the schduler register request."""
+    content = request.json
+    gv.gDebugPrint("Get raw data from %s "%str(peerName), logType=gv.LOG_INFO)
+    gv.gDebugPrint("Raw Data: %s" %str(content), prt=True, logType=gv.LOG_INFO)
+    if gv.iDataMgr:
+        lkMode = 1 if content['report'] else 0
+        gv.iDataMgr.addSchedulerPeer(content['name'], content['ipAddr'], content['udpPort'], 
+                                linkMode=lkMode)
+        gv.gDebugPrint("Added new schudler: %s" %str(peerName), prt=True, logType=gv.LOG_INFO)
+    return jsonify({"ok":True})
 
 #-----------------------------------------------------------------------------
 if __name__ == '__main__':

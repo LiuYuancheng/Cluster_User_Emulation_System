@@ -122,6 +122,10 @@ def main():
     gv.gDebugPrint("Add %s weekly actions to scheduler: " %str(len(sProfiling.weeklyTaskList)), logType=gv.LOG_INFO)
     for weeklyAction in sProfiling.weeklyTaskList:
         addWeeklyAction(weeklyAction)
+    # Regiser and report to hub if set the report flag.
+    if gv.RPT_MD:
+        gv.gDebugPrint("Register to the hub: %s" %str(gv.HUB_IP), logType=gv.LOG_INFO)
+        gv.iScheduler.reportTohub()
 
     gv.iScheduler.startSimulate()
 
