@@ -3,92 +3,106 @@
 # Name:        emailActor.py
 #
 # Purpose:     This module is used to login different kinds of email server to 
-#              read and write email. 
+#              send (with attachment) email or receive email (download attachment).
 # Author:      Yuancheng Liu
 #
-# Version:     v_0.1
+# Version:     v_0.1.2
 # Created:     2022/12/28
-# Copyright:   n.a
-# License:     n.a
+# Copyright:   Copyright (c) LiuYuancheng
+# License:     MIT License 
 #-----------------------------------------------------------------------------
+""" Program design : 
+    we want to build a email module provide the email implementation API for user to:
+    1. Read multiple email (in sequential order or randomly). 
+    2. Batch download the attachment from email list.
+    3. Batch deploy emails to multiple targets as an email bot.
 
-# Gmail account configure:
-# Turn on the "Less secure app access" setting at: Google Account > Security > Less secure app access
-# Enable the IMAP Access at: Gmail Settings > Forwarding and POP / IMAP > IMAP Acess
+    Program config : 
+    Gmail account configure :
+    - Turn on the "Less secure app access" setting at: Google Account > Security > Less secure app access 
+    - Enable the IMAP Access at: Gmail Settings > Forwarding and POP / IMAP > IMAP Acess
+    Hotmail account configure : 
+    - N.A 
 
+    Program Usage: refer to the testCase program <emailActorTest.py>
+"""
+
+# Import basic build-in lib
 import os
 import time
 import random
-import re
 
+# Import build-in function lib
+import re
 import ssl
 import smtplib
 import imaplib
-import traceback 
 
-# import the email module
+# Import the email module
 import email
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-# stand email server port config:
+# Define standard SMTP email server port config:
 SMTP_PORT_READ = 993
 SMTP_PORT_SEND = 587
 SMTP_PORT_SEND_SSL = 465
 
 # default email read config. 
 DEFAULT_CFG = {
-    'mailBox'   : 'inbox',  # mail folder name.
-    'sender'    : None,     # serch email based on sender. None: read all email.
-    'number'    : 10,       # numher of email will be fetched. 
-    'randomNum' : 0,        # if set > 0, download the the random number for email from the fetched email.
-    'interval'  : 0,        # time interval between fetch 2 emails.
-    'returnFlg' : False     # flag indentify whether return all the email contents.
+    'mailBox'   : 'inbox',  # Inbox mail folder name (different email vendor may use other name).
+    'sender'    : None,     # Search email based on sender. None: read all email.
+    'number'    : 10,       # Numher of email will be fetched. 
+    'randomNum' : 0,        # if set > 0, download the random number for email from the fetched email. if set=0 read all
+    'interval'  : 0,        # Time interval between download(read) 2 emails.
+    'returnFlg' : False     # the flag indentify whether return all the email contents.
 }
 
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 class emailActor(object):
-    """ GMail: smtpPort[993], sslConn[True]
-        HotMail: smtpPort[587], sslConn[True]
-        Mailu: smtpPort[143], sslConn[True]
-
-        Args:
-            object (_type_): _description_
+    """ The main email actor module, for differnt email vendors, use the below 
+        server port and connection type config: 
+        - GMail:        smtpPort[993], sslConn[True]
+        - HotMail:      smtpPort[587], sslConn[True]
+        - Mailu/:       smtpPort[143], sslConn[True]
+        - Hmailserver:  smtpPort[143], sslConn[True]
     """
     def __init__(self, account, password) -> None:
-        """ Each email actor will bind to one email account.
+        """ Each email actor will bind to one valid email account. Init example:
+            actor = emailActor.emailActor('xxx@gmail.com', '******')
             Args:
-                account (str): full email account.For example: liu_yuan_cheng@hotmail.com
+                account (str): full email address.For example: liu_yuan_cheng@hotmail.com
                 password (str): password.
         """
-        if not self._isEmailFmtValid(account):
+        if not self._isEmailFmtValid(account): 
+            print("Email actor init failed.")
             return None
         self.account = account
         self.password = password
         self.emailReader = None
         self.emailSender = None
-
+        
 #-----------------------------------------------------------------------------
     def _isEmailFmtValid(self, emailStr):
-        if re.match("^[a-zA-Z0-9-_.]+@[a-zA-Z0-9]+\.[a-z]{1,3}$",emailStr):
+        """ Verify the email address format."""
+        if re.match("^[a-zA-Z0-9-_.]+@[a-zA-Z0-9]+\.[a-z]{1,3}$", emailStr):
             return True
-        print(" Error the input email account format is not valid: %s" %str(emailStr))
+        print("Error: the input email account format is not valid: %s" %str(emailStr))
         return False
 
 #-----------------------------------------------------------------------------
     def initEmailReader(self, smtpServer, smtpPort=SMTP_PORT_READ, sslConn=True):
-        """ Connect(login) to the email read IMAP server and init the read object. 
+        """ Connect(login) to the email read IMAP server and init the reader object. 
             Args:
                 smtpServer (str): email IMAP server url.
                 smtpPort (int, optional): email IMAP server port. Defaults to SMTP_PORT_READ.
                 sslConn (bool, optional): email account's connection ssl encryption 
                     config. Defaults to True.
-
             Returns:
-                _type_: _description_
+                _type_: true if connect to the server successful, else false.
         """
         try:
             self.emailReader = imaplib.IMAP4_SSL(
@@ -97,11 +111,22 @@ class emailActor(object):
             return True
         except Exception as err:
             print("Login the email server failed.")
-            print("Error: %s" % str(err))
+            print("- Error: %s" % str(err))
             return False
 
 #-----------------------------------------------------------------------------
-    def initEmailSender(self, smtpServer, smtpPort=SMTP_PORT_READ, sslConn=True):
+    def initEmailSender(self, smtpServer, smtpPort=SMTP_PORT_SEND, sslConn=True):
+        """ Connect(login) to the email read IMAP server and init the sender object.
+            You can send email from local without login but your email will be treated 
+            as spam/fake.
+            Args:
+                smtpServer (_type_): email IMAP server url.
+                smtpPort (_type_, optional): email IMAP server port. Defaults to SMTP_PORT_SEND.
+                sslConn (bool, optional): email account's connection ssl encryption 
+                    config. Defaults to True.
+            Returns:
+                _type_: true if connect to the server successful, else false.
+        """
         try:
             if sslConn:
                 ssl_context = ssl.create_default_context()
@@ -114,17 +139,30 @@ class emailActor(object):
             return True
         except Exception as err:
             print("Login the email server failed.")
-            print("Error: %s" % str(err))
+            print("- Error: %s" % str(err))
             return False
 
 #-----------------------------------------------------------------------------
     def getMailboxList(self):
+        """ Get the email box list.
+            Returns:
+                list(): ['inbox', 'sent', 'spam'...] None if reader is not init.
+        """
         if self.emailReader:
             return self.emailReader.list()
         return None
 
 #-----------------------------------------------------------------------------
     def getEmailIdList(self, emailBox='inbox', emailNum=10, sender=None):
+        """ Get the email unique ID list.
+            Args:
+                emailBox (str, optional): mailbox name. Defaults to 'inbox'.
+                emailNum (int, optional): number of email. Defaults to 10.
+                sender (_type_, optional): if set not None, only return the ID list 
+                    of the email from the sender. Defaults to None.
+            Returns:
+                list(): list of the email ID.
+        """
         if self.emailReader:
             try:
                 self.emailReader.select(emailBox)
@@ -140,14 +178,14 @@ class emailActor(object):
 #-----------------------------------------------------------------------------
     def getEmailDetail(self, emailId):
         """ Get the email info.
-        Args:
-            emailIdx (_type_): _description_
+            Args:
+                emailIdx (_type_): _description_
         """
         if self.emailReader:
             mailId = int(emailId)
             data = self.emailReader.fetch(str(mailId), '(RFC822)')
-            for response_part in data:
-                arr = response_part[0]
+            for responsePart in data:
+                arr = responsePart[0]
                 if isinstance(arr, tuple):
                     try:
                         return email.message_from_string(str(arr[1],'utf-8'))
@@ -158,22 +196,44 @@ class emailActor(object):
             return None
 
 #-----------------------------------------------------------------------------
-    def readLastMail(self, configDict=DEFAULT_CFG):
+    def readLastMail(self, configDict=DEFAULT_CFG, downloadDir=None):
+        """ Read the email based on the config setting.
+            Args:
+                configDict (dict(), optional): refer to the <DEFAULT_CFG>.
+                  Defaults to DEFAULT_CFG.
+                  example: 
+                    readConfig2 = {
+                        'mailBox': 'inbox',
+                        'sender': None,
+                        'number': 1,
+                        'randomNum': 1,
+                        'interval': 0.5,
+                        'returnFlg': False
+                    }
+                downloadDir (str, optional): The folder to save the attachment
+                    - None: Don't download the attachment. 
+                    - str(<folder path>): download the attachment to the folder.
+            Returns:
+                str/None: The successed read emails detail, None if read error.
+        """
         if not isinstance(configDict, dict):
-            print("The input config is invalid: %s" %str(configDict))
+            print("The input config setting is invalid: %s" %str(configDict))
             return None
         configKeys = configDict.keys()
         result = [] if 'returnFlg' in configKeys and configDict['returnFlg'] else None
         if self.emailReader:
             mailIds = self.getEmailIdList(emailBox=configDict['mailBox'], emailNum=configDict['number'], sender=configDict['sender'])
             if mailIds is None :
-                print("Can not file email based on the config.")
+                print("Can not file email-ID based on the config.")
                 return None
             randMailIds = random.sample(mailIds, configDict['randomNum']) if 'randomNum' in configKeys and configDict['randomNum'] > 0 else mailIds
+            # Fetch email detail information basedon the email ID.
             for mailId in randMailIds:
                 msg = self.getEmailDetail(mailId)
                 if msg:
                     print("Get email: %s " %str(msg['subject']))
+                    # print the email detail if no need return the data, else archive the data in 
+                    # result list:
                     if result is None:
                         print("Email idx=%s info:" %str(mailId))
                         print('From : ' + msg['from'] + '\n')
@@ -181,20 +241,51 @@ class emailActor(object):
                         print('Subject : ' + msg['subject'] + '\n')
                     else:
                         result.append(msg)
+                    # Download the email attachment if specified the foler.
+                    if downloadDir:
+                        print("Start to download attachment if contents")
+                        self.downloadAttachment(msg, downloadDir)
+                else:
+                    print("The email id = %s is not readable" %str(mailId))
                 if 'interval' in configKeys and configDict['interval'] > 0:
                     time.sleep(configDict['interval'])
-            print("Read email finish")
+            print("Read all email contents finish.")
             if result: return result
         else:
             print("Email send is not init.")
             return None
 
 #-----------------------------------------------------------------------------
-    def forwardEml(self, dests, emlFilePath):
-        """ Forward a export email file *.eml as email to destinations.
+    def downloadAttachment(self, emailMsg, downloadDir):
+        """ Download the attachment from the mail.
             Args:
-                dests (_type_): _description_
-                emlFilePath (_type_): _description_
+                emailMsg : refer to <email.message_from_string()> return value.
+                downloadDir: download folder (absolute path).
+        """
+        for part in emailMsg.walk():
+            if part.get_content_maintype() == 'multipart':
+                print(part.as_string())
+                continue
+            if part.get('Content-Disposition') is None:
+                print(part.as_string())
+                continue
+            fileName = part.get_filename()
+            print('Get attachment file name [%s] to process.' %str(fileName))
+            if bool(fileName):
+                if not (os.path.exists(downloadDir) and os.path.isdir(downloadDir)):
+                    print("Attachment download folder not exist, create the dir...")
+                    os.mkdir(downloadDir)
+                filePath = os.path.join(downloadDir, fileName)
+                with open(filePath, 'wb') as fh:
+                    fh.write(part.get_payload(decode=True))
+                print("Finished download the attachment.")
+
+#-----------------------------------------------------------------------------
+    def forwardEml(self, dests, emlFilePath):
+        """ Forward an exported email file *.eml as email to destinations.
+            Args:
+                dests (str): destination email address.
+                emlFilePath (_type_): *.eml file path.
         """
         if not ('eml' in emlFilePath):
             print('The file format must be and *eml')
@@ -210,7 +301,12 @@ class emailActor(object):
 
 #-----------------------------------------------------------------------------
     def sendEmailHtml(self, dests, subjectStr, htmlContent, attachmentPath=None):
-        """ Send the html email 
+        """ Send a html formate email.
+            Args:
+                dests (str) : receiver's email address.
+                subjectStr (str) : email subject title.
+                htmlContent (str) : refer to the example below.
+                attachmentPath: attachment file absolute path.
         """
         # An Example of the html content:
         # html = """\
@@ -251,8 +347,7 @@ class emailActor(object):
 
 #-----------------------------------------------------------------------------
     def sendEmailMsg(self, dests, message):
-        """ Send a sample message to email destination(s)
-        """
+        """ Send a simple message to email destination(s)"""
         if self.emailSender:
             if isinstance(dests, str): dests = (dests,) 
             if isinstance(dests, list) or isinstance(dests, tuple):
@@ -261,6 +356,7 @@ class emailActor(object):
 
 #-----------------------------------------------------------------------------
     def sendMsg(self, sender, receiver, message):
+        """ Send a email to the receiver."""
         if self._isEmailFmtValid(sender) and self._isEmailFmtValid(sender):
             self.emailSender.sendmail(sender, receiver, message)
         
