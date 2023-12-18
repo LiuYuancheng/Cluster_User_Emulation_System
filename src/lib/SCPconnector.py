@@ -10,8 +10,8 @@
 #
 # Created:     2022/08/01
 # Version:     v_0.1
-# Copyright:   National Cybersecurity R&D Laboratories
-# License:     
+# Copyright:   Copyright (c) 2023 LiuYuancheng
+# License:     MIT License
 #-----------------------------------------------------------------------------
 """ Program Design:
     We want to create a scp connector which can scp transfer files (upload/download) 
