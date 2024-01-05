@@ -20,10 +20,13 @@ import threading
 import numpy as np
 
 import pyautogui
-from selenium import webdriver
 from PIL import ImageGrab, ImageOps
 
-CHROME_DRI = 'chromedriver.exe'
+# change to use new webdriver-manager module : https://pypi.org/project/webdriver-manager/
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
+
 GAME_URL = 'chrome://dino/'
 REP_POS = (460, 421)        # screen coordinates of replay button to start the game. 
 DINO_FR_POS = (190, 440)    # dinaso front rectangle box position on the screen.
@@ -38,9 +41,10 @@ class dinoActor(object):
             driverPath (_type_, optional): The google driver(exe) path. Defaults to None.
             playtime (int, optional): how many second you want to play. Defaults to 0.
         """
-        dirpath = os.path.dirname(__file__)
-        chromeDriverPath = driverPath if driverPath else os.path.join(dirpath, CHROME_DRI)
-        self.driver = webdriver.Chrome(executable_path=chromeDriverPath)
+        # dirpath = os.path.dirname(__file__)
+        # chromeDriverPath = driverPath if driverPath else os.path.join(dirpath, 'chromedriver.exe')
+        # self.driver = webdriver.Chrome(executable_path=chromeDriverPath)
+        self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
         self.replaybutton = (REP_POS[0], REP_POS[1], REP_POS[0]+60, REP_POS[1]+50)
         self.dinasaurFbox = (DINO_FR_POS[0]+30, DINO_FR_POS[1], DINO_FR_POS[0]+120, DINO_FR_POS[1]+2)
         self.playtime = playtime    # set how long you want the actor play.

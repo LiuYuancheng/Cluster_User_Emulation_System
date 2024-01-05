@@ -5,7 +5,7 @@
 # Purpose:     This module will prvoide different individual actor function/class
 #              for the action schedular.
 #
-# Author:      Yuancheng Liu
+# Author:      Yuancheng Liu, Ponnu Rose Raju
 #
 # Version:     v_0.1
 # Created:     2022/10/12
@@ -18,10 +18,11 @@ import time
 import json
 import subprocess
 import keyboard
-from selenium import webdriver
-import datetime
 
-CHROME_DRI = 'chromedriver.exe'
+# change to use new webdriver-manager module : https://pypi.org/project/webdriver-manager/
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
 
 #-----------------------------------------------------------------------------
 def runCmd(cmdStr, showConsole=False, winShell=False):
@@ -190,9 +191,10 @@ def msPPTedit(filePath, actionDict):
 class webActor(object):
 
     def __init__(self, driverPath=None) -> None:
-        dirpath = os.path.dirname(__file__)
-        chromeDriverPath = driverPath if driverPath else os.path.join(dirpath, CHROME_DRI)
-        self.driver = webdriver.Chrome(executable_path=chromeDriverPath)
+        # dirpath = os.path.dirname(__file__)
+        # chromeDriverPath = driverPath if driverPath else os.path.join(dirpath, 'chromedriver.exe')
+        # self.driver = webdriver.Chrome(executable_path=chromeDriverPath)
+        self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
         self.startT = 0
 
     def openUrls(self, urlConfig):

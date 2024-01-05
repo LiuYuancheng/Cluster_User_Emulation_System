@@ -2,10 +2,11 @@
 #-----------------------------------------------------------------------------
 # Name:        zoomActor.py
 #
-# Purpose:     This module is used to start a zoom meeting with the input url.
-# Author:      Yuancheng Liu
+# Purpose:     This module is used to start a zoom meeting via browser with the 
+#              input url.
+# Author:      Yuancheng Liu, Ponnu Rose Raju
 #
-# Version:     v_0.1
+# Version:     v_0.2
 # Created:     2022/12/12
 # Copyright:   n.a
 # License:     n.a
@@ -14,7 +15,10 @@
 import os 
 import time
 import keyboard
+# change to use new webdriver-manager module : https://pypi.org/project/webdriver-manager/
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
 
 """
 Test Join Zoom Meeting
@@ -24,17 +28,16 @@ Meeting ID: 458 046 6160
 Passcode: 8cVJ6M
     
 """
-
-CHROME_DRI = 'chromedriver.exe'
-
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 class zoomActor(object):
 
     def __init__(self, userName=None, driverPath=None):
-        dirpath = os.path.dirname(__file__)
-        chromeDriverPath = driverPath if driverPath else os.path.join(dirpath, CHROME_DRI)
-        self.driver = webdriver.Chrome(executable_path=chromeDriverPath)
+        # dirpath = os.path.dirname(__file__)
+        # chromeDriverPath = driverPath if driverPath else os.path.join(dirpath, 'chromedriver.exe')
+        # self.driver = webdriver.Chrome(executable_path=chromeDriverPath)
+        self.userName = userName
+        self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
         self.appFlg = False # The zoom is open in a App
 
 #-----------------------------------------------------------------------------
@@ -80,14 +83,14 @@ class zoomActor(object):
 
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
-def testCase(mode =0):
+def testCase(mode=0):
     if mode == 1:
         actor = zoomActor(userName='TestUser_Bob')
         actor.startMeeting('https://us04web.zoom.us/j/4580466160?pwd=d0ZUSCs0bWpMc2o2MHgzTS80a2tJdz09')
         time.sleep(10)
         actor.endCrtMeeting()
         print("Finish")
-    else: 
+    else:
         pass
 
 if __name__ == '__main__':

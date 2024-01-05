@@ -162,7 +162,7 @@ class nmapScanner(object):
 #-----------------------------------------------------------------------------
     def fastScan(self, target):
         """ fast Scan a target, same as the cmd: nmap -F <ip> """
-        return self._fastScanTarget(target, None)
+        return self._fastScanTarget(target, [])
     
     @scanPortDecorator
     def _fastScanTarget(self, target, portInfo, showFiltered=False):

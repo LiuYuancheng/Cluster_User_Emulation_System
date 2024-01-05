@@ -15,11 +15,13 @@
 
 import os
 import time
-from selenium import webdriver
 import keyboard # keyboard event for windows.(Linux need root permission to execute this)
 from pynput.keyboard import Key, Controller # keyboard event for Linux (no need sudo permit)
 
-CHROME_DRI = 'chromedriver.exe' # default chrome 
+# change to use new webdriver-manager module : https://pypi.org/project/webdriver-manager/
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
 
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
@@ -33,9 +35,10 @@ class browserActor(object):
             currect dirver, please to refer this link: https://chromedriver.chromium.org/downloads
 
         """
-        dirpath = os.path.dirname(__file__)
-        chromeDriverPath = driverPath if driverPath else os.path.join(dirpath, CHROME_DRI)
-        self.driver = webdriver.Chrome(executable_path=chromeDriverPath)
+        # dirpath = os.path.dirname(__file__)
+        # chromeDriverPath = driverPath if driverPath else os.path.join(dirpath, 'chromedriver.exe')
+        # self.driver = webdriver.Chrome(executable_path=chromeDriverPath)
+        self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
         self.startT = 0
 
 #-----------------------------------------------------------------------------
