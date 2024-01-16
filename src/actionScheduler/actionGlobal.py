@@ -115,6 +115,8 @@ def gDebugPrint(msg, prt=True, logType=None):
     elif logType == LOG_INFO or DEBUG_FLG:
         Log.info(msg)
 
+gDayIdx = 0 # index to indetify which day of the event.
+
 #-------<GLOBAL INSTANCES (start with "i")>-------------------------------------
 iDataMgr = None
 iScheduler = None

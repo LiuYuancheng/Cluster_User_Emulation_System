@@ -22,6 +22,7 @@
     <python-nmap> link: https://pypi.org/project/python-nmap/
 
 """
+import re
 import ipaddress
 import nmap # pip install python-nmap, 
 
@@ -31,6 +32,11 @@ FILTER_TAG = 'filtered' # Port touchable but no reponse or the response can not 
 UNKNOWN_TAG = 'unknown'
 STATE_UP = 'up'
 STATE_DOWN = 'down'
+
+# Regular expression pattern string for IPv4 subnet format
+SUBNET_PT_STR = r'^(\d{1,3}\.){3}\d{1,3}/\d{1,2}$'  
+# Regular expression pattern string for IPv4 address format
+IP_PT_STR = r'^(\d{1,3}\.){3}\d{1,3}$'
 
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
@@ -204,6 +210,23 @@ class nmapScanner(object):
         self.scanTcpPorts(target, serviceList)
 
 #-----------------------------------------------------------------------------
+    def scanSubnetIps(self, subnetStr):
+        """ Scan the subnet and find the reachable IP addresses. 
+            Args:
+                subnetStr (str): subnet string, such as 
+        """
+        # Check the input string valid
+        pattern = re.compile(SUBNET_PT_STR)
+        if bool(pattern.match(subnetStr)):
+            self.scanner.scan(hosts=subnetStr, arguments='-sn')
+            addresses = self.scanner.all_hosts()
+            return addresses
+        else:
+            print("Error: scanSubnetIps() > Invalid subnet string: %s " %str(subnetStr))
+            return None
+
+#-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 def testCase(mode):
 
     scanner = nmapScanner()
@@ -218,28 +241,38 @@ def testCase(mode):
         print(' - 3.Scan un-reachable ip:')
         rst = scanner.scanTcpPorts('172.18.178.11', [80], showFiltered=True)
         print('\t', rst)
-    elif mode == 1:
+    elif mode == 4:
         print(' - 4.Scan localhhost:')
         rst = scanner.scanTcpPorts('localhost', [134, 443, 3000])
         print('\t', rst)
-    elif mode == 2:
+    elif mode == 5:
         print(' - 5.Scan port range 22 - 30')
         rst = scanner.scanPortRange('172.18.178.6', (22,30), showFiltered=True )
         print('\t', rst)
-    elif mode == 3:
+    elif mode == 6:
         print(' - 6.Fast scan')
         rst = scanner.fastScan('localhost')
         print('\t', rst)
-    elif mode == 4:
-        print(' - 7.Scan service')
+    elif mode == 7:
+        print(' - 7.Scan service test 1')
         rst = scanner.scanServices('localhost', ['http', 'http', 'ppp', 'https'])
         print('\t', rst)
-    elif mode == 5:
-        print(' - 7.Scan service')
+    elif mode == 8:
+        print(' - 8.Scan service test 2')
         rst = scanner.scanServices('sg.pool.ntp.org', ['ntp'])
+        print('\t', rst)
+    elif mode == 9:
+        print(' - 9.Scan all IP address in Subnet')
+        print('9.1 test invlid input')
+        invalidSubnetStr = "172.18.178."
+        rst = scanner.scanSubnetIps(invalidSubnetStr)
+        print('\t', rst)
+        subnetStr = "172.25.121.0/24"
+        print('9.2 test scan subnet: %s' %str(subnetStr))
+        rst = scanner.scanSubnetIps(subnetStr)
         print('\t', rst)
 
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 if __name__ == '__main__':
-    testCase(0)
+    testCase(9)
