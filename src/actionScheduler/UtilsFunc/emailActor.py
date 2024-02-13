@@ -70,13 +70,14 @@ class emailActor(object):
         - Mailu/:       smtpPort[143], sslConn[True]
         - Hmailserver:  smtpPort[143], sslConn[True]
     """
-    def __init__(self, account, password) -> None:
+    def __init__(self, account, password, verifyEmailValid=False) -> None:
         """ Each email actor will bind to one valid email account. Init example:
             actor = emailActor.emailActor('xxx@gmail.com', '******')
             Args:
                 account (str): full email address.For example: liu_yuan_cheng@hotmail.com
                 password (str): password.
         """
+        self.verifyEmailValid = verifyEmailValid
         if not self._isEmailFmtValid(account): 
             print("Email actor init failed.")
             return None
@@ -85,13 +86,19 @@ class emailActor(object):
         self.emailReader = None
         self.emailSender = None
         
+        
 #-----------------------------------------------------------------------------
     def _isEmailFmtValid(self, emailStr):
         """ Verify the email address format."""
+        if not self.verifyEmailValid: return True
         if re.match("^[a-zA-Z0-9-_.]+@[a-zA-Z0-9]+\.[a-z]{1,3}$", emailStr):
             return True
         print("Error: the input email account format is not valid: %s" %str(emailStr))
         return False
+
+#-----------------------------------------------------------------------------
+    def enableEmailFmtVerify(self, enable=True):
+        self.verifyEmailValid = enable
 
 #-----------------------------------------------------------------------------
     def initEmailReader(self, smtpServer, smtpPort=SMTP_PORT_READ, sslConn=True):
@@ -359,7 +366,7 @@ class emailActor(object):
         """ Send a email to the receiver."""
         if self._isEmailFmtValid(sender) and self._isEmailFmtValid(sender):
             self.emailSender.sendmail(sender, receiver, message)
-        
+
 #-----------------------------------------------------------------------------
     def close(self):
         if self.emailReader:
