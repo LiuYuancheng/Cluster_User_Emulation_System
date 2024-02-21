@@ -1,6 +1,6 @@
-# Windows_User_Simulator
+# Cluster User Emulation System
 
-**Program Design Purpose**: We want to create a distributed and no-centralized single/multiple users’ activities emulator system to simulate and monitor a mid size cluster of users’ normal network traffic actions and the local activities events. The system can be applied to support below scenario : 
+**Program Design Purpose**: We want to create a centralized controlled distributed user human activities emulation cluster system which can be used to simulate and monitor a mid size cluster of multiple users’ normal network traffic actions and the local activities events. The system can be applied to support below scenario : 
 
 - Auto repeat/replay specified numbers of users (blue team) activities (benign-traffic) or or attack-action (red team) in cyber exercise event.
 - Generate required network traffic flow with different network protocols for network security research project or network honeypot built. 
