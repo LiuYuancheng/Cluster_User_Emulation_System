@@ -21,7 +21,12 @@ The Cluster Users Emulator is a multiple users’ action emulation system runnin
 
 - System tasks’ process monitoring and control.
 
-  
+
+System workflow:
+
+![](doc/img/workflow.png)
+
+
 
 #### System structure 
 
@@ -49,14 +54,14 @@ There are several kinds of well-developed network traffic generators, task sched
 
 ![](doc/img/RM_diagram_swot.png)
 
-##### **Who may be interested about using it:** 
+##### Who may be interested about using it: 
 
 - Customers whose system config setting and requirements keep updating, or need flexible tool to integrate different apps. 
 - Customer who wants to create some complex “human type” action especially related UI operation and Windows platform.
 - Customer who needs different kinds of pre-configured activities scenario and try to avoid spending much development effort on the events/traffic generation details. 
 - Researcher who want to automatically repeat specific scenario with small changes for their experiments.
 
-##### **Why user choose using it :** 
+##### Why user choose using it : 
 
 - **Open** : Our product is open source and focuses on more specific activities generation tasks, so compare with other general tools, our product is more suitable for the customer to create complex scenario. 
 - **Reusable**: Our product can provide activities library for customer to reuse and integrate to their software/program. 
