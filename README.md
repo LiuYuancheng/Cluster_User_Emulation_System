@@ -1,11 +1,26 @@
 # Cluster User Emulation System
 
-**Program Design Purpose**: We want to create a centralized controlled distributed user human activities emulation cluster system which can be used to simulate and monitor a mid size cluster of multiple users’ normal network traffic actions and the local activities events. The system can be applied to support below scenario : 
+![](doc/img/logo.png)
 
-- Auto repeat/replay specified numbers of users (blue team) activities (benign-traffic) or or attack-action (red team) in cyber exercise event.
-- Generate required network traffic flow with different network protocols for network security research project or network honeypot built. 
-- Be used to build the repeatable users’ test environment for AI/ML trained model’s testing and verification.
-- Provide library API for customer to build customized complex “Human type” action. 
+**Project Design Purpose**: Our objective is to develop a distributed, automated, flexible, and reusable toolkit for generating both benign and malicious activities and traffic. This toolkit is designed to fulfill the following requirements:
+
+- Simulation of mid size of network with active users (generate human activities) for DFIR.
+- Simulation of red team attacks or recurrent attack scenarios in cyber exercise/events.
+- Simulation of blue team defense activities or the creation of live honeypots. 
+- Provide real time monitoring and management interface of cyber exercise management team. 
+- Automated to do regular penetration test or stress test for a system or service. 
+- Assistance in cyber-security education and professional training. 
+- Building the customizable malware for researching purposes. 
+
+By meeting these objectives, our toolkit aims to enhance cybersecurity preparedness, training, and research efforts by providing comprehensive and adaptable functionalities.
+
+```
+version:     v0.1.6
+Copyright:   Copyright (c) 2024 LiuYuancheng
+License:     MIT License   
+```
+
+
 
 [TOC]
 
@@ -13,16 +28,51 @@
 
 ### Introduction
 
-The Cluster Users Emulator is a multiple users’ action emulation system running in a network/compute cluster system which can satisfy the customers’ requirement about:
+The Cluster User Emulation system operates within a network/compute cluster environment, simulating multiple users' actions and monitoring their network traffic and local activities. This system serves various purposes, including:
 
-- Network-traffic / node activities / group-users interactive action generation. 
+- Providing a repository with benign and malicious activities&traffic library module for customers to create customized complex "Human/Hacker" type actions.
+- Providing automatically robotic processes and tasks(RPT) or repeating/replaying specified attacking activities of red team and defense activities of blue team during cyber exercise/event.
+- Generating network traffic flows with different protocols for target system penetration testing, service stress testing or using for network security research projects.
+- Providing the management interface for monitoring and controlling the tasks, processes, network traffic, node activities, and group-users interactive actions.
+- Establishing repeatable test environments for testing and verifying AI/ML trained models.
 
-- Robotic process / tasks automation. 
+With its versatile capabilities, the Cluster User Emulation system proves invaluable for cybersecurity exercises, research projects, AI/ML testing, and process automation.
 
-- System tasks’ process monitoring and control.
+#### System Structure 
+
+The Custer User Emulator System contents three main parts, the Activities Generation Modules Repository, the Users Action Emulator and the System Status Orchestrator as shown blow:
+
+![](doc/img/systemStructure.png)
+
+##### Activities Generation Modules Repository
+
+This repository houses a collection of library modules for generating both benign and malicious activities and traffic. These modules can be seamlessly integrated with other components to generate organic activities across hardware, network, operating system, and application levels. Examples of such activities include initiating online meetings, sending/receiving emails, uploading/downloading files, editing MS-Office documents, toggling Windows Firewall, and watching online/offline videos.
+
+The **Organic** repository comprises 33 different plugin modules categorized into four types:
+
+- Network Activities Generation plugin [11 modules]
+- Application/Software Interaction and Control Activities plugin [9 modules]
+- Human Operation Activities plugin [8 modules]
+- System Activities plugin [5 modules]
+
+Conversely, the **Malicious** repository contains 24 different plugin modules across five types:
+
+- Credentials and Critical Data Compromise plugin [4 modules]
+- Phishing and Scam plugin [4 modules]
+- Scan and Record plugin [5 modules]
+- Denial of Service plugin [5 modules]
+- System Destruction plugin [6 modules]
+
+These modules offer a comprehensive range of functionalities to support various simulation and testing requirements, enhancing the versatility and effectiveness of the activities generation process.
 
 
-System workflow:
+
+- **User Action Emulator**: A RPA type scheduler to invoke the lib from action repository to build more complex “Human type” activities and run the tasks based on the users’ timeline playbook configuration.
+- **Scheduler Monitor Hub**: A no-centralized monitor website host which provides plug and play tasks state view function for the customer to monitor and control all/parts of their schedulers in a computers/servers cluster. 
+
+
+
+
 
 ![](doc/img/workflow.png)
 
@@ -34,9 +84,7 @@ The user Emulator system can be deployed on single compute node, real network sy
 
 ![](doc/img/RM_diagram_system.png)
 
-- **User Actions Repository** : Provide the library APIs repository to simulate simple user’s normal activities/events under hardware, network, OS and App level. (Such as starting the online meeting, send/receive email, upload/download files, edit MS-Office doc, On/Off Windows FW, watch online/offline video…)
-- **User Action Emulator**: A RPA type scheduler to invoke the lib from action repository to build more complex “Human type” activities and run the tasks based on the users’ timeline playbook configuration.
-- **Scheduler Monitor Hub**: A no-centralized monitor website host which provides plug and play tasks state view function for the customer to monitor and control all/parts of their schedulers in a computers/servers cluster. 
+- 
 
 The modules relationship diagram is shown below: 
 
