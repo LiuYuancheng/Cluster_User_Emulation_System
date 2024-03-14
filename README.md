@@ -38,6 +38,10 @@ The Cluster User Emulation System operates within a network/compute cluster envi
 
 With its versatile capabilities, the Cluster User Emulation system proves invaluable for cybersecurity exercises, research projects, AI/ML testing, and process automation.
 
+>  User Action Emulator Demo Video: [Video-01](https://www.youtube.com/watch?v=jgm3gQhzUq4&t=57s) , [Video-02](https://www.youtube.com/watch?v=wZsRmYPcPTQ)
+
+
+
 #### System Structure 
 
 The Custer User Emulator System contents three main parts, the `Activities Generation Modules Repository`, the `Users Action Emulator` and the `System Status Orchestrator` as shown blow:
@@ -80,23 +84,36 @@ The system workflow consists of five main steps, outlined below:
 
 ##### Benign Activities and Traffic Generation 
 
-The detailed 5 steps workflow of the system generating the benign traffic is shown below:
+The detailed 5 steps workflow of the system generating the benign activities & traffic is shown below:
 
 ![](doc/img/workflow.png)
 
-With different playbook and profile config the emulator can act as different type of users and device in a cyber range such as 
+With varied playbook and profile configurations, the emulator can effectively emulate various types of users and devices within a cyber range, including:
 
-IT/OT Specialist: Maintenance engineer, Network admin, Pentest engineer and Support engineer
+- **IT/OT Specialists**: This category encompasses roles such as maintenance engineers, network administrators, penetration test engineers, and IT support engineers.
+- **Company Officers' Daily Work**: Roles like HR officers, finance managers, HQ operators, and company interns fall under this category, simulating typical daily tasks within the organization.
+- **Normal Customers**: Users in this category simulate typical customer interactions, such as raising support tickets, engaging with the company website, and utilizing company services.
+- **Device Simulation**: This involves emulating various devices, including IoT devices (sensors), OT equipment (PLC/RTU), surveillance cameras, and database servers, mimicking their behavior and interactions within the network environment.
 
-Company Officer's Daily Work : HR officer Finance Manager, HQ Operator and Company Intern
-
-
-
-
-
+By adopting different configurations, the emulator can accurately replicate the actions and behaviors of diverse user roles and devices, enhancing the realism and effectiveness of cyber range simulations.
 
 
-##### Activities Generation Modules Repository
+
+##### Malicious Activities and Traffic 
+
+The system can also be used to act as attacker or malware to generate the  activities & traffic , the detailed work flow is shown below:
+
+![](doc/img/atkworkflow.png)
+
+With diverse playbook and profile configurations, the emulator can adeptly simulate a wide array of hackers, attack programs, and malware within a cyber range, encompassing:
+
+- **Penetration Testing**: This includes conducting regular penetration tests, service stress tests, and vulnerability scans to assess the security posture of systems and networks.
+- **Red Teaming**: The emulator can replicate human hackers, automated attack programs, recurring attack scenarios, and distributed denial-of-service (DDoS) attacks, providing a comprehensive assessment of defensive capabilities and response strategies.
+- **Customized Malware**: It can also simulate various types of malware, such as backdoor trojans, spy trojans, Modbus FDI/FCI, and ransomware, enabling organizations to evaluate their resilience against sophisticated cyber threats and develop effective mitigation strategies.
+
+
+
+#### Design of Activities Generation Modules Repository
 
 This repository houses a collection of library modules for generating both benign and malicious activities and traffic. These modules can be seamlessly integrated with other components to generate organic activities across hardware, network, operating system, and application levels. Examples of such activities include initiating online meetings, sending/receiving emails, uploading/downloading files, editing MS-Office documents, toggling Windows Firewall, and watching online/offline videos.
 
@@ -117,9 +134,11 @@ Conversely, the **Malicious** repository contains 24 different plugin modules ac
 
 These modules offer a comprehensive range of functionalities to support various simulation and testing requirements, enhancing the versatility and effectiveness of the activities generation process.
 
+> **The detail document link of User Action Repository** [click [here](ReadMe_User_Actions_Repository.md) ] 
 
 
-##### User Action Emulator 
+
+#### Design User Action Emulator 
 
 The User Action Emulator serves as the activating agent, utilizing assembled plugin modules from the `Activities Generation Modules Repository` to execute tasks on the target machine according to a user-defined timeline. It consists of two main components module:
 
@@ -127,48 +146,60 @@ The User Action Emulator serves as the activating agent, utilizing assembled plu
 
 - **Action Emulator Module**: Each Action Emulator instance loads a user profile (generated by the scheduler module) and assumes the role required for simulation. It executes tasks based on the timeline configuration, saving the execution results in emulator local database and updating them to the Orchestrator server for user access. Depending on the timeline configuration, the Action Emulator can generate regular or random human, software, or malware activities and traffic on a daily, weekly, or monthly schedule.
 
+The emulator program offers four levels of components to fulfill customer requirements as shown below:
+
+![](doc/img/RM_Diagram_components.png)
+
+- **Basic Action Function [lvl-0]:** Performs individual basic actions, such as sending a file via TCP request, copying a file, or executing a command.
+- **User Action [lvl-1]:** Groups basic functions with a schedule configuration file to execute complex user actions, such as reading and writing emails or joining a Zoom meeting.
+- **Actor [lvl-2]:** Combines user actions with a schedule configuration file to mimic normal human activities, such as editing a PowerPoint presentation and sharing it to the cloud, playing a game, browsing the internet, and downloading content.
+- **User Emulator [lvl-3]:** Schedules actors with a customized timeline, enabling the emulator to replicate specific daily events of a particular user role, such as a network administrator.
+
+By offering these hierarchical levels of components, the User Actor Emulator provides a flexible framework for building and implementing diverse user scenarios, catering to a wide range of customer requirements.
+
+> **The detail document link of  User Action Emulator** [click [here](ReadMe_User_Actions_Emulator.md) ] 
 
 
-##### System Orchestrator
+
+#### Design of System Orchestrator
 
 The System Orchestrator is a cloud-based server that aggregates all User Action Emulator task execution states and offers a management website interface for users to monitor and manage the User Action Emulators. The Orchestrator provides two distinct web interfaces:
 
 - **Emulator Procedure Management Interface**: This web dashboard displays comprehensive information about all connected emulators, including their current state and task details. Users can efficiently oversee the execution of tasks across multiple emulators from this interface.
 - **Malware Command and Control Interface**: This web dashboard presents the task execution states of all connected malware instances and offers a web API for the red team to dynamically control the malware. This interface empowers red team members with the flexibility to manage malware operations effectively in real-time.
 
- 
+ The emulator's task monitor Page/ tasks view is shown below:
+
+![](doc/img/RM_diagram_Monitor_page1.png)
+
+**Emulator’s action monitor web feature:** 
+
+- User can monitor the scheduled actions(events) execution state from the monitor web.
+- User can remove/deactivate the action from the web. 
+- The web provide regular action (daily/weekly action) and random action monitoring. 
+- (Under development) user can add new action/edit the actions from the Web interface**.**
+
+> **The detail document link of  Scheduler Monitor Hub** [click [here](ReadMe_User_Actions_Emulator.md) ] 
+
+
 
 ------
 
- 
+### System Deployment and Execution 
+
+#### System Deployment
+
+The Cluster Emulator System can be deployed on various platforms, including a single compute node, a real network system, or VMs based SDN (Software Defined Network), as illustrated in the diagram below.
+
+![](doc/img/deployment.png)
+
+The `Activities Generation Modules Repository` can be deployed remotely in a database server in the network or local in every node for import, this enables easy access and utilization by the Cluster Emulator System.
+
+The `User Action Emulator` requires deployment on the cluster's node computers or VMs to ensure seamless integration and execution within the emulation environment.
+
+The `Orchestrator Webserver` can be deployed either on the cloud or within the cluster itself, providing centralized management and coordination of the emulation activities. This flexibility allows for efficient orchestration regardless of the deployment environment's specifics.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-#### System structure 
-
-The user Emulator system can be deployed on single compute node, real network system, VMs based SDN (software defined network). The product contents three parts, the “User actions repository”, the “User action emulator/scheduler” and the “scheduler monitor hub”. (The 3 parts relationship is shown in the below system deployment structure diagram)
-
-![](doc/img/RM_diagram_system.png)
-
-- 
-
-The modules relationship diagram is shown below: 
-
-![](doc/img/RM_diagram_module.png)
-
-`Version: 0.1`
 
 ------
 
@@ -193,10 +224,7 @@ There are several kinds of well-developed network traffic generators, task sched
 - **Reusable**: Our product can provide activities library for customer to reuse and integrate to their software/program. 
 - **Flexible**: Our pre-build user cluster’s activities scenario can be easily changed to match customers’ requirement to help reduce the customer’s development effort. 
 
-##### **User Action emulator demo video:** 
 
-- https://www.youtube.com/watch?v=jgm3gQhzUq4&t=57s
-- https://www.youtube.com/watch?v=wZsRmYPcPTQ
 
 
 
@@ -218,48 +246,21 @@ The system will work under the below work diagram
 
 
 
-#### User Actions Repository
-
-User Actions Repository is library APIs repository to simulate simple user’s normal activities/events under hardware, network, OS and App level. (Such as starting the online meeting, send/receive email, upload/download files, edit MS-Office doc, On/Off Windows FW, watch online/offline video…)
-
-Currently we provide 5 main repositories with 18 kinds of basic user action functions and 28 kinds of pre-built complex user’s actors components. The 5 main feature repositories covers: 
-
-- Network traffic action generators. 
-- Application operation action generators. 
-- User’s human activities action generators.
-- System control action generators.
-- Other action generators.
-
-**The detail document link of User Action Repository** [click [here](ReadMe_User_Actions_Repository.md) ] 
 
 
 
-#### **User Action Emulator**
 
-User Actor Emulator is a RPA type scheduler to invoke the lib from action repository to build more complex “Human type” activities and run the tasks based on the users’ timeline playbook configuration. The emulator program provides four levels of components to build/implement the customers requirement: 
 
-- **Basic action function[lvl-0] :** Do one basic action such as file send tcp request, file copy, run cmd. 
-- **User action [lvl-1]:** Grouped basic functions with a schedule config file to implement complex user’s action such read and write email, join a zoom meeting. 
-- **Actor [lvl-2]:** Grouped user actions with a schedule config file to implement human normal activity such as edit a PPT and share to the cloud, play a sample game, surf the internet and download the contents. 
-- **User emulator [lvl-3]:** Schedule the actors with a customized timeline so the emulator can implement a specific user’s daily event, such as a network admin.
-
-The components relationship is shown below:
-
-![](doc/img/RM_Diagram_components.png)
-
-**The detail document link of  User Action Emulator** [click [here](ReadMe_User_Actions_Emulator.md) ] 
 
 
 
 #### **Scheduler Monitor Hub**
 
-The Scheduler Monitor hub is a no-centralized monitor website host which provides plug and play tasks state view function for the customer to monitor and control all/parts of their schedulers in a computers/servers cluster. The emulator's task monitor Page/ tasks view is shown below:
-
-![](doc/img/RM_diagram_Monitor_page1.png)
+The Scheduler Monitor hub is a no-centralized monitor website host which provides plug and play tasks state view function for the customer to monitor and control all/parts of their schedulers in a computers/servers cluster
 
 The scheduler monitor hub program provide a website for the customer to check each user emulator’s tasks execution state and do some basic control**.** As shown in the workflow diagram section, the user can connect to the monitor hub server to view the webpage or plug their own laptop in the cluster to “Fetch” the emulators’ state basic their local setting.
 
-**The detail document link of  Scheduler Monitor Hub** [click [here](ReadMe_User_Actions_Emulator.md) ] 
+
 
 
 
