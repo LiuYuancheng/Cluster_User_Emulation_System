@@ -1,10 +1,10 @@
-# Cluster User Emulation System
+# Cluster User Emulation System (CUE)
 
 ![](doc/img/logo.png)
 
-**Project Design Purpose**: Our objective is to develop a distributed, automated, flexible, and reusable toolkit for generating both benign and malicious activities and traffic. This toolkit is designed to fulfill the following requirements:
+**Project Design Purpose**: Our objective is to develop a distributed, automated, flexible and reusable toolkits set for generating both benign and malicious activities and traffic. This toolkit is designed to fulfill the following requirements:
 
-- Simulation of mid size of network with active users (generate human activities) for DFIR.
+- Simulation of a mid size of cluster/network with active users (generate human activities) for Digital Forensics and Incident Response (DFIR). 
 - Simulation of red team attacks or recurrent attack scenarios in cyber exercise/events.
 - Simulation of blue team defense activities or the creation of live honeypots. 
 - Provide real time monitoring and management interface of cyber exercise management team. 
@@ -15,12 +15,12 @@
 By meeting these objectives, our toolkit aims to enhance cybersecurity preparedness, training, and research efforts by providing comprehensive and adaptable functionalities.
 
 ```
-version:     v0.1.6
+version:     v0.2.2
 Copyright:   Copyright (c) 2024 LiuYuancheng
 License:     MIT License   
 ```
 
-
+**Table of Contents**
 
 [TOC]
 
@@ -28,10 +28,10 @@ License:     MIT License
 
 ### Introduction
 
-The Cluster User Emulation system operates within a network/compute cluster environment, simulating multiple users' actions and monitoring their network traffic and local activities. This system serves various purposes, including:
+The Cluster User Emulation System operates within a network/compute cluster environment, simulating multiple users' actions and monitoring their network traffic and activities. This system serves various purposes, including:
 
-- Providing a repository with benign and malicious activities&traffic library module for customers to create customized complex "Human/Hacker" type actions.
-- Providing automatically robotic processes and tasks(RPT) or repeating/replaying specified attacking activities of red team and defense activities of blue team during cyber exercise/event.
+- Providing a library repository with benign and malicious activities&traffic plugin module for customers to create customized complex "Human / Hacker / device" type actions.
+- Providing automatically robotic processes and tasks (RPT) or repeating/replaying specified attacking path/scenario of red team and defense activities of blue team during cyber exercise/event.
 - Generating network traffic flows with different protocols for target system penetration testing, service stress testing or using for network security research projects.
 - Providing the management interface for monitoring and controlling the tasks, processes, network traffic, node activities, and group-users interactive actions.
 - Establishing repeatable test environments for testing and verifying AI/ML trained models.
@@ -40,9 +40,61 @@ With its versatile capabilities, the Cluster User Emulation system proves invalu
 
 #### System Structure 
 
-The Custer User Emulator System contents three main parts, the Activities Generation Modules Repository, the Users Action Emulator and the System Status Orchestrator as shown blow:
+The Custer User Emulator System contents three main parts, the `Activities Generation Modules Repository`, the `Users Action Emulator` and the `System Status Orchestrator` as shown blow:
 
 ![](doc/img/systemStructure.png)
+
+The Activities Generation Modules Repository is a collection of library modules for generating both benign and malicious activities and traffic. The Organic repository comprises 33 different plugin modules and the Malicious repository contains 24 different plugin modules. 
+
+The User Action Emulator serves as the activating agent, utilizing assembled plugin modules from the `Activities Generation Modules Repository` to execute tasks on the target machine according to a user-defined timeline.
+
+The System Orchestrator is a cloud-based server that aggregates all User Action Emulator task execution states and offers a management website interface for users to monitor and manage the User Action Emulators
+
+
+
+------
+
+### Project Design 
+
+This section will introduce the design of system workflow, the design of system execution in the cyber range and the design of the three project main section. 
+
+
+
+#### Design of System Work Flow 
+
+The system workflow consists of five main steps, outlined below:
+
+![](doc/img/systemWorkflow.png)
+
+1. **Behavior Module Assembly**: This step involves gathering library modules from the `Activities Generation Modules Repository` based on the user's configuration file.
+
+2. **Activities Profile Building**: The gathered library modules and playbook files are packaged into a specific format profile, tailored for use by the emulator.
+
+3. **Customized User Emulator**: The profile package is imported to the emulator to create a customized "Role" program, ensuring it behaves according to user specifications.
+
+4. **Activities and Traffic Generation**: Upon execution, the emulator follows the playbook within the profile to generate relevant activities and traffic flow as per the user's requirements.
+
+5. **Procedure Monitoring**: This step involves monitoring the progress of task execution to ensure tasks are carried out efficiently and effectively.
+
+   
+
+##### Benign Activities and Traffic Generation 
+
+The detailed 5 steps workflow of the system generating the benign traffic is shown below:
+
+![](doc/img/workflow.png)
+
+With different playbook and profile config the emulator can act as different type of users and device in a cyber range such as 
+
+IT/OT Specialist: Maintenance engineer, Network admin, Pentest engineer and Support engineer
+
+Company Officer's Daily Work : HR officer Finance Manager, HQ Operator and Company Intern
+
+
+
+
+
+
 
 ##### Activities Generation Modules Repository
 
@@ -67,14 +119,40 @@ These modules offer a comprehensive range of functionalities to support various 
 
 
 
-- **User Action Emulator**: A RPA type scheduler to invoke the lib from action repository to build more complex “Human type” activities and run the tasks based on the users’ timeline playbook configuration.
-- **Scheduler Monitor Hub**: A no-centralized monitor website host which provides plug and play tasks state view function for the customer to monitor and control all/parts of their schedulers in a computers/servers cluster. 
+##### User Action Emulator 
+
+The User Action Emulator serves as the activating agent, utilizing assembled plugin modules from the `Activities Generation Modules Repository` to execute tasks on the target machine according to a user-defined timeline. It consists of two main components module:
+
+- **Activities Scheduler Module**: The Activities Scheduler interprets the user's task timeline configuration and selects plugin modules from the `Activities Generation Modules Repository` based on task type specifications. Subsequently, it constructs a "playbook" to organize the execution sequence of each task according to the scheduled timeline. Once all modules and the playbook are imported, the Activities Scheduler packages them into a single package ( emulator profile ) for execution by the Action Emulator module.
+
+- **Action Emulator Module**: Each Action Emulator instance loads a user profile (generated by the scheduler module) and assumes the role required for simulation. It executes tasks based on the timeline configuration, saving the execution results in emulator local database and updating them to the Orchestrator server for user access. Depending on the timeline configuration, the Action Emulator can generate regular or random human, software, or malware activities and traffic on a daily, weekly, or monthly schedule.
+
+
+
+##### System Orchestrator
+
+The System Orchestrator is a cloud-based server that aggregates all User Action Emulator task execution states and offers a management website interface for users to monitor and manage the User Action Emulators. The Orchestrator provides two distinct web interfaces:
+
+- **Emulator Procedure Management Interface**: This web dashboard displays comprehensive information about all connected emulators, including their current state and task details. Users can efficiently oversee the execution of tasks across multiple emulators from this interface.
+- **Malware Command and Control Interface**: This web dashboard presents the task execution states of all connected malware instances and offers a web API for the red team to dynamically control the malware. This interface empowers red team members with the flexibility to manage malware operations effectively in real-time.
+
+ 
+
+------
+
+ 
 
 
 
 
 
-![](doc/img/workflow.png)
+
+
+
+
+
+
+
 
 
 
