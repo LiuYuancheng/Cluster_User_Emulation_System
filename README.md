@@ -24,6 +24,31 @@ License:     MIT License
 
 [TOC]
 
+- [Cluster User Emulation System (CUE)](#cluster-user-emulation-system--cue-)
+    + [Introduction](#introduction)
+      - [System Structure](#system-structure)
+    + [Project Design](#project-design)
+      - [Design of System Work Flow](#design-of-system-work-flow)
+        * [Benign Activities and Traffic Generation](#benign-activities-and-traffic-generation)
+        * [Malicious Activities and Traffic](#malicious-activities-and-traffic)
+      - [Design of Activities Generation Modules Repository](#design-of-activities-generation-modules-repository)
+      - [Design User Action Emulator](#design-user-action-emulator)
+      - [Design of System Orchestrator](#design-of-system-orchestrator)
+    + [System Deployment and Execution](#system-deployment-and-execution)
+      - [System Deployment](#system-deployment)
+      - [System Execution Flow](#system-execution-flow)
+    + [Business Overview](#business-overview)
+        * [Who Might Benefit from Using It:](#who-might-benefit-from-using-it-)
+        * [Why user choose using it :](#why-user-choose-using-it--)
+    + [Program Setup](#program-setup)
+      - [Detail Setup Steps](#detail-setup-steps)
+    + [Program Usage](#program-usage)
+        * [Run User Action Emulator](#run-user-action-emulator)
+        * [Run Scheduler Monitor Hub](#run-scheduler-monitor-hub)
+    + [Problem and Solution](#problem-and-solution)
+
+
+
 ------
 
 ### Introduction
@@ -187,36 +212,58 @@ The System Orchestrator is a cloud-based server that aggregates all User Action 
 
 ### System Deployment and Execution 
 
+This section will introduce who to deploy the emulation system in the network and the system execution flow.
+
 #### System Deployment
 
-The Cluster Emulator System can be deployed on various platforms, including a single compute node, a real network system, or VMs based SDN (Software Defined Network), as illustrated in the diagram below.
+The Cluster Emulator System can be deployed on various platforms, including a single/multiple compute node, IoT devices, a real network system, or VMs based SDN (Software Defined Network), as illustrated in the diagram below.
 
 ![](doc/img/deployment.png)
 
-The `Activities Generation Modules Repository` can be deployed remotely in a database server in the network or local in every node for import, this enables easy access and utilization by the Cluster Emulator System.
+The `Activities Generation Modules Repository` can be deployed remotely in a database server in the network or local in every node for modules import, this enables easy access and utilization by the cluster emulation system.
 
-The `User Action Emulator` requires deployment on the cluster's node computers or VMs to ensure seamless integration and execution within the emulation environment.
+The `User Action Emulator` requires deployment on the cluster's node computers or VMs to ensure seamless integration and execution within the emulation environment. For deploying each emulator, normally the profile package will contents below files:
+
+- `setup.bat` : The script to install the needed software and the related lib to the target machine. 
+- `scheduleCfg.txt`: The Emulator program config file includes the program execution parameters such as the DB path,  Orchestrator IP address and so on. 
+-  `actorFunctions<xxxxx>.py`: The functions to import the Activities Generation Modules to do the task. 
+- `scheduleProfile_<xxxxxx>.py`: The module contents the timeline for schedule the task execution.
 
 The `Orchestrator Webserver` can be deployed either on the cloud or within the cluster itself, providing centralized management and coordination of the emulation activities. This flexibility allows for efficient orchestration regardless of the deployment environment's specifics.
 
 
 
+#### System Execution Flow
+
+The system will work under the below work diagram : 
+
+![](doc/img/RM_Diagram_workflow.png)
+
+The key features of the execution flow:
+
+- The User Emulator program is a multi-threaded application. Upon initialization, it spawns a sub-thread data manager responsible for fetching execution history from its local database and updating the state to the Orchestrator server.
+- The main thread orchestrates three handler threads to concurrently manage random, daily, and weekly task lists.
+- When the main scheduler detects a task with a timestamp matching the current time, the corresponding handler thread initiates a new sub-actor thread to import the necessary module and execute the task.
+- Upon task completion, the result checker gathers logs and stores them in the data manager's database. Subsequently, the emulator regularly updates its latest task execution state to the Orchestrator, adhering to user-defined settings.
+
+
+
 ------
 
-### Product overview 
+### Business Overview 
 
-There are several kinds of well-developed network traffic generators, task scheduler tools and the tasks progress monitors hub in the market. But most of these tools’ functions are very general and don’t cover all the three areas ( emulation, management and monitoring), so the customer still speed a lot of time and effort to build their system. Our Cluster Users Emulator is aimed to provide a packaged all-in-one light solution allow our customers to simulate a groups of different users’ complex human type action, then schedule these events and monitor / control them without spending much workload to play with several different tools. 
+While the market offers various network traffic generators, task scheduler tools, and task progress monitors, many lack comprehensive coverage across all three areas: emulation, management, and monitoring. Consequently, customers often expend significant time and effort building their systems. Our Cluster Users Emulator aims to address this challenge by providing an all-in-one, lightweight solution. Our product enables customers to simulate diverse human-like actions, schedule events, and monitor/control them without the need for multiple tools.
 
-#### SWOT Business Analysis
+**SWOT Business Analysis**
 
 ![](doc/img/RM_diagram_swot.png)
 
-##### Who may be interested about using it: 
+##### Who Might Benefit from Using It:
 
-- Customers whose system config setting and requirements keep updating, or need flexible tool to integrate different apps. 
-- Customer who wants to create some complex “human type” action especially related UI operation and Windows platform.
-- Customer who needs different kinds of pre-configured activities scenario and try to avoid spending much development effort on the events/traffic generation details. 
-- Researcher who want to automatically repeat specific scenario with small changes for their experiments.
+- **Dynamic Configurations**: Customers with evolving system configurations or those requiring a flexible tool to integrate different applications can benefit.
+- **Complex User Actions**: Users seeking to create complex human-like actions, especially those involving UI operations and the Windows platform, will find value in our product.
+- **Efficiency Seekers**: Customers looking for pre-configured activity scenarios to minimize development efforts on event/traffic generation details.
+- **Researchers**: Researchers desiring to automatically replicate specific scenarios with minor variations for experiments can leverage our product.
 
 ##### Why user choose using it : 
 
@@ -226,78 +273,96 @@ There are several kinds of well-developed network traffic generators, task sched
 
 
 
-
-
 ------
 
-### System Design
+### Program Setup 
 
-We want to create an intelligent "actor” program which can simulate a normal MS-Windows user’s daily action ( different kinds of network access, system level operation and different app level operation) to generate user’s regular or random event based on the customer’s requirement. So, it can:
-
-- Be used to repeat/replay specified large numbers of users (blue team) activities in cyber exercise event.
-- Generate required network traffic flow for network security research project. 
-- Be used as repeatable user’s test environment for AI/ML trained module’s verification.
-
-##### System Work Flow Diagram
-
-The system will work under the below work diagram 
-
-![](doc/img/RM_Diagram_workflow.png)
-
-
-
-
-
-
-
-
-
-
-
-#### **Scheduler Monitor Hub**
-
-The Scheduler Monitor hub is a no-centralized monitor website host which provides plug and play tasks state view function for the customer to monitor and control all/parts of their schedulers in a computers/servers cluster
-
-The scheduler monitor hub program provide a website for the customer to check each user emulator’s tasks execution state and do some basic control**.** As shown in the workflow diagram section, the user can connect to the monitor hub server to view the webpage or plug their own laptop in the cluster to “Fetch” the emulators’ state basic their local setting.
-
-
-
-
-
-
-
-------
-
-### Program Setup [under editing]
-
-###### Development Environment : python 3.7.4
+Development Environment : python 3.7.4
 
 Additional Lib/Software Need: 
 
-###### Hardware Needed : None
+```
+beautifulsoup4
+keyboard
+mouse
+numpy
+paramiko
+Pillow
+PyAutoGUI
+pythonping
+requests
+schedule
+selenium
+pyscreenshot
+python-nmap
+pynput
+scp
+```
 
-###### Program  Folder Structure;
+Hardware Needed : None
+
+#### Detail Setup Steps
+
+This is a profile package example (a profile to simulate the maintenance OT engineer):
+
+ ![](doc/img/setup.png)
+
+Follow the below steps to setup the cue on a node (Windows OS):
+
+1. Git clone the repository in a folder in the target machine/vm. 
+2. Copy the auto execution run script `runCUE_MtEng.bat` under folder  `C:\Users\xxxx\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup` 
+3. Install the lib module via run the `setup.bat` .
+4. Copy all the *.py files in `codes` folder and `scheduleCfg.txt` to the `Windows_User_Simulator\src\actionScheduler`
 
 
-
-######  
 
 ------
 
 ### Program Usage
 
+To use the User Emulation Program, follow the c template to set the configuration file: 
 
+```
+# This is the config file template for the module <ScheduleRun.py>
+# Setup the paramter with below format (every line follows <key>:<val> format, the
+# key can not be changed):
 
-#### Program Execution 
+# Add your connect peer under below format in one line:
 
-##### User action Emulator
+#Set the OwnID
+Own_ID:Test_Template
+
+# Set the OwnIP address
+OWN_IP:127.0.0.1
+
+# Setup the host UDP port here.
+# Format HOST_PORT:<int>
+HOST_PORT:3001
+# HOST_PORT:3002 # Alice test use port 3002
+
+# Set the report Mode (If the schdule is not in the hub list, set the flag to true and config the 
+# hub ip address, the schudler will auto register to the hub when it start)
+RPT_MD:True
+HUB_IP:127.0.0.1
+HUB_PORT:5000
+
+# Set the actor profile's name here (the file will be import, example: if you 
+# want to import file scheduleProfile_Bob.py as user profile, use scheduleProfile_Bob):
+# Format: PROFILE:<python Module file Name>
+PROFILE:scheduleProfile_template
+# PROFILE:scheduleProfile_Alice
+# PROFILE:scheduleProfile_Bob
+# PROFILE:scheduleProfile_Charlie
+```
+
+##### Run User Action Emulator
 
 Your can use program execution 1 or program execution 2
 
 - Program execution 1: Run `src/runScheduler_win.bat`
 - Program execution 2: cd to `src/actionScheduler` run `python ScheduleRun.py`
 
-##### Scheduler Monitor Hub
+##### Run Scheduler Monitor Hub
 
 Your can use program execution 1 or program execution 2
 
@@ -306,22 +371,13 @@ Your can use program execution 1 or program execution 2
 
 
 
-remove access the windows vm:
+------
 
-```
-ssh -L 127.0.0.1:3389:192.168.57.10:3389 -p 6022 -J rp_fyp_ctf@gateway.ncl.sg ls23@172.18.178.10
-```
+### Problem and Solution
 
-
-
-
+Refer to `doc/ProblemAndSolution.md`
 
 ------
 
-### Program Use Case 
+> Last edit by LiuYuancheng (liu_yuan_cheng@hotmail.com) at 15/04/2024, if you have any problem or find anu bug, please send me a message .
 
-
-
-------
-
-> Last edit by LiuYuancheng(liu_yuan_cheng@hotmail.com) at 03/02/2023, if you have any problem or find anu bug, please send me a message .
