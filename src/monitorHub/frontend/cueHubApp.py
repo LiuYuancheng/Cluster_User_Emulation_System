@@ -24,7 +24,7 @@ from datetime import timedelta, datetime
 from flask import Flask, render_template, request, flash, url_for, redirect, jsonify
 
 import dataManager
-import frontendGlobal as gv
+import cueHubGlobal as gv
 import ConfigLoader
 
 TEST_MD = False # Test mode flag.
@@ -101,5 +101,10 @@ def peerRegister(peerName):
     return jsonify({"ok":True})
 
 #-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000,  debug=False, threaded=True)
+    #app.run(host="0.0.0.0", port=5000,  debug=False, threaded=True)
+    app.run(host=gv.gflaskHost,
+        port=gv.gflaskPort,
+        debug=gv.gflaskDebug,
+        threaded=gv.gflaskMultiTH)

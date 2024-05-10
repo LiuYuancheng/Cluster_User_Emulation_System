@@ -17,7 +17,7 @@ import datetime
 from datetime import datetime
 from copy import deepcopy
 
-import frontendGlobal as gv
+import cueHubGlobal as gv
 import Log
 import udpCom
 
