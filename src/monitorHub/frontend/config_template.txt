@@ -1,0 +1,10 @@
+# This is the config file template for the module <cueHubApp.py>
+# Setup the paramter with below format (every line follows <key>:<val> format, the
+# key can not be changed):
+
+
+#-----------------------------------------------------------------------------
+# Init the Flask app parameters
+FLASK_SER_PORT:5000
+FLASK_DEBUG_MD:False
+FLASK_MULTI_TH:True
