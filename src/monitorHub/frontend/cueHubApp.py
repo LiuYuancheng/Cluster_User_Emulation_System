@@ -1,44 +1,44 @@
 #!/usr/bin/python
 #-----------------------------------------------------------------------------
-# Name:        app.py [python3]
+# Name:        cueHubApp.py
 #
-# Purpose:     This module is the main website host program to host the scheduled
-#              tasks monitor Hub webpage by using python-Flask frame work. 
-#  
+# Purpose:     This module is the main website frontend host program to provide 
+#              the web UI to monitor the scheduler's tasks information and state. 
+#              We use python-flask and bootstrap5 to build the web UI.
+#
 # Author:      Yuancheng Liu
 #
 # Created:     2022/01/13
-# version:     v0.2
-# Copyright:   National Cybersecurity R&D Laboratories
-# License:     
+# version:     v0.2.3
+# Copyright:   Copyright (c) 2024 LiuYuancheng
+# License:     MIT License
 #-----------------------------------------------------------------------------
+# CSS lib [bootstrap]: https://www.w3schools.com/bootstrap5/index.php
 
-# CSS lib [bootstrap]: https://www.w3schools.com/bootstrap4/default.asp
-import os
 import json
-
-from datetime import timedelta, datetime
-from flask import Flask, render_template, request, flash, url_for, redirect, jsonify
+from datetime import timedelta
+from flask import Flask, render_template, request, url_for, redirect, jsonify
 
 import dataManager
 import cueHubGlobal as gv
-import ConfigLoader
-
-TEST_MD = False # Test mode flag.
 
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 def InitDataMgr():
+    """ Init the data manager and load the peer information."""
     gv.iDataMgr = dataManager.DataManager(None)
-    ld = ConfigLoader.ConfigLoader(gv.gGonfigPath, mode='r')
-    for line in ld.getLines():
+    # load the peer info
+    for line in gv.iConfigLoader.getLines():
         try:
-            peerInfo = json.loads(line)
-            lkMode = int(peerInfo['lkMode']) if 'lkMode' in peerInfo.keys() else 0
-            gv.iDataMgr.addSchedulerPeer(peerInfo['name'], peerInfo['ipAddr'], peerInfo['udpPort'], 
-                                         linkMode=lkMode)
+            if str(line).startswith('PEER:'):
+                info = str(line).split('PEER:')[1].strip()
+                peerInfo = json.loads(info)
+                lkMode = int(peerInfo['lkMode']) if 'lkMode' in peerInfo.keys() else 0
+                gv.iDataMgr.addSchedulerPeer(peerInfo['name'], peerInfo['ipAddr'], 
+                                             peerInfo['udpPort'], linkMode=lkMode)
         except Exception as err:
-            gv.gDebugPrint("The peer's info line format Invalid: %s" %str(line), logType=gv.LOG_ERR)
+            gv.gDebugPrint("The peer's info line format Invalid: %s" %str(line),
+                           logType=gv.LOG_ERR)
             continue
 
 #-----------------------------------------------------------------------------
@@ -59,8 +59,7 @@ app = createApp()
 # web home request handling functions.
 @app.route('/')
 def index():
-    # page index is used to highlight the left page slide bar.
-    posts = {'page': 0}
+    posts = {'page': 0} # page index is used to highlight the left page slide bar.
     return render_template('index.html', posts=posts)
 
 #-----------------------------------------------------------------------------
@@ -76,7 +75,7 @@ def schedulermgmt():
 @app.route('/<int:postID>')
 def peerstate(postID):
     peerInfoDict = dataManager.buildPeerInfoDict(postID)
-    return render_template('peerstate.html',posts=peerInfoDict)
+    return render_template('peerstate.html', posts=peerInfoDict)
  
 #-----------------------------------------------------------------------------
 @app.route('/<string:peerName>/<int:jobID>/<string:action>', methods=('POST',))

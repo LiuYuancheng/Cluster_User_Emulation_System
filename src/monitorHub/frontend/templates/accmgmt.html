@@ -26,17 +26,17 @@
                 <td> {{ post['userName'] }} </td>
                 <td>
                     {% if post['authority'] == 5 %}
-                        <span class="badge badge-success"> admin </span>
+                        <span class="badge bg-success"> admin </span>
                     {% else %}
-                        <span class="badge badge-info"> user </span>
+                        <span class="badge bg-info"> user </span>
                     {% endif %}
                 </td>
                 
                 <td>
                     {% if post['active'] > 0 %}
-                        <span class="badge badge-success"> Active </span>
+                        <span class="badge bg-success"> Active </span>
                     {% else %}
-                        <span class="badge badge-dark"> Disabled </span>
+                        <span class="badge bg-dark"> Disabled </span>
                     {% endif %} 
                 </td>
 

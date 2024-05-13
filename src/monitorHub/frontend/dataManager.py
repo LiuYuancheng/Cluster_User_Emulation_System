@@ -15,29 +15,25 @@
 import json
 import datetime
 from datetime import datetime
-from copy import deepcopy
 
 import cueHubGlobal as gv
 import Log
 import udpCom
 
-SCH_ID_PREFIX = 'Emu'
-
 # Define all the module local untility functions here:
 #-----------------------------------------------------------------------------
 def parseIncomeMsg(msg):
-    """ parse the income message to tuple with 3 element: request key, type and jsonString
+    """ parse the income message to tuple with 3 elements: request key, type and jsonString
         Args: msg (str): example: 'GET;dataType;{"user":"<username>"}'
     """
     req = msg.decode('UTF-8') if not isinstance(msg, str) else msg
-    reqKey = reqType = reqJsonStr= None
     try:
         reqKey, reqType, reqJsonStr = req.split(';', 2)
+        return (reqKey.strip(), reqType.strip(), reqJsonStr)
     except Exception as err:
         Log.error('parseIncomeMsg(): The income message format is incorrect.')
         Log.exception(err)
-    return (reqKey.strip(), reqType.strip(), reqJsonStr)
-
+        return('', '', json.dumps({}))
 
 # Define all class here:
 #-----------------------------------------------------------------------------
@@ -56,11 +52,11 @@ class PeerConnector(object):
         self.lastUpdateT = None
         self.connReadyFlg = self._loginScheduler()
         self.taskCountDict = {
-            'total': 0,
-            'finish': 0,
-            'running':0,
-            'pending': 0,
-            'error': 0,
+            'total':    0,
+            'finish':   0,
+            'running':  0,
+            'pending':  0,
+            'error':    0,
             'deactive': 0
         }
         gv.gDebugPrint("Peer Connector Inited.", logType=gv.LOG_INFO)
