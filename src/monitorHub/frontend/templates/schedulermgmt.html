@@ -1,39 +1,30 @@
 {% extends 'mgmbase.html' %}
 
-{% block title %} User Action scheduler Monitor {% endblock %}
+{% block title %} User Action Scheduler Monitor {% endblock %}
 
-{% block style%}
-<style>
-    /* Make the image fully responsive 
-  .carousel-inner img {
-    width: 100%;
-    height: 50%;
-  }*/
-</style>
-
-{% endblock %}
+{% block style%} {% endblock %}
 
 {% block mgmContent %}
 <div class="table-responsive">
-    <table class="table table-bordered table-dark">
+    <table class="table table-dark table-striped">
         <thead>
-            <tr class="table table-primary">
-                <th>Scheduler_Id</th>
+            <tr class="table-primary">
+                <th>Scheduler_ID</th>
                 <th>Scheduler_Name</th>
                 <th>IP_address</th>
                 <th>UDP_Port</th>
                 <th>Connection</th>
-                <th>Last_Update </th>
+                <th>Last_Update</th>
                 <th>TotalTask</th>
                 <th>Finished</th>
                 <th>Running</th>
                 <th>Pending</th>
                 <th>Error</th>
-                <th>Deactived </th>
+                <th>Deactived</th>
             </tr>
         </thead>
         <tbody>
-            {% for post in posts %}
+            {% for post in posts['schedulersInfo'] %}
             <tr class="info">
                 <td> <b>{{ post['id'] }}</b> </td>
                 <td> {{ post['peerName'] }} [
@@ -45,9 +36,9 @@
                 <td> {{ post['updPort'] }} </td>
                 <td>
                     {% if post['connected'] %}
-                    <span class="badge badge-success"> online </span>
+                        <span class="badge badge-success"> online </span>
                     {% else %}
-                    <span class="badge badge-warning"> offline </span>
+                        <span class="badge badge-warning"> offline </span>
                     {% endif %}
                 </td>
                 <td> {{ post['updateT'] }} </td>

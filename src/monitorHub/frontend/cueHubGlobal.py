@@ -22,9 +22,9 @@ import os
 import sys
 
 print("Current working directory is : %s" % os.getcwd())
-dirpath = os.path.dirname((os.path.abspath(__file__)))
+dirpath = os.path.dirname(os.path.abspath(__file__))
 print("Current source code location : %s" % dirpath)
-APP_NAME = ('Monitor_Hub', 'frontend')
+APP_NAME = ('CUE_Monitor_Hub', 'frontend')
 
 TOPDIR = 'src'
 LIBDIR = 'lib'
@@ -33,8 +33,7 @@ idx = dirpath.find(TOPDIR)
 gTopDir = dirpath[:idx + len(TOPDIR)] if idx != -1 else dirpath   # found it - truncate right after TOPDIR
 # Config the lib folder 
 gLibDir = os.path.join(gTopDir, LIBDIR)
-if os.path.exists(gLibDir):
-    sys.path.insert(0, gLibDir)
+if os.path.exists(gLibDir): sys.path.insert(0, gLibDir)
 
 #-----------------------------------------------------------------------------
 # load the config file.

@@ -62,14 +62,16 @@ app = createApp()
 # web home request handling functions. 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    posts = {'page': 0} # page index is used to highlight the left page slide bar.
+    return render_template('index.html', posts=posts)
 
 #-----------------------------------------------------------------------------
 @app.route('/schedulermgmt')
 def schedulermgmt():
-    scheudlerInfoDict = gv.iDataMgr.getPeersInfo()
-    gv.gDebugPrint("Receive the peer Info %s" %str(scheudlerInfoDict), logType=gv.LOG_INFO)
-    return render_template('schedulermgmt.html', posts=scheudlerInfoDict)
+    schedulerInfoList = gv.iDataMgr.getPeersInfo()
+    gv.gDebugPrint("Receive the peer Info %s" %str(schedulerInfoList), logType=gv.LOG_INFO)
+    posts = {'page': 1, 'schedulersInfo': schedulerInfoList}
+    return render_template('schedulermgmt.html', posts=posts)
 
 #-----------------------------------------------------------------------------
 @app.route('/<int:postID>')
@@ -83,7 +85,6 @@ def changeTask(peerName, jobID, action):
     peerInfo = gv.iDataMgr.getOnePeerDetail(peerName)
     posts = gv.iDataMgr.changeTaskState(peerName, jobID, action)
     return redirect(url_for('peerstate', postID=peerInfo['id']))
-
 
 #-----------------------------------------------------------------------------
 # Data post request handling 
