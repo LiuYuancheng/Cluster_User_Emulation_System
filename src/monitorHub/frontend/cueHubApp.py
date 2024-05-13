@@ -14,9 +14,6 @@
 #-----------------------------------------------------------------------------
 
 # CSS lib [bootstrap]: https://www.w3schools.com/bootstrap4/default.asp
-
-# https://www.w3schools.com/howto/howto_css_form_on_image.asp
-
 import os
 import json
 
@@ -59,17 +56,19 @@ InitDataMgr()
 app = createApp()
 
 #-----------------------------------------------------------------------------
-# web home request handling functions. 
+# web home request handling functions.
 @app.route('/')
 def index():
-    posts = {'page': 0} # page index is used to highlight the left page slide bar.
+    # page index is used to highlight the left page slide bar.
+    posts = {'page': 0}
     return render_template('index.html', posts=posts)
 
 #-----------------------------------------------------------------------------
 @app.route('/schedulermgmt')
 def schedulermgmt():
     schedulerInfoList = gv.iDataMgr.getPeersInfo()
-    gv.gDebugPrint("Receive the peer Info %s" %str(schedulerInfoList), logType=gv.LOG_INFO)
+    gv.gDebugPrint("Receive the peer Info %s" %
+                   str(schedulerInfoList), logType=gv.LOG_INFO)
     posts = {'page': 1, 'schedulersInfo': schedulerInfoList}
     return render_template('schedulermgmt.html', posts=posts)
 

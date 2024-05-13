@@ -1,67 +1,51 @@
 {% extends 'base.html' %}
 
-{% block title %} User Action scheduler Monitor {% endblock %}
-
-{% block link %} <link rel="stylesheet" href="https://cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css"> {% endblock %}
-
-{% block script %} <script type="text/javascript" src="https://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script> {% endblock %}
-
-
-
-{% block style%}
-<style>
-    /* Make the image fully responsive 
-  .carousel-inner img {
-    width: 100%;
-    height: 50%;
-  }*/
-</style>
-
-{% endblock %}
+{% block title %} User Action Tasks Monitor {% endblock %}
+{% block style%} {% endblock %}
 
 {% block content %}
 
 <div class="container-fluid">
     <hr>
-        <b> Scheduler: [ {{posts['name'] }} ] : </b> 
+        <b> Scheduler Name: [ {{posts['name'] }} ] : </b> 
         {% if posts['connected'] %}
-        <span class="badge badge-success"> Connected </span> 
+            <span class="badge bg-success"> Connected </span> 
         {% else %}
-        <span class="badge badge-warning"> Not Connected </span>
+        <span class="badge bg-warning"> Not Connected </span>
         {% endif %}
-        last update time : {{posts['updateT'] }}
+            Last update time : {{ posts['updateT'] }}
     <p> </p>    
     
-    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs">
         <li class="nav-item">
-            <a class="nav-link active" id="pills-daily-tab" data-toggle="pill" href="#pills-daily" role="tab"
-                aria-controls="pills-daily" aria-selected="true">Daily Actions</a>
+        <a class="nav-link active" data-bs-toggle="tab" href="#pills-daily">Daily Actions</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="pills-random-tab" data-toggle="pill" href="#pills-random" role="tab"
-                aria-controls="pills-random" aria-selected="false">Periodically Action</a>
+        <a class="nav-link" data-bs-toggle="tab" href="#pills-random">Periodically Action</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="pills-weekly-tab" data-toggle="pill" href="#pills-weekly" role="tab"
-                aria-controls="pills-weekly" aria-selected="false">Weekly Actions</a>
+        <a class="nav-link" data-bs-toggle="tab" href="#pills-weekly">Weekly Actions</a>
         </li>
     </ul>
-    {% set tableTagList = [ ["daily", "pills-daily", "pills-daily-tab", "tab-pane fade show active"], 
-                            ["random", "pills-random", "pills-random-tab", "tab-pane fade"],
-                            ["weekly", "pills-weekly", "pills-weekly-tab", "tab-pane fade"]] %}
+    
+    {% set tableTagList = [ 
+        ["daily", "pills-daily", "pills-daily-tab", "container-fluid tab-pane active"],
+        ["random", "pills-random", "pills-random-tab", "container-fluid tab-pane fade"],
+        ["weekly", "pills-weekly", "pills-weekly-tab", "container-fluid tab-pane fade"]] 
+    %}
 
+    <!-- Tab panes -->
     <div class="tab-content">
-
+        
         {% for tableTag in tableTagList %}
-
-
+            
             {% set tableId = tableTag[0] %}
             {% set tableName = tableTag[1] %}
             {% set tableLabel = tableTag[2] %}
             {% set tableClass = tableTag[3] %}
             <div class= "{{tableClass}}" id="{{tableName}}" role="tabpanel" aria-labelledby="{{tableLabel}}">
-            
-                <button type="button" onclick="downloadCSVFile()" class="float-right"> Export as CSV </button>    
+                <button type="button" class="btn btn-primary btn-sm " onclick="downloadCSVFile()" > Export as CSV </button>                    
                 <div class="table-responsive">
                     <table class="table table-bordered table-dark"> 
                         <thead>
@@ -81,7 +65,7 @@
                             </tr>
                         </thead>
                         <tbody>
-    
+
                             {% for post in posts[tableId] %}
                             <tr class="info">
                                 <td> <b>{{ post['actId'] }}</b> </td>
@@ -90,48 +74,48 @@
                                     <a href="#" data-toggle="tooltip" data-placement="right"
                                         title="{{post['actDesc']}}">{{post['actDetail']}}</a>
                                 </td>
-    
-                                <td> <span class="badge badge-primary">  Every 1 day start at: {{ post['startT'] }} </span> </td>
+
+                                <td> <span class="badge bg-primary">  Every 1 day start at: {{ post['startT'] }} </span> </td>
                                 <td> {{ post['period'] }} </td>
                                 <td> {{ post['actOwner'] }} </td>
-    
+
                                 <td>
                                     {% if post['actType'] == 0 %}
-                                    <span class="badge badge-primary"> sequencial </span>
+                                    <span class="badge bg-primary"> sequencial </span>
                                     {% else %}
-                                    <span class="badge badge-warning"> parallel </span>
+                                    <span class="badge bg-warning"> parallel </span>
                                     {% endif %}
                                 </td>
-    
+
                                 <td>
                                     {% if post['depend'] == 0 %}
-                                    <span class="badge badge-dark"> None </span>
+                                    <span class="badge bg-dark"> None </span>
                                     {% else %}
-                                    <span class="badge badge-light"> Action: {{ post['depend'] }} </span>
+                                    <span class="badge bg-light"> Action: {{ post['depend'] }} </span>
                                     {% endif %}
                                 </td>
-    
+
                                 <td>
                                     {% if post['actState'] == "error" %}
-                                    <span class="badge badge-danger"> error </span>
+                                    <span class="badge bg-danger"> error </span>
                                     {% elif post['actState'] == "finish" %}
-                                    <span class="badge badge-success"> finished </span>
+                                    <span class="badge bg-success"> finished </span>
                                     {% elif post['actState'] == "pending" %}
-                                    <span class="badge badge-info"> pending </span>
+                                    <span class="badge bg-info"> pending </span>
                                     {% elif post['actState'] == "running" %}
-                                    <span class="badge badge-primary"> Running  </span> <div class="spinner-border"></div>
+                                    <span class="badge bg-primary"> Running  </span> <div class="spinner-border"></div>
                                     {% else %}
-                                    <span class="badge badge-secondary"> deactivated </span>
+                                    <span class="badge bg-secondary"> deactivated </span>
                                     {% endif %}
                                 </td>
-    
-                                <td> <span class="badge badge-secondary"> {{ post['nextT'] }} </span> </td>
+
+                                <td> <span class="badge bg-secondary"> {{ post['nextT'] }} </span> </td>
                                 <td> 
                                     <button type="button" data-id = "{{post['id']}}" class="open-AddBookDialog btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">
                                         Config
                                     </button>
                                 </td>
-    
+
                                 <td>
                                     <form action="{{ url_for('changeTask', peerName = posts['name'], jobID=post['actId'], action='delete')}}" method="POST">
                                         <input type="submit" value="Delete tasks" class="btn btn-danger btn-sm"
@@ -142,17 +126,16 @@
                             {% endfor %}
                         </tbody>
                     </table>
-    
+
                 </div>
                 <a href="#">
                     <button type="button" class="btn btn-success">[+] Add a new action </button>
                 </a> 
             </div>
-    
+
         {% endfor %}
 
     </div>
-
 </div>
 
 <div class="modal fade" id="myModal">

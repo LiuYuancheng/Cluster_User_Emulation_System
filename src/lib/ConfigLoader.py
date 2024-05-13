@@ -11,8 +11,8 @@
 #
 # Created:     2019/11/12
 # Version:     v_0.1
-# Copyright:   Copyright (c) 2023 LiuYuancheng
-# License:     MIT License
+# Copyright:   Copyright (c) 2019 LiuYuancheng
+# License:     MIT License    
 #-----------------------------------------------------------------------------
 """ Program Design:
     Some times we want to read some program's simple customized config files which 
@@ -89,6 +89,10 @@ class ConfigLoader(object):
         for line in self.configLines:
             if specChar in line:
                 key, val = line.split(':', 1)
+                if val.lower() == 'true':
+                    val = True
+                elif val.lower() == 'false': 
+                    val = False
                 result[key] = val
         return result
 
