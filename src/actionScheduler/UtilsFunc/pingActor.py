@@ -39,9 +39,9 @@ class pingActor(object):
                                 json item format 'dest ip/url': int(pingtime)
                 parallel (bool, optional): Ping the dest in sequential if val==False or parallel threading 
                                 (multi-thread) if val==True. Defaults to False.
-                Log (_type_, optional): A logger object used to log the result to local if necessory. 
+                Log (_type_, optional): A logger object used to log the result to local if necessary. 
                                 Defaults to None.
-                showConsole (bool, optional): Flag to identify whether pop-up the os console. Defaults to False.
+                showConsole (bool, optional): Flag to identify whether pop-up the OS console. Defaults to False.
 
             Returns:
                 _type_: pingActor obj.

@@ -77,7 +77,6 @@ COOKIE_TIME = 30
 
 #-------<GLOBAL VARIABLES (start with "g")>-------------------------------------
 # VARIABLES are the built in data type.
-gGonfigPath = os.path.join(dirpath, 'peerConfig.txt')
 
 # Flask App parameters : 
 gflaskHost = '0.0.0.0'

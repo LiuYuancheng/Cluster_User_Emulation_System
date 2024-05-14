@@ -63,7 +63,7 @@ class Sqlite3Cli(dbHandler):
             databaseName (_type_, optional): Name of the DB. Defaults to None.
             threadSafe (bool, optional): flag to check_same_thread, if you want the client
                 be used in different thread, set the val to False. Defaults to True.
-            rowFac (_type_, optional): select row fector. Defaults to None.
+            rowFac (_type_, optional): select row factor. Defaults to None.
         """
         if not os.path.exists(dbPath):
             print("Error: sqlite3DB file %s not exist, exit() called..." %str(dbPath))

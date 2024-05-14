@@ -4,7 +4,7 @@
 #
 # Purpose:     This module will provide API to download the webpage components: 
 #              html file, image file, javascript file, href link file, host SSL
-#              certificate and xxl  based on the input url. The user can list 
+#              certificate and xml file based on the input url. The user can list 
 #              all the urls he wants to downlad in the file "urllist.txt" .
 #
 # Author:      Yuancheng Liu
@@ -40,10 +40,10 @@ class webDownloader(object):
                  spLinkType=SP_LINK_TYPE):
         """ Init example: webDownloader(imgFlg=True, linkFlg=True, scriptFlg=True, caFlg=True)
             Args:
-                imgFlg (bool, optional): flag to identify whehter download image. Defaults to True.
-                linkFlg (bool, optional): flag to identify whehter download all the hyper link contents. Defaults to True.
-                scriptFlg (bool, optional): flag to identify whehter download script. Defaults to True.
-                caFlg (bool, optional): flag to identify whehter download certificate. Defaults to True.
+                imgFlg (bool, optional): flag to identify whether download image. Defaults to True.
+                linkFlg (bool, optional): flag to identify whether download all the hyper link contents. Defaults to True.
+                scriptFlg (bool, optional): flag to identify whether download script. Defaults to True.
+                caFlg (bool, optional): flag to identify whether download certificate. Defaults to True.
                 spLinkType (list, optional): all the hyper link contents type . Defaults to SP_LINK_TYPE.
         """
         self.soup = None
