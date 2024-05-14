@@ -141,7 +141,7 @@ class nmapScanner(object):
 
             Args:
                 target (str): target IP address/Url.
-                portRange (tupple): (start port, end port)
+                portRange (tuple): (start port, end port)
                 showFiltered (bool, optional): whether show the 'filtered' state port. 
                     Defaults to False.
             Returns:

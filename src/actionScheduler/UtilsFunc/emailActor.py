@@ -308,7 +308,7 @@ class emailActor(object):
 
 #-----------------------------------------------------------------------------
     def sendEmailHtml(self, dests, subjectStr, htmlContent, attachmentPath=None):
-        """ Send a html formate email.
+        """ Send a html format email.
             Args:
                 dests (str) : receiver's email address.
                 subjectStr (str) : email subject title.

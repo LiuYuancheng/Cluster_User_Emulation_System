@@ -122,7 +122,7 @@ class networkServiceProber(Prober):
 
 #----------------------------------------------------------------------------- 
     def checkNtpConn(self, target, pingFlg=False, portFlg=False, ntpPort=123):
-        """ Check whether a NTP(Network Time Protocol) service is avaliable. As if we use the nmap
+        """ Check whether a NTP(Network Time Protocol) service is available. As if we use the nmap
             to scan the port, most of the public ntp server will ban the client who did the ports
             scan for their server, so the port state may show 'down' 
 
