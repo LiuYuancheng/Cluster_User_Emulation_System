@@ -2,8 +2,8 @@
 # Name:        dataManage.py
 #
 # Purpose:     Monitor Hub data manager class used to provide specific data fetch 
-#              and process functions and init the local data storage to store
-#              the tasks state of 
+#              and process functions and init the local data storage to store the 
+#              action scheduler tasks state. 
 #              
 # Author:      Yuancheng Liu 
 #
