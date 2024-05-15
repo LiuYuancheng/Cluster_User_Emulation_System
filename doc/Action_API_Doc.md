@@ -1,6 +1,6 @@
 # CUE Organic Actions API Document
 
-This user API module will introduce the Organic Actions mapping with the related lib and program code API and give a simple example. 
+This API manual will introduce the CUE Organic Actions mapping with the related lib and program code API and give a simple example about how to use it. 
 
 ```
 # Version:     v_0.0.1

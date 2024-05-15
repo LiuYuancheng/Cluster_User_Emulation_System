@@ -1,15 +1,16 @@
 #-----------------------------------------------------------------------------
 # Name:        dataManage.py
 #
-# Purpose:     Data manager class used to provide specific data fetch and process 
-#              functions and init the local data storage.
+# Purpose:     Monitor Hub data manager class used to provide specific data fetch 
+#              and process functions and init the local data storage to store
+#              the tasks state of 
 #              
 # Author:      Yuancheng Liu 
 #
-# Version:     v_0.2
+# Version:     v_0.2.3
 # Created:     2023/01/11
-# Copyright:   
-# License:     
+# Copyright:   Copyright (c) 2024 LiuYuancheng
+# License:     MIT License
 #-----------------------------------------------------------------------------
 
 import json
@@ -21,6 +22,7 @@ import Log
 import udpCom
 
 # Define all the module local untility functions here:
+#-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 def parseIncomeMsg(msg):
     """ parse the income message to tuple with 3 elements: request key, type and jsonString
@@ -35,15 +37,49 @@ def parseIncomeMsg(msg):
         Log.exception(err)
         return('', '', json.dumps({}))
 
+#-----------------------------------------------------------------------------
+def buildPeerInfoDict(peerId):
+    """ Build the peer all information dictionary based on the input peer ID.
+        Args:
+            peerId (int): scheduler id.
+        Returns:
+            _type_: scheduler all information dictionary.
+    """
+    peerName = gv.iDataMgr.getPeerName(peerId)
+    peerInfoDict = {
+        "name": peerName,
+        "connected" : False,
+        "updateT"   : None,
+        "daily"     : [],
+        "random"    : [],
+        "weekly"    : []
+    }
+    result = gv.iDataMgr.getPeerConnInfo(peerName)
+    taskInfoDict = gv.iDataMgr.getPeerTaskInfo(peerName, 'all')
+    if result: peerInfoDict['connected'] = result[0]
+    if result: peerInfoDict['updateT'] = result[1]
+    if taskInfoDict and taskInfoDict['daily']: peerInfoDict['daily'] = taskInfoDict['daily']
+    if taskInfoDict and taskInfoDict['random']: peerInfoDict['random'] = taskInfoDict['random']
+    if taskInfoDict and taskInfoDict['weekly']: peerInfoDict['weekly'] = taskInfoDict['weekly']
+    return peerInfoDict
+
+
 # Define all class here:
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 class PeerConnector(object):
-    """ Peer connector is used to connect to each scheduler and save the connectors
-        information. Each peer connector has one UPD connector to communicate with 
+    """ Peer connector is used to connect to each scheduler and save the connection
+        information. Each peer connector has one UDP connector to communicate with 
         the scheudler.
     """
     def __init__(self, id, uniqName, ipaddress, udpPort):
+        """ init example: connector = PeerConnector( 1, 'scheduler1', '192.168.1.100', 5000)
+            Args:
+                id (int): unqiue ID map to the connected scheduler. 
+                uniqName (str): connected scheduler name.
+                ipaddress (str): scheduler IP address.
+                udpPort (int): scheduler UDP port.
+        """
         self.uniqID = id
         self.uniqName = uniqName
         self.ipaddres = ipaddress
@@ -59,12 +95,12 @@ class PeerConnector(object):
             'error':    0,
             'deactive': 0
         }
-        gv.gDebugPrint("Peer Connector Inited.", logType=gv.LOG_INFO)
+        gv.gDebugPrint("Peer Connector [%s]Inited." %str(uniqName), logType=gv.LOG_INFO)
 
     #-----------------------------------------------------------------------------
     def _fetchTaskCounts(self):
-        """ Connect to the peer and fetch the peer's current tasks' count, then update
-            taskCountDict."""
+        """ Connect to the peer and fetch the peer's current tasks' count detail, 
+            then update taskCountDict."""
         rqstKey = 'GET'
         rqstType = 'taskCount'
         result = self._queryToBE(rqstKey, rqstType, self.taskCountDict)
@@ -72,8 +108,9 @@ class PeerConnector(object):
 
     #-----------------------------------------------------------------------------
     def _loginScheduler(self):
-        """ Try to connect to the scheduler."""
-        gv.gDebugPrint("Try to connnect to the scheduler [%s]..." %str(self.ipaddres), logType=gv.LOG_INFO)
+        """ Try to connect / login to the scheduler."""
+        gv.gDebugPrint("Try to connnect to the scheduler [%s]..." %str(self.ipaddres), 
+                       logType=gv.LOG_INFO)
         rqstKey = 'GET'
         rqstType = 'login'
         rqstDict = {'user': self.uniqName}
@@ -120,6 +157,14 @@ class PeerConnector(object):
     
     #-----------------------------------------------------------------------------
     def changeTask(self, jobID, action):
+        """ Control the task state.
+            Args:
+                jobID (int): job id
+                action (str): task change action.
+
+            Returns:
+                _type_: _description_
+        """
         rqstKey = 'POST'
         rqstType = 'changeTsk'
         rqstDict = {
@@ -206,7 +251,6 @@ class DataManager(object):
 #-----------------------------------------------------------------------------
     def addSchedulerPeer(self, peerName, peerIp, peerPort, linkMode=0):
         """ Add the scheduler peer in the data manager
-
             Args:
                 peerName (str): scheduler's unique name.
                 peerIp (str): ip address
@@ -272,33 +316,3 @@ class DataManager(object):
         if str(id) in self.schedulerIds.keys():
             return self.schedulerIds[str(id)]
         return None
-
-# Define all general function and test case here:
-#-----------------------------------------------------------------------------
-#-----------------------------------------------------------------------------
-
-def buildPeerInfoDict(peerId):
-    """ Build the peer all information dictionary based on the input peer ID.
-    Args:
-        peerId (_type_): _description_
-
-    Returns:
-        _type_: _description_
-    """
-    peerName = gv.iDataMgr.getPeerName(peerId)
-    peerInfoDict = {
-        "name": peerName,
-        "connected" : False,
-        "updateT"   : None,
-        "daily"     : [],
-        "random"    : [],
-        "weekly"    : []
-    }
-    result = gv.iDataMgr.getPeerConnInfo(peerName)
-    taskInfoDict = gv.iDataMgr.getPeerTaskInfo(peerName, 'all')
-    if result: peerInfoDict['connected'] = result[0]
-    if result: peerInfoDict['updateT'] = result[1]
-    if taskInfoDict and taskInfoDict['daily']: peerInfoDict['daily'] = taskInfoDict['daily']
-    if taskInfoDict and taskInfoDict['random']: peerInfoDict['random'] = taskInfoDict['random']
-    if taskInfoDict and taskInfoDict['weekly']: peerInfoDict['weekly'] = taskInfoDict['weekly']
-    return peerInfoDict
