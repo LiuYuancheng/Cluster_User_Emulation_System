@@ -7,8 +7,8 @@
 #
 # Version:     v_0.2
 # Created:     2023/01/11
-# Copyright:   
-# License:     
+# Copyright:   Copyright (c) 2023 LiuYuancheng
+# License:     MIT License
 #-----------------------------------------------------------------------------
 
 import sqlite3
@@ -55,5 +55,5 @@ def testCase(mode):
     connection.close()
 
 if __name__ == '__main__':
-    mode = 0
+    mode = int(input("Input the function mode: 0 for reset DB, 1 for test insert data:"))
     testCase(mode)
