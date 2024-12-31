@@ -11,6 +11,57 @@ This API manual will introduce the CUE Organic Actions mapping with the related 
 
 [TOC]
 
+**Table of Contents** 
+
+- [CUE Organic Actions API Document](#cue-organic-actions-api-document)
+    + [Network Activities Module](#network-activities-module)
+      - [Action 01 : Ping targets sequence or parallel](#action-01---ping-targets-sequence-or-parallel)
+      - [Action 02: Capture webpage screen shot](#action-02--capture-webpage-screen-shot)
+      - [Action 03: Download all the contents in a web page](#action-03--download-all-the-contents-in-a-web-page)
+      - [Action 04: Connect to FTP server](#action-04--connect-to-ftp-server)
+      - [Action 05: SSH connect to target and run command](#action-05--ssh-connect-to-target-and-run-command)
+      - [Action 06: SCP file to target](#action-06--scp-file-to-target)
+      - [Action 07: SSH port forward to local](#action-07--ssh-port-forward-to-local)
+      - [Action 08: UDP connect to the target](#action-08--udp-connect-to-the-target)
+      - [Action 09: TCP connect to the target](#action-09--tcp-connect-to-the-target)
+      - [Action 10: Connect to SQLite3 Database](#action-10--connect-to-sqlite3-database)
+      - [Action 11: Connect to influxDB1.8X Database](#action-11--connect-to-influxdb18x-database)
+      - [Action 12: Send and Receive Email](#action-12--send-and-receive-email)
+      - [Action 13: Use browser to open URL](#action-13--use-browser-to-open-url)
+      - [Action 14: Connect to NTP(Network Time Protocol) service](#action-14--connect-to-ntp-network-time-protocol--service)
+      - [Action 15: Send HTTP GET/POST request](#action-15--send-http-get-post-request)
+    + [Application Activities Module](#application-activities-module)
+      - [Action 16: Start an application file](#action-16--start-an-application-file)
+      - [Action 17: Edit a PPT file](#action-17--edit-a-ppt-file)
+      - [Action 18: Start a Zoom meeting](#action-18--start-a-zoom-meeting)
+      - [Action 19: Git download/pull the project](#action-19--git-download-pull-the-project)
+      - [Action 20: Use Wireshark to capture network traffic or open pcap file](#action-20--use-wireshark-to-capture-network-traffic-or-open-pcap-file)
+      - [Action 21: Use FTK Imager to capture the memory dump file](#action-21--use-ftk-imager-to-capture-the-memory-dump-file)
+      - [Action 22: Connect to Scheduler PLC to send command](#action-22--connect-to-scheduler-plc-to-send-command)
+      - [Action 23: Connect to Siemens RTU to send command](#action-23--connect-to-siemens-rtu-to-send-command)
+      - [Action 25: Use Nmap to scan the network](#action-25--use-nmap-to-scan-the-network)
+      - [Action 26: Use speed test to check current network speed](#action-26--use-speed-test-to-check-current-network-speed)
+    + [Human Activities Module](#human-activities-module)
+      - [Action 27: Record User's mouse and keyboard action](#action-27--record-user-s-mouse-and-keyboard-action)
+      - [Action 28: Generate the keyboard type in event](#action-28--generate-the-keyboard-type-in-event)
+      - [Action 29: Generate the mouse event](#action-29--generate-the-mouse-event)
+      - [Action 30: Start chrome browser and play the google dino game](#action-30--start-chrome-browser-and-play-the-google-dino-game)
+      - [Action 31: Send chat message via Telegram](#action-31--send-chat-message-via-telegram)
+      - [Action 32: Select local file (video, music, picture) and play/open](#action-32--select-local-file--video--music--picture--and-play-open)
+      - [Action 33: Connect to web camera and capture video](#action-33--connect-to-web-camera-and-capture-video)
+      - [Action 33: Play simple sudoku game](#action-33--play-simple-sudoku-game)
+    + [System Activities Module](#system-activities-module)
+      - [Action 34: Run commands on different system](#action-34--run-commands-on-different-system)
+      - [Action 35: Open local connected camera can capture video](#action-35--open-local-connected-camera-can-capture-video)
+      - [Action 36: Open RS232/485 Comm port to read/set serial data](#action-36--open-rs232-485-comm-port-to-read-set-serial-data)
+      - [Action 37: Check OS state and record result](#action-37--check-os-state-and-record-result)
+      - [Action 38: User Ettercap to mirror target network traffic](#action-38--user-ettercap-to-mirror-target-network-traffic)
+      - [Action 39: Use Google map API to get the direction to destination](#action-39--use-google-map-api-to-get-the-direction-to-destination)
+      - [Action 40: Open Cytoscape to view graph and convert to Json file](#action-40--open-cytoscape-to-view-graph-and-convert-to-json-file)
+      - [Action 41: Do python program obfuscation encode and decode](#action-41--do-python-program-obfuscation-encode-and-decode)
+
+
+
 ------
 
 ### Network Activities Module
