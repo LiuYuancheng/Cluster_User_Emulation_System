@@ -10,26 +10,29 @@
 # Author:      Yuancheng Liu
 #
 # Created:     2019/11/12
-# Version:     v_0.1
+# Version:     v_0.2.0
 # Copyright:   Copyright (c) 2019 LiuYuancheng
-# License:     MIT License    
+# License:     MIT License
 #-----------------------------------------------------------------------------
-""" Program Design:
+""" 
+Program Design:
     Some times we want to read some program's simple customized config files which 
-    are created not under stand format (Json, Yaml). This module is deisgned to 
+    are created not under stand format (Json, Yaml). This module is designed to 
     solve this problem. 
     Running Platform: Win, Linux, Mac
     Development Env: Python 3.7.10
     Additional Lib: N.A
     Function:
     1. Load the file in list and filtered the comments line based on the user's setting.
-    2. Users can customized the comments line identify char for the lines they want to igore.
+    2. Users can customized the comments line identify char for the lines they want to ignore.
     3. Append the new data line into the config file with time stamps.
 """
 import os
+import json
 import datetime
 
-FILTER_CHAR = ('#', '', '\n', '\r', '\t') # comment lines 1st identify charactors.
+DEF_SPE_CHAR = ':' # default split char.
+FILTER_CHAR = ('#', '', '\n', '\r', '\t') # comment lines 1st identify characters.
 ENCODE = 'utf-8'    # file encode format.
 
 #-----------------------------------------------------------------------------
@@ -39,11 +42,11 @@ class ConfigLoader(object):
     def __init__(self, filePath, mode='r', filterChars=None, logFlg=True):
         """ Init the config loader.
             example: cfg = ConfigLoader('cfg.txt', mode='r', filterChars=('#', '\n'), logFlg=False)
-        Args:
-            filePath ([str]): Configfile path.
-            mode (str, optional): 'r'-read, 'w'-write ,'rw'-read&write, 'a'-append. Defaults to 'r'.
-            filterChars ([str], optional): Comment lines 1st identify charators list.
-            logFlg (bool, optional): Flag to show the running log. Defaults to True.
+            Args:
+                filePath ([str]): Configfile path.
+                mode (str, optional): 'r'-read, 'w'-write ,'rw'-read&write, 'a'-append. Defaults to 'r'.
+                filterChars ([str], optional): Comment lines 1st identify characters list.
+                logFlg (bool, optional): Flag to show the running log. Defaults to True.
         """
         self.filePath = filePath
         self.mode = mode
@@ -67,23 +70,23 @@ class ConfigLoader(object):
     
     #-----------------------------------------------------------------------------
     def getLines(self, filterFun=None):
-        """ Get all the filered lines of the config file.
-        Args:
-            filterFun ([function], optional): function for filter. Defaults to None.
-        Returns:
-            list[str]: configfile lines data after filtered.
+        """ Get all the filtered lines of the config file.
+            Args:
+                filterFun ([function], optional): function for filter. Defaults to None.
+            Returns:
+                list[str]: list of config file's lines data after filtered.
         """
         if not filterFun: return self.configLines
         return list(filter(filterFun, self.configLines))
     
     #-----------------------------------------------------------------------------
-    def getJson(self, specChar=':'):
+    def getJson(self, specChar=DEF_SPE_CHAR):
         """ Get the config data under json format (python dict).
-        Args:
-            specChar (str, optional): The key/value pair split char: key<specChar>value. 
-                Defaults to ':'.
-        Returns:
-            dict: data json dict.
+            Args:
+                specChar (str, optional): The key/value pair split char: key<specChar>value. 
+                    Defaults to DEF_SPE_CHAR ':'.
+            Returns:
+                dict: data json dict.
         """
         result = {}
         for line in self.configLines:
@@ -99,21 +102,21 @@ class ConfigLoader(object):
     #-----------------------------------------------------------------------------
     def setMode(self, mode):
         """ Set the file process mode.
-        Args:
-            mode ([str]): mode string.
+            Args:
+                mode ([str]): mode string.
         """
         self.mode = mode
     
     #-----------------------------------------------------------------------------
     def appendLine(self, line, timeFlg=False, cmtChar=None):
         """ Append a new line in the config file.
-        Args:
-            line ([str]): line data.
-            timeFlg (bool, optional): Add the time stamp before the line. Defaults to False.
-            cmtChar ([str], optional):Set char if you want to append the line as comments 
-                line. Defaults to None.
-        Returns:
-            [bool]: Whether the line is append successfully.
+            Args:
+                line ([str]): line data.
+                timeFlg (bool, optional): Add the time stamp before the line. Defaults to False.
+                cmtChar ([str], optional):Set char if you want to append the line as comments 
+                    line. Defaults to None.
+            Returns:
+                [bool]: Whether the line is append successfully.
         """
         if self.mode == 'r':
             if self.logFlg: print('> Cannot Append line, config loader under read only mode.')
@@ -125,8 +128,57 @@ class ConfigLoader(object):
                 fh.write(line+"\n")
             return True
         except:
-            if self.logFlg: print('> Error: appendline() can not open file.')
+            if self.logFlg: print('> Error: appendLine() can not open file.')
             return False
+
+#-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
+class JsonLoader(object):
+
+    def __init__(self):
+        """ Init the Json file loader class."""
+        self.jsonFilePath = None
+        self.jsonData = None
+
+    def _haveData(self):
+        return not (self.jsonData is None or self.jsonFilePath is None)
+    
+    #-----------------------------------------------------------------------------
+    def loadFile(self, filePath):
+        """" Load the json file. """
+        if not str(filePath).endswith('.json'):
+            print("> Error: JsonLoader.loadFile() file path is not a json file.")
+            return False
+        if os.path.exists(filePath):
+            try:
+                with open(filePath, 'r') as fh:
+                    self.jsonData= json.loads(fh.read())
+                    self.jsonFilePath = filePath
+            except Exception as err:
+                print("Error to load the json file: %s" % str(err))
+                return False
+        else:
+            print("> Error: JsonLoader.loadFile() file path does not exist: %s" % filePath)
+            return False
+
+    #-----------------------------------------------------------------------------
+    def getJsonData(self):
+        return self.jsonData
+
+    def getJsonFilePath(self):
+        return self.jsonFilePath
+    
+    #-----------------------------------------------------------------------------
+    def updateRcdFile(self, indent=4):
+        if self._haveData():
+            try:
+                with open(self.jsonFilePath, 'w') as fh:
+                    fh.write(json.dumps(self.jsonData, indent=indent))
+                    return True
+            except Exception as err:
+                print("Error to write the json file: %s" % str(err))
+                return False
+        return False
 
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
