@@ -1,10 +1,12 @@
-# Cluster User Emulation System (CUE)
+# Cluster User Activities Emulation System (CUE)
+
+**Project Design Purpose** : The Cluster User Activities Emulation (CUE) System is a distributed, automated, and reusable toolkit designed to generate both benign and malicious user activities across a simulated network environment (such as a cyber exercise cluster). The primary objective of the project is to emulate realistic cyber environments by creating human-like user behavior, network traffic, system events, and attack activities that can be customized for a wide range of cybersecurity research, education, testing, and operational scenarios.
 
 ![](doc/img/logo.png)
 
-**Project Design Purpose**: Our objective is to develop a distributed, automated, flexible and reusable toolkits set for generating both benign and malicious activities and traffic. This toolkit is designed to fulfill the following requirements:
+Unlike traditional traffic generators that only produce network packets, CUE focuses on behavior-driven activity emulation, enabling the simulation of complete user workflows, attacker operations, and defender responses across multiple hosts. This approach creates realistic datasets and system interactions that are valuable for Digital Forensics and Incident Response (DFIR), cyber range exercises, security validation, and malware research. This toolkit is designed to fulfill the following requirements:
 
-- Simulation of a mid size of cluster/network with active users (generate human activities) for Digital Forensics and Incident Response (DFIR). 
+- Simulation of a mid size of cluster/network with active users (generate human activities) for DFIR data collection. 
 - Simulation of red team attacks or recurrent attack scenarios in cyber exercise/events.
 - Simulation of blue team defense activities or the creation of live honeypots. 
 - Provide real time monitoring and management interface of cyber exercise management team. 
@@ -14,10 +16,12 @@
 
 By meeting these objectives, our toolkit aims to enhance cybersecurity preparedness, training, and research efforts by providing comprehensive and adaptable functionalities.
 
-```
-version:     v0.2.2
-Copyright:   Copyright (c) 2024 LiuYuancheng
-License:     MIT License   
+```python
+# Author:      Yuancheng Liu
+# Created:     2024/01/20
+# Version:     v_0.2.3
+# Copyright:   Copyright (c) 2026 LiuYuancheng
+# License:     GNU Lesser General Public License v3.0
 ```
 
 **Table of Contents**
