@@ -55,33 +55,64 @@ By meeting these objectives, our toolkit aims to enhance cybersecurity preparedn
 
 ------
 
-### Introduction
+### 1. Project Introduction
 
-The Cluster User Emulation System operates within different network/compute cluster environment, simulating multiple users' actions and monitoring their network traffic and activities. This system serves various purposes, including:
+The **Cluster User Emulation (CUE)** System is a distributed user behavior and activity emulation platform designed to simulate realistic user, device, and attacker behaviors across multiple hosts within a network or compute cluster. Unlike conventional traffic generators that only produce network packets, CUE emulates complete user workflows by combining operating system interactions, application usage, network communications, and automated attack or defense activities.
 
-- Providing a library repository with benign and malicious activities&traffic plugin module for customers to create customized complex "Human / Hacker / device" type actions.
-- Providing automatically robotic processes and tasks (RPT) or repeating/replaying specified attacking path/scenario of red team and defense activities of blue team during cyber exercise/event.
-- Generating network traffic flows with different protocols for target system penetration testing, service stress testing or using for network security research projects.
-- Providing the management interface for monitoring and controlling the tasks, processes, network traffic, node activities, and group-users interactive actions.
-- Establishing repeatable test environments for testing and verifying AI/ML trained models.
+The platform enables researchers, instructors, security engineers, and penetration testers to construct repeatable and configurable cyber environments that closely resemble real enterprise networks. By orchestrating multiple emulation agents simultaneously, CUE can generate realistic background activities, execute complex attack scenarios, and produce comprehensive datasets for Digital Forensics and Incident Response (DFIR), AI/ML model validation, cybersecurity training, and cyber range exercises.
 
-With its versatile capabilities, the Cluster User Emulation system proves invaluable for cybersecurity exercises, research projects, AI/ML testing, and process automation.
+#### 1.1 System Main Features
 
->  User Action Emulator Demo Video: [Video-01](https://www.youtube.com/watch?v=jgm3gQhzUq4&t=57s) , [Video-02](https://www.youtube.com/watch?v=wZsRmYPcPTQ)
+The CUE System provides the following core capabilities:
 
+- **Extensible Activity Repository** – A reusable library of both **benign** and **malicious** activity plugins that allows users to build customized Human, Device, Insider, or Hacker behavior models.
+- **Automated User Action Emulation** – Supports robotic process automation (RPA)-style execution, scheduled tasks, randomized user activities, and repeatable Red Team attack paths or Blue Team defense procedures.
+- **Network Traffic Generation** – Produces realistic network traffic using multiple communication protocols for penetration testing, service stress testing, protocol validation, and network security research.
+- **Centralized Monitoring and Management** – Provides a web-based management platform for monitoring emulator status, task execution progress, node health, generated traffic, and group-user interactions across the cluster.
+- **Repeatable AI/ML Test Environment** – Generates reproducible datasets containing user activities, operating system events, application logs, and network traffic for developing, training, and validating cybersecurity AI/ML models.
 
+**1.1.1 System Feature Demo Video**
 
-#### System Structure 
+With the above versatile capabilities, the Cluster User Emulation system proves invaluable for cybersecurity exercises, research projects, AI/ML testing, and process automation.
 
-The Custer User Emulator System contents three main parts, the `Activities Generation Modules Repository`, the `Users Action Emulator` and the `System Status Orchestrator` as shown blow:
+> **User Action Emulator Demo Videos**
+>
+> - **Video-01:** https://www.youtube.com/watch?v=jgm3gQhzUq4&t=57s
+> - **Video-02:** https://www.youtube.com/watch?v=wZsRmYPcPTQ
+
+#### 1.2 System Structure and Overview 
+
+The Custer User Emulator System contents three main parts, the `Activities Generation Modules Repository`, the `Users Action Emulator` and the `System Status Orchestrator` as shown blow :
 
 ![](doc/img/systemStructure.png)
 
-The Activities Generation Modules Repository is a collection of library modules for generating both benign and malicious activities and traffic. The Organic repository comprises 33 different plugin modules and the Malicious repository contains 24 different plugin modules. 
+**1.2.1 Activities and Traffic Generation Modules Repository**
 
-The User Action Emulator serves as the activating agent, utilizing assembled plugin modules from the `Activities Generation Modules Repository` to execute tasks on the target machine according to a user-defined timeline.
+The Activities Generation Modules Repository is a collection of library modules for generating both benign and malicious activities and traffic:
 
-The System Orchestrator is a cloud-based server that aggregates all User Action Emulator task execution states and offers a management website interface for users to monitor and manage the User Action Emulators
+- **Organic Activities Repository** – Currently contains **33** plugin modules that emulate legitimate user (blue team) operations, application usage, file access, web browsing, email communication, network services, and other daily activities.
+- **Malicious Activities Repository** – Currently contains **24** plugin modules that simulate attacker (read team) behaviors, malware execution, command-and-control (C2) communication, privilege escalation, persistence techniques, lateral movement, and other offensive security activities.
+
+**1.2.2 User Action Emulator Module**
+
+The **User Action Emulator** is the execution engine responsible for running activity plugins on target machines. It assembles selected modules from the repository into configurable workflows and executes them according to user-defined schedules or randomized timelines, the main function includes: 
+
+- Continuous or randomized background activity generation
+- Daily, weekly, or monthly scheduled tasks
+- Automated human, software, and malware behavior simulation
+- Repeatable attack replay for Red Team exercises
+- Automated defensive actions for Blue Team training
+
+**1.2.3 System Centralized  Orchestrator**
+
+The **System Orchestrator** is the centralized management server responsible for coordinating all distributed User Action Emulators within the cluster. It continuously collects execution status, activity logs, resource utilization, and communication statistics from each emulator, providing operators with a unified web-based management interface for monitoring and controlling the entire environment. The main function includes: 
+
+- Centralized task scheduling and deployment
+- Activity execution monitoring
+- Cluster node status management
+- Emulator configuration management
+- Malware and Command-and-Control (C2) management interface
+- Real-time visualization of emulator activities and execution progress
 
 
 
