@@ -118,44 +118,78 @@ The **System Orchestrator** is the centralized management server responsible for
 
 ------
 
-### Project Design 
+### 2. System Design and Workflow
 
-This section will introduce the design of system workflow, the design of system execution in the cyber range and the design of the three project main section. 
+The CUE System follows a modular design philosophy, allowing activity modules, user roles, execution playbooks, and emulation nodes to be independently developed, reused, and combined to create realistic cyber environments.
 
+#### 2.1 System Workflow
 
-
-#### Design of System Work Flow 
-
-The system workflow consists of five main steps, outlined below:
+The overall workflow of the CUE System consists of five sequential stages, as illustrated below.
 
 ![](doc/img/systemWorkflow.png)
 
-1. **Behavior Module Assembly**: This step involves gathering library modules from the `Activities Generation Modules Repository` based on the user's configuration file.
+**2.1.1 Step 1 – Behavior Module Assembly**
 
-2. **Activities Profile Building**: The gathered library modules and playbook files are packaged into a specific format profile, tailored for use by the emulator.
+- The workflow begins by user selecting needed plugin modules from the **Activities Generation Modules Repository**. 
+- Then the users choose the API with the related activity modules, communication protocols, application behaviors, operating system actions, and attack modules to build a desired user profile.
 
-3. **Customized User Emulator**: The profile package is imported to the emulator to create a customized "Role" program, ensuring it behaves according to user specifications.
+**2.1.2 Step 2 – Activity Profile Construction**
 
-4. **Activities and Traffic Generation**: Upon execution, the emulator follows the playbook within the profile to generate relevant activities and traffic flow as per the user's requirements.
+- After the required modules have been selected, they are assembled together with one or more **playbooks** to form a complete activity profile.
+- Then set the activity profile define parameters such as : User role (Engineer, HR Officer, Customer, Device, etc.), Activity sequence, Execution timeline, Randomization rules, Network behavior, Scheduled tasks
 
-5. **Procedure Monitoring**: This step involves monitoring the progress of task execution to ensure tasks are carried out efficiently and effectively.
+**2.1.3 Step 3 – Customized User Emulator Generation**
 
-   
+- The generated profile package is imported into a User Action Emulator, transforming the generic emulator into a customized role-specific execution agent.
+- Each emulator behaves independently according to its assigned profile and can represent different entities within a cyber range, including:
 
-##### Benign Activities and Traffic Generation 
+**2.1.4 Step 4 – Activity and Traffic Generation**
 
-The detailed 5 steps workflow of the system generating the benign activities & traffic is shown below:
+- After deployment, the emulator executes the playbook according to its configured schedule.
+- Activities can be executed continuously, periodically, randomly, or according to predefined timelines, allowing the system to closely resemble real enterprise user behavior.
+
+**2.1.5 Step 5 – Procedure Monitoring**
+
+- Throughout execution, every emulator continuously reports its execution status, activity progress, generated traffic statistics, and health information to the **Cloud Orchestrator**.
+- The orchestrator provides visualization of the  emulator status, execution progress, execution logs and the control function for start or stop activity profiles, deploy new playbook. 
+
+
+
+#### 2.2 Benign Activities and Traffic Generation 
+
+The benign activity generation process begins with selecting reusable activity modules from the **Organic Activities Plugin Repository**, which currently contains over **33** modules covering common enterprise behaviors. These modules are organized into categories including network communications, application usage, human interactions, and operating system activities.
+
+The detailed workflow for generating legitimate user activities is shown below : 
 
 ![](doc/img/workflow.png)
 
-With varied playbook and profile configurations, the emulator can effectively emulate various types of users and devices within a cyber range, including:
+By assigning different playbooks and profiles, the CUE System can emulate a wide range of users and devices commonly found in enterprise and industrial environments.
 
-- **IT/OT Specialists**: This category encompasses roles such as maintenance engineers, network administrators, penetration test engineers, and IT support engineers.
-- **Company Officers' Daily Work**: Roles like HR officers, finance managers, HQ operators, and company interns fall under this category, simulating typical daily tasks within the organization.
-- **Normal Customers**: Users in this category simulate typical customer interactions, such as raising support tickets, engaging with the company website, and utilizing company services.
-- **Device Simulation**: This involves emulating various devices, including IoT devices (sensors), OT equipment (PLC/RTU), surveillance cameras, and database servers, mimicking their behavior and interactions within the network environment.
+**2.2.1 IT and OT Specialists**
 
-By adopting different configurations, the emulator can accurately replicate the actions and behaviors of diverse user roles and devices, enhancing the realism and effectiveness of cyber range simulations.
+| Function Description                                         | Simulated Roles                                              | Simulated activities                                         |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| Simulates technical personnel responsible for maintaining enterprise and industrial infrastructure | Maintenance Engineers, Network Administrators, Penetration Test Engineers, IT Support Engineers, Network Administrators | SSH login, PLC programming, database maintenance, network diagnostics, software deployment, and remote administration |
+
+**2.2.2 Enterprise Office Staff**
+
+| Function Description                                         | Simulated Roles                                              | Simulated activities                                         |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| Daily office employees performing routine business operations | Human Resources Officers, Finance Managers, Finance Managers, Headquarters Operators, Company Interns | Doc editing, spreadsheet processing, presentation preparation, email communication, file sharing, printing, web browsing, and video conferencing. |
+
+**2.2.3 Customer Activities**
+
+| Function Description                                | Simulated Roles | Simulated activities                                         |
+| --------------------------------------------------- | --------------- | ------------------------------------------------------------ |
+| External users interacting with enterprise services | Normal Users    | Accessing company websites, Registering user accounts, Raising support tickets, Using online services, Downloading resources |
+
+**2.2.4 Device Emulation**
+
+| Function Description                                | Simulated Roles                                              | Simulated activities                                         |
+| --------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| Emulate autonomous devices and industrial equipment | IoT sensors, PLCs and RTUs, Surveillance cameras, Database servers, Edge computing devices | Protocol-specific traffic and operational behaviors that closely resemble real-world deployments. |
+
+
 
 
 
