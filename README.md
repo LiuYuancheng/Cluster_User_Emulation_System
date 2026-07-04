@@ -252,41 +252,65 @@ These modules generate network communications using common enterprise protocols 
 
 These plugins automate interactions with commonly used desktop and enterprise applications.
 
-Example activities include: `Microsoft Word document editing`, `Microsoft Excel spreadsheet processing`, `Microsoft PowerPoint presentation editing`, `PDF viewing`, `Microsoft Teams collaboration`, 
+- Example activities include: `[01] Microsoft Word document editing`, `[02] Microsoft Excel spreadsheet processing`, `[03] Microsoft PowerPoint presentation editing`, `[04] PDF viewing`, `[05] Microsoft Teams collaboration`, `[05] Remote Desktop usage`, `[06] Web browser automation`, `[07] Database management software`, `[08] Third-party desktop applications`.
 
-- Remote Desktop usage
-- Web browser automation
-- Database management software
-- Third-party desktop applications
+**3.1.3 Human Operation Plugins (8 Modules)**
 
+Human operation plugins emulate the actions of real users interacting with their workstations.
 
+- Typical activities include: `[01] Keyboard and mouse operations`, `[02] Web browsing`, `[03] Watching online or offline videos`, `[04] Instant messaging`, `[05] File copying and compression`, `[06] Downloading software`, `[07] Opening folders and documents`, `[08] Manual application operations`. 
 
+**3.1.4 System Activity Plugins (5 Modules)**
 
+System activity plugins interact directly with the operating system and system services.
 
+- Example activities include: `[01] Command Prompt execution`, `[02] Windows service management`, `[03] Windows Firewall configuration`, `[04] System configuration changes`, `[05] Operating system maintenance tasks`.
 
+#### 3.2 Malicious Activities Plugin Repository
 
-This repository houses a collection of library modules for generating both benign and malicious activities and traffic. These modules can be seamlessly integrated with other components to generate organic activities across hardware, network, operating system, and application levels. Examples of such activities include initiating online meetings, sending/receiving emails, uploading/downloading files, editing MS-Office documents, toggling Windows Firewall, and watching online/offline videos.
+The **Malicious Activities Plugin Repository** currently contains **24** plugin modules designed to emulate adversarial behaviors, cyber attacks, and malware operations within isolated environments. Rather than deploying real malware, these plugins safely reproduce attack techniques and malicious traffic patterns for cybersecurity research, penetration testing, DFIR training, and defensive validation.
 
-The **Organic** repository comprises 33 different plugin modules categorized into four types:
+**3.2.1 Credential and Critical Data Compromise Plugins (4 Modules)**
 
-- Network Activities Generation plugin [11 modules]
-- Application/Software Interaction and Control Activities plugin [9 modules]
-- Human Operation Activities plugin [8 modules]
-- System Activities plugin [5 modules]
+These plugins simulate attacks targeting sensitive credentials and confidential information.
 
-Conversely, the **Malicious** repository contains 24 different plugin modules across five types:
+- Typical activities include: `[01] Password harvesting`, `[02] Credential dumping`, `[03] Sensitive file collection`, `[04] Data exfiltration preparation`. 
 
-- Credentials and Critical Data Compromise plugin [4 modules]
-- Phishing and Scam plugin [4 modules]
-- Scan and Record plugin [5 modules]
-- Denial of Service plugin [5 modules]
-- System Destruction plugin [6 modules]
+**3.2.2 Phishing and Scam Plugins (4 Modules)**
 
-These modules offer a comprehensive range of functionalities to support various simulation and testing requirements, enhancing the versatility and effectiveness of the activities generation process.
+These plugins reproduce common social engineering attacks used by adversaries.
+
+- Example simulations include: `[01] Phishing emails`, `[02] Malicious attachment delivery`, `[03] Fake login pages`, `[04] Scam website interactions`.
+
+**3.2.3 Scan and Reconnaissance Plugins (5 Modules)**
+
+These modules emulate reconnaissance activities commonly performed before launching an attack.
+
+- Typical examples include: `[01] Network scanning`, `[02] Port scanning`, `[03] Host discovery`, `[04] Service enumeration`, `[05] Vulnerability scanning`. 
+
+**3.2.4 Denial-of-Service Plugins (5 Modules)**
+
+These plugins generate abnormal traffic intended to evaluate system resilience and defensive mechanisms.
+
+- Supported simulations include: `[01] TCP flooding`, `[02] UDP flooding`, `[03] HTTP request flooding`, `[04] Connection exhaustion`, `[05] Service stress testing`.
+
+**3.2.5 System Destruction Plugins (6 Modules)**
+
+These plugins emulate destructive malware behaviors and post-compromise activities.
+
+- Examples include: `[01] File encryption simulation`, `[02] File deletion`, `[03] Service termination`, `[04] System configuration modification`, `[05] Process termination`, `[06] Persistence and cleanup activities`. 
+
+#### 3.3 Modular Design and Extensibility
+
+The Activities Generation Modules Repository is designed to be **modular**, **extensible**, and **reusable**. Every activity is implemented as an independent plugin with a standardized interface, allowing developers to add new behaviors without affecting existing modules or the core emulator.
+
+Multiple plugins can be assembled into **playbooks**, which define the execution order, timing, dependencies, and repetition rules for a specific user role or attack scenario. This modular composition enables users to rapidly create highly customized activity profiles ranging from ordinary office employees and industrial devices to sophisticated attackers and malware.
 
 > **The detail document link of User Action Repository** [click [here](ReadMe_User_Actions_Repository.md) ] 
 
 
+
+------
 
 #### Design User Action Emulator 
 
