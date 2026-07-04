@@ -189,25 +189,81 @@ By assigning different playbooks and profiles, the CUE System can emulate a wide
 | --------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | Emulate autonomous devices and industrial equipment | IoT sensors, PLCs and RTUs, Surveillance cameras, Database servers, Edge computing devices | Protocol-specific traffic and operational behaviors that closely resemble real-world deployments. |
 
+#### 2.3 Malicious Activity and Traffic Generation
 
-
-
-
-##### Malicious Activities and Traffic 
-
-The system can also be used to act as attacker or malware to generate the  activities & traffic , the detailed work flow is shown below:
+Besides generating normal enterprise activities, the CUE System can also emulate adversarial behaviors, malware execution, and automated cyber attacks. The malicious activity workflow is shown below.
 
 ![](doc/img/atkworkflow.png)
 
-With diverse playbook and profile configurations, the emulator can adeptly simulate a wide array of hackers, attack programs, and malware within a cyber range, encompassing:
+Different attacker profiles can represent human hackers, automated attack tools, malware samples, or command-and-control (C2) agents.
 
-- **Penetration Testing**: This includes conducting regular penetration tests, service stress tests, and vulnerability scans to assess the security posture of systems and networks.
-- **Red Teaming**: The emulator can replicate human hackers, automated attack programs, recurring attack scenarios, and distributed denial-of-service (DDoS) attacks, providing a comprehensive assessment of defensive capabilities and response strategies.
-- **Customized Malware**: It can also simulate various types of malware, such as backdoor trojans, spy trojans, Modbus FDI/FCI, and ransomware, enabling organizations to evaluate their resilience against sophisticated cyber threats and develop effective mitigation strategies.
+**2.3.1 Penetration Testing**
+
+| Function Description                                         | Simulated Roles  | Simulated activities                                         |
+| ------------------------------------------------------------ | ---------------- | ------------------------------------------------------------ |
+| Validate security controls and identify weaknesses before production deployment | Pentest engineer | Network vulnerability scanning, Service enumeration, Authentication testing, Service stress testing |
+
+**2.3.2 Red Team Operations**
+
+| Function Description                                         | Simulated Roles                     | Simulated activities                                         |
+| ------------------------------------------------------------ | ----------------------------------- | ------------------------------------------------------------ |
+| Attack playbooks can reproduce sophisticated offensive campaigns involving multiple stages of the cyber kill chain. | Red team attacker. simulated hacker | Initial access, Credential harvesting, Privilege escalation, Lateral movement, Persistence establishment, Command-and-Control (C2) communication, Data exfiltration, Distributed Denial-of-Service (DDoS) attacks |
+
+**2.3.3 Customized Malware Emulation**
+
+| Function Description                                         | Simulated Roles               | Simulated activities                                         |
+| ------------------------------------------------------------ | ----------------------------- | ------------------------------------------------------------ |
+| Simulate malware behaviors without requiring live malware samples. | Malware and Malicious payload | Remote Access Trojans (RATs), Backdoor Trojans, Spyware, Ransomware, Modbus False Data Injection (FDI) |
 
 
 
-#### Design of Activities Generation Modules Repository
+------
+
+### 3. Design of Activities Generation Modules Repository
+
+The **Activities Generation Modules Repository** provides an extensible collection of reusable plugin modules that generate both benign and malicious activities across multiple layers of a computing environment. The repository follows a plugin-based architecture, allowing new activity modules to be developed and integrated independently without modifying the core emulator. Each plugin encapsulates a specific activity or behavior and can be combined with other plugins through user-defined playbooks to construct complex, repeatable workflows.
+
+Typical activities supported by the repository include:
+
+- Sending and receiving emails
+- Joining online meetings
+- Uploading and downloading files
+- Editing Microsoft Office documents
+- Web browsing and online searches
+- Playing online or offline multimedia
+- Executing command-line utilities
+- Managing databases and remote servers
+- Enabling or disabling Windows Firewall
+- Transferring files through various network protocols
+- Executing scheduled background tasks
+- Simulating industrial control system communications
+
+#### 3.1 Organic Activities Plugin Repository
+
+The **Organic Activities Plugin Repository** contains **33** reusable plugin modules that emulate legitimate day-to-day activities performed by enterprise users, administrators, and devices. These modules generate realistic operating system events, application logs, and network traffic, providing valuable datasets for Digital Forensics and Incident Response (DFIR), cybersecurity training, AI/ML research, and cyber range exercises.
+
+**3.1.1 Network Activities Generation Plugins (11 Modules)**
+
+These modules generate network communications using common enterprise protocols and services.
+
+- Typical examples include: `[01] ICMP (Ping)`, `[02] HTTP / HTTPS`, `[03] FTP / SFTP` , `[04] SSH`, `[05] Email protocols (SMTP, POP3, IMAP)`, `[06] TCP and UDP communications`, `[07] Database connections`, `[08] Remote service access`, `[09] Web API interactions`, `[10] DNS and network diagnostics`, `[11] Custom protocol simulation`. 
+
+**3.1.2 Application and Software Interaction Plugins (9 Modules)**
+
+These plugins automate interactions with commonly used desktop and enterprise applications.
+
+Example activities include: `Microsoft Word document editing`, `Microsoft Excel spreadsheet processing`, `Microsoft PowerPoint presentation editing`, `PDF viewing`, `Microsoft Teams collaboration`, 
+
+- Remote Desktop usage
+- Web browser automation
+- Database management software
+- Third-party desktop applications
+
+
+
+
+
+
 
 This repository houses a collection of library modules for generating both benign and malicious activities and traffic. These modules can be seamlessly integrated with other components to generate organic activities across hardware, network, operating system, and application levels. Examples of such activities include initiating online meetings, sending/receiving emails, uploading/downloading files, editing MS-Office documents, toggling Windows Firewall, and watching online/offline videos.
 
