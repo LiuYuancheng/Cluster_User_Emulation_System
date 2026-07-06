@@ -221,7 +221,9 @@ Different attacker profiles can represent human hackers, automated attack tools,
 
 ### 3. Design of Activities Generation Modules Repository
 
-The **Activities Generation Modules Repository** provides an extensible collection of reusable plugin modules that generate both benign and malicious activities across multiple layers of a computing environment. The repository follows a plugin-based architecture, allowing new activity modules to be developed and integrated independently without modifying the core emulator. Each plugin encapsulates a specific activity or behavior and can be combined with other plugins through user-defined playbooks to construct complex, repeatable workflows.
+The **Activities Generation Modules Repository** provides an extensible collection of reusable plugin modules that generate both benign and malicious activities across multiple layers of a computing environment. The repository follows a plugin-based architecture, allowing new activity modules to be developed and integrated independently without modifying the core emulator. Each plugin encapsulates a specific activity or behavior and can be combined with other plugins through user-defined playbooks to construct complex, repeatable workflows. The system components diagram is shown below:
+
+![](doc/img/s_03.png)
 
 Typical activities supported by the repository include:
 
@@ -386,23 +388,59 @@ By offering these hierarchical levels of components, the User Actor Emulator pro
 
 ------
 
-#### Design of System Orchestrator
+### 5. Design of System Orchestrator
 
-The System Orchestrator is a cloud-based server that aggregates all User Action Emulator task execution states and offers a management website interface for users to monitor and manage the User Action Emulators. The Orchestrator provides two distinct web interfaces:
+The **System Orchestrator** is the centralized management and coordination platform of the **Cluster User Emulation (CUE)** System. It is responsible for managing distributed **User Action Emulators**, collecting their execution status, coordinating task deployment, and providing operators with a unified web-based interface for monitoring and controlling cyber range activities.
 
-- **Emulator Procedure Management Interface**: This web dashboard displays comprehensive information about all connected emulators, including their current state and task details. Users can efficiently oversee the execution of tasks across multiple emulators from this interface.
-- **Malware Command and Control Interface**: This web dashboard presents the task execution states of all connected malware instances and offers a web API for the red team to dynamically control the malware. This interface empowers red team members with the flexibility to manage malware operations effectively in real-time.
+In addition to centralized monitoring, the Orchestrator also provides remote task management, enabling operators to start, stop, pause, or modify emulator activities without requiring direct access to the target machines. This centralized architecture greatly simplifies the administration of large-scale cyber exercises and ensures consistent execution across distributed environments. The System Orchestrator provides two primary web-based management interfaces:
 
- The emulator's task monitor Page/ tasks view is shown below:
+- Emulator Procedure Management Interface
+- Malware Command and Control (C2) Interface
+
+#### 5.1 Emulator Procedure Management Interface
+
+The Emulator Procedure Management Interface serves as the primary dashboard for monitoring and managing all connected User Action Emulators. The management UI is shown below: 
 
 ![](doc/img/RM_diagram_Monitor_page1.png)
 
-**Emulator’s action monitor web feature:** 
+Each emulator continuously uploads its execution status to the Orchestrator, allowing operators to observe the progress of scheduled tasks, verify emulator health, and identify failed or delayed activities. This centralized dashboard provides complete visibility into the execution state of the distributed emulation environment, making it especially valuable during cyber range exercises, penetration testing campaigns, and automated security validation.
 
-- User can monitor the scheduled actions(events) execution state from the monitor web.
-- User can remove/deactivate the action from the web. 
-- The web provide regular action (daily/weekly action) and random action monitoring. 
-- (Under development) user can add new action/edit the actions from the Web interface**.**
+The interface provides real-time information including:
+
+- Connected emulator status
+- Current execution state
+- Running and pending tasks
+- Scheduled activity timelines
+- Execution progress
+- Task completion status
+- System health information
+- Activity execution history
+
+#### 5.2 Malware Command and Control (C2) Interface
+
+In addition to managing benign user activities, the System Orchestrator also provides a dedicated Malware Command and Control (C2) Interface for offensive security exercises. The malware C2 UI is shown below: 
+
+![](doc/img/s_04.png)
+
+This interface monitors all active malware emulation instances and provides a secure Web API that allows authorized Red Team operators to dynamically control malware behaviors during cyber exercises.
+
+Typical management functions include:
+
+- Deploying malware playbooks
+- Starting and stopping malware execution
+- Triggering attack stages
+- Updating malware configurations
+- Monitoring malware execution status
+- Collecting execution reports
+- Coordinating multi-stage attack scenarios
+
+#### 5.3 Emulator Action Management Features
+
+The web-based management interface provides several operational features that simplify emulator administration and activity management.
+
+- **Real-time Activity Monitoring** :  Users can monitor the execution status of all scheduled activities in real time, including both one-time and recurring tasks.
+- **Task Lifecycle Management** : Users can deactivate or remove selected actions from the execution queue, enabling rapid adjustment of simulation scenarios during an exercise.
+- **Support for Multiple Scheduling Modes** : The dashboard distinguishes between recurring activities, such as daily or weekly office routines, and randomly generated background activities that emulate natural user behavior.
 
 > **The detail document link of  Scheduler Monitor Hub** [click [here](ReadMe_User_Actions_Emulator.md) ] 
 
